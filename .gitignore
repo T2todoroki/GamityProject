@@ -19,6 +19,5 @@ vendor/
 # Java 
 **/target/
 **/*.class
-**/mvnw
-**/mvnw.cmd
+
 .mvn/wrapper/maven-wrapper.properties
