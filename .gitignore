@@ -1,0 +1,24 @@
+# Docker y Base de Datos
+.docker/
+# Ignora la carpeta de datos de MySQL para no subir tu DB local
+mysql_data/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PHP/Web
+vendor/
+.env
+
+# Java 
+**/target/
+**/*.class
+**/mvnw
+**/mvnw.cmd
+.mvn/wrapper/maven-wrapper.properties

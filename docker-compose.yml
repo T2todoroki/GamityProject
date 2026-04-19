@@ -1,0 +1,70 @@
+services:
+  # Servidor Web Apache y PHP 8.2 con Driver MySQL
+  app:
+    build: .
+    container_name: gamity_app
+    ports:
+      - "8080:80" # Acceso desde el navegador en localhost:8080
+    volumes:
+      - ./public:/var/www/html
+      - ./src:/var/www/src
+    networks:
+      - gamity_network
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # BASE DE DATOS: MySQL 8.0
+  db:
+    image: mysql:8.0
+    container_name: gamity_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root # Contraseña del admin
+      MYSQL_DATABASE: gamity_db # Nombre de la base de datos de Gamity
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - gamity_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # GESTOR VISUAL: phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: gamity_pma
+    ports:
+      - "8081:80" # Acceso en localhost:8081
+    environment:
+      PMA_HOST: db # Indica que se conecte al servicio 'db'
+    networks:
+      - gamity_network
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # API REST: Spring Boot + Java 21
+  gamity-api:
+    build: ./gamity-api
+    container_name: gamity_api_java
+    restart: on-failure
+    ports:
+      - "8082:8082"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - gamity_network
+
+networks:
+  gamity_network:
+    driver: bridge
+
+volumes:
+  db_data:
