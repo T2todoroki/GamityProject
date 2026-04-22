@@ -8,7 +8,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
-
+    // Endpoint de registro simulado
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterDTO dto) {
         //Conectar con la base de datos (UserService) más adelante
