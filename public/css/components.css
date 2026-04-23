@@ -1,0 +1,25 @@
+/* Estilos para los Inputs */
+.input-gamity {
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    outline: none;
+}
+
+/*  Clases de Visibilidad, con esto no se pone texto encima de otro */
+.opacity-0-custom {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.opacity-100-custom {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Esto es para el contenedor de brillo, es el sombreado verde y morado */
+.glow {
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.15), 0 0 40px rgba(16, 185, 129, 0.15);
+}
