@@ -1,0 +1,36 @@
+/* ============================================
+   GAMITY - profile.css
+   Estilos exclusivos del perfil: inputs neón,
+   cards, botón guardar, light mode overrides.
+   ============================================ */
+
+/* === Profile Card === */
+.profile-card {
+    transition: border-color 0.3s ease;
+}
+
+/* === Profile Labels === */
+.profile-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+
+/* === Game Row Cards === */
+.profile-game-row {
+    background-color: rgba(31, 41, 55, 0.5);
+    border: 1px solid rgba(139, 92, 246, 0.15);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    position: relative;
+    transition: border-color 0.3s ease;
+}
+
+.profile-game-row:hover {
+    border-color: rgba(139, 92, 246, 0.4);
+}
