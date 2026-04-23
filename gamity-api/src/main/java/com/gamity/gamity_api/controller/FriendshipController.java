@@ -17,16 +17,20 @@ public class FriendshipController {
 
     private final FriendshipService friendshipService;
 
+     // Solicitudes pendientes para un usuario
       @GetMapping("/pending/{userId}")
     public ResponseEntity<List<FriendshipResponseDTO>> getPendingRequests(@PathVariable Long userId) {
         return ResponseEntity.ok(friendshipService.getPendingRequests(userId));
     }
 
+
+    // Lista de amigos aceptados para un usuario
      @GetMapping("/friends/{userId}")
     public ResponseEntity<List<FriendDTO>> getFriends(@PathVariable Long userId) {
         return ResponseEntity.ok(friendshipService.getFriends(userId));
     }
 
+     // Responder a una solicitud (accepted / rejected)
     @PostMapping("/{requestId}/respond")
     public ResponseEntity<?> respondToRequest(
             @PathVariable Long requestId,
@@ -40,6 +44,7 @@ public class FriendshipController {
         }
     }
 
+    // Enviar solicitud de amistad
     @PostMapping("/send")
     public ResponseEntity<?> sendRequest(@RequestBody Map<String, Long> body) {
         try {
