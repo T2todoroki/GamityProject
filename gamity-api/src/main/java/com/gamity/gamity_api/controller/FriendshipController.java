@@ -27,4 +27,27 @@ public class FriendshipController {
         return ResponseEntity.ok(friendshipService.getFriends(userId));
     }
 
+    @PostMapping("/{requestId}/respond")
+    public ResponseEntity<?> respondToRequest(
+            @PathVariable Long requestId,
+            @RequestBody Map<String, String> body) {
+        try {
+            String decision = body.get("decision"); // "accepted" o "rejected"
+            friendshipService.respondToRequest(requestId, decision);
+            return ResponseEntity.ok(Map.of("success", true, "message", "Solicitud " + decision));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/send")
+    public ResponseEntity<?> sendRequest(@RequestBody Map<String, Long> body) {
+        try {
+            friendshipService.sendRequest(body.get("senderId"), body.get("receiverId"));
+            return ResponseEntity.ok(Map.of("success", true, "message", "Solicitud enviada"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
+        }
+    }
+
 }
