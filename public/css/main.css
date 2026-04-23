@@ -1,0 +1,33 @@
+/* ============================================
+   ESTILOS DE AUTENTICACIÓN (LOGIN/REGISTER)
+   ============================================ */
+
+/* Variables de color usadas en los formularios y fondos */
+:root {
+    --bg-main: #0D0F16;        /* Color de fondo */
+    --bg-input: #222637;       /* Fondo de los campos de texto */
+    --border-color: #2D324F;   /* Color de los bordes de los inputs */
+    --accent-primary: #9B5DE5; /* Color morado de Gamity */
+    --text-primary: #E0E6ED;   /* Color del texto principal */
+}
+
+/* Estilos base del body del de Login */
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+/* Scrollbar personalizado para que encaje con el diseño oscuro */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--bg-input);
+    border-radius: 10px;
+}
