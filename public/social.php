@@ -84,28 +84,3 @@ endif; ?>
                         Amigos
                     </button>
                 </div>
-
-                 <!-- Contenedores -->
-                <div id="contentRequests" class="space-y-4">
-                    <!-- Javascript inyectará las solicitudes aquí -->
-                    <div class="flex flex-col items-center justify-center py-20 opacity-50">
-                        <svg class="animate-spin h-8 w-8 text-gamityPurple mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                        <p>Cargando información...</p>
-                    </div>
-                </div>
-
-                <div id="contentFriends" class="space-y-4 hidden">
-                    <!-- Javascript inyectará amigos aquí -->
-                </div>
-
-            </div>
-        </div>
-    </main>
-
-    <!-- Bottom Navigation Bar (Solo Móvil) -->
-    <nav class="fixed bottom-0 left-0 w-full z-50 bg-[#0a0a0b]/90 backdrop-blur-md border-t border-purple-500/20 md:hidden" style="padding-bottom: env(safe-area-inset-bottom, 12px)">
-        <div class="flex items-center justify-around h-16">
-            <a href="index.php" class="flex flex-col items-center gap-1 text-gray-400 hover:text-gamityPurple transition-colors">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                <span class="text-[10px] font-medium">Inicio</span>
-            </a>
