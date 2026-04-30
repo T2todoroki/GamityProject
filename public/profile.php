@@ -122,3 +122,112 @@ if (is_dir($avatarDir)) {
                             </p>
                     </div>
                 </div>
+
+                <!-- Formulario -->
+                <form id="profileForm" class="profile-card bg-surface md:rounded-2xl p-6 md:p-8 border border-white/5 space-y-6">
+
+                    <!-- Biografía -->
+                    <div>
+                        <label class="profile-label">Tu Biografía</label>
+                        <textarea id="inputDesc" name="bio" rows="4" placeholder="¡Hola! Busco equipo para subir a Platino..." class="input-gamity w-full resize-none"></textarea>
+                    </div>
+
+                    <!-- Juegos -->
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <label class="profile-label mb-0">Tus Juegos</label>
+                            <button type="button" id="addGameBtn" class="text-xs text-gamityPurple font-semibold hover:text-gamityGreen flex items-center gap-1 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                Añadir Juego
+                            </button>
+                        </div>
+                        <div id="gamesContainer" class="space-y-4"></div>
+                    </div>
+
+                    <!-- Actitud -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="profile-label">Actitud</label>
+                            <div class="relative">
+                                <select id="inputAttitude" name="attitude" class="input-gamity w-full appearance-none cursor-pointer">
+                                    <option value="">Desconocida</option>
+                                    <option value="Chill">Chill / Casual</option>
+                                    <option value="Tryhard">Competitivo / Tryhard</option>
+                                </select>
+                                <span class="absolute right-4 top-3 text-gray-400 pointer-events-none">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-end gap-4">
+                        <span id="saveResult" class="text-sm font-medium flex items-center"></span>
+                        <button type="submit" id="saveBtn" class="profile-save-btn w-full sm:w-auto px-8 py-3 rounded-xl bg-neon-gradient text-white font-bold transition-all transform hover:-translate-y-1">
+                            Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation Bar (Solo Móvil) -->
+    <nav class="fixed bottom-0 left-0 w-full z-50 bg-[#0a0a0b]/90 backdrop-blur-md border-t border-purple-500/20 md:hidden" style="padding-bottom: env(safe-area-inset-bottom, 12px)">
+        <div class="flex items-center justify-around h-16">
+            <a href="index.php" class="flex flex-col items-center gap-1 text-gray-400 hover:text-gamityPurple transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                <span class="text-[10px] font-medium">Inicio</span>
+            </a>
+            <a href="chat.php" class="flex flex-col items-center gap-1 text-gray-400 hover:text-gamityPurple transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                <span class="text-[10px] font-medium">Chats</span>
+            </a>
+            <a href="social.php" class="flex flex-col items-center gap-1 text-gray-400 hover:text-gamityPurple transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                <span class="text-[10px] font-medium">Social</span>
+            </a>
+            <a href="profile.php" class="flex flex-col items-center gap-1 text-gamityPurple transition-colors relative">
+                <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-gamityPurple shadow-[0_0_6px_rgba(139,92,246,0.8)]"></div>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                <span class="text-[10px] font-bold">Perfil</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Avatar Modal -->
+    <div id="avatarModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div class="bg-surface border border-white/10 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col">
+            <div class="p-6 border-b border-white/10 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-white">Selecciona tu Avatar</h3>
+                <button type="button" onclick="closeAvatarModal()" class="text-gray-400 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto max-h-[60vh]">
+                <div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-4" id="avatarGrid">
+                    <?php foreach($valorantAvatars as $avatar): ?>
+                    <div class="cursor-pointer rounded-xl overflow-hidden border-2 border-transparent hover:border-gamityPurple transition-all avatar-option" data-src="<?php echo htmlspecialchars($avatar); ?>" onclick="selectAvatar('<?php echo htmlspecialchars($avatar); ?>', this)">
+                        <img src="<?php echo htmlspecialchars($avatar); ?>" class="w-full h-auto aspect-square object-cover" loading="lazy">
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <div class="p-6 border-t border-white/10 bg-surfaceLight flex justify-end gap-3">
+                <button type="button" onclick="closeAvatarModal()" class="px-5 py-2.5 rounded-xl text-gray-400 font-medium hover:bg-white/5 transition-colors">Cancelar</button>
+                <button type="button" id="confirmAvatarBtn" disabled onclick="saveAvatar()" class="px-5 py-2.5 rounded-xl bg-gamityPurple text-white font-bold opacity-50 cursor-not-allowed transition-all hover:bg-purple-500">
+                    Guardar Selección
+                </button>
+            </div>
+        </div>
+    </div>
+    //script para pasar el user_id a JS y cargar el avatar al iniciar la página
+    <script>
+        const SESSION_USER_ID = <?php echo $_SESSION['user_id']; ?>;
+    </script>
+    <script src="js/app.js?v=<?php echo filemtime('js/app.js'); ?>"></script>
+    <script src="js/profile.js?v=<?php echo filemtime('js/profile.js'); ?>"></script>
+</body>
+</html>
