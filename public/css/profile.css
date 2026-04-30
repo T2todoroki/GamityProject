@@ -35,3 +35,45 @@
 .profile-game-row:hover {
     border-color: rgba(139, 92, 246, 0.4);
 }
+/* === Save Button (Neon Glow) === */
+.profile-save-btn {
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+.profile-save-btn:hover {
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5), 0 0 15px rgba(16, 185, 129, 0.3);
+}
+
+/* LIGHT MODE OVERRIDES */
+html.light .profile-card {
+    background-color: #ffffff !important;
+    border-color: #e2e8f0 !important;
+}
+
+
+html.light .profile-label {
+    color: #64748b !important;
+}
+
+html.light .profile-game-row {
+    background-color: #f8fafc !important;
+    border-color: #e2e8f0 !important;
+}
+
+html.light .profile-game-row:hover {
+    border-color: #cbd5e1 !important;
+}
+
+html.light .profile-save-btn {
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2) !important;
+}
+
+html.light .profile-save-btn:hover {
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3) !important;
+}
+
+/* Light mode bottom nav */
+html.light nav.fixed {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border-color: #e2e8f0 !important;
+}
