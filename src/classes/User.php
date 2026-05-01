@@ -58,3 +58,106 @@ class User
         }
     }
 }
+
+/**
+     * Inicia sesión verificando credenciales
+     * 
+     * @param string $email
+     * @param string $password
+     * @return array|false Datos del usuario si es correcto, false si falla
+     */
+    public function login($email, $password)
+    {
+        try {
+            $stmt = $this->db->prepare("SELECT id, username, password, role, avatar FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+            $user = $stmt->fetch();
+
+            if ($user && password_verify($password, $user['password'])) {
+                // Eliminar el hash antes de devolver los datos del usuario por seguridad
+                unset($user['password']);
+                return $user;
+            }
+
+            return false;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+
+    /**
+     * Obtener el perfil de un usuario
+     */
+    public function getProfile($userId)
+    {
+        try {
+            // Asegurar que exista la fila en user_profiles (esto sirve para auto-reparar en caso de que algo falle y no se cree el perfil)
+            $check = $this->db->prepare("SELECT 1 FROM user_profiles WHERE user_id = ?");
+            $check->execute([$userId]);
+            if (!$check->fetch()) {
+                $insert = $this->db->prepare("INSERT INTO user_profiles (user_id) VALUES (?)");
+                $insert->execute([$userId]);
+            }
+
+            $stmt = $this->db->prepare("
+                SELECT u.username, u.email, u.avatar, up.bio, up.main_game, up.game_rank, up.attitude
+                FROM users u
+                LEFT JOIN user_profiles up ON u.id = up.user_id
+                WHERE u.id = ?
+            ");
+            $stmt->execute([$userId]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+        catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Actualiza el perfil de un usuario
+     */
+    public function updateProfile($userId, $data)
+    {
+        try {
+            // Asegurar que exista la fila en user_profiles
+            $check = $this->db->prepare("SELECT 1 FROM user_profiles WHERE user_id = ?");
+            $check->execute([$userId]);
+            if (!$check->fetch()) {
+                $insert = $this->db->prepare("INSERT INTO user_profiles (user_id) VALUES (?)");
+                $insert->execute([$userId]);
+            }
+
+            $stmt = $this->db->prepare("
+                UPDATE user_profiles 
+                SET bio = ?, main_game = ?, game_rank = ?, attitude = ?
+                WHERE user_id = ?
+            ");
+            return $stmt->execute([
+                $data['bio'] ?? '',
+                $data['main_game'] ?? '',
+                $data['game_rank'] ?? '',
+                $data['attitude'] ?? '',
+                $userId
+            ]);
+        }
+        catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Actualiza el avatar del usuario
+     */
+    public function updateAvatar($userId, $avatarUrl)
+    {
+        try {
+            $stmt = $this->db->prepare("UPDATE users SET avatar = ? WHERE id = ?");
+            return $stmt->execute([$avatarUrl, $userId]);
+        }
+        catch (PDOException $e) {
+            return false;
+        }
+    }
+}
+?>
