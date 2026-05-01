@@ -94,6 +94,159 @@ endif; ?>
                 </div>
             </div>
         </header>
+        <!-- Contenedor Scrollable -->
+        <div class="flex-1 overflow-y-auto p-8 z-10" id="mainScroll">
+
+            <!-- Filters Section -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                <div class="flex items-center gap-4 flex-wrap">
+                    <div class="flex items-center text-gray-400 mr-2">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+                        Filtros
+                    </div>
+
+                    <select id="filterGame" class="filter-select">
+                        <option value="">Todos los juegos</option>
+                        <option value="Valorant">Valorant</option>
+                        <option value="LoL">League of Legends</option>
+                        <option value="CS2">Counter Strike 2</option>
+                    </select>
+
+                    <select id="filterRank" class="filter-select">
+                        <option value="">Cualquier rango</option>
+                        <option value="low">Hierro / Bronce / Plata</option>
+                        <option value="mid">Oro / Platino / Diamante</option>
+                        <option value="high">Ascendente / Inmortal / Radiante</option>
+                    </select>
+
+                    <select id="filterAttitude" class="filter-select">
+                        <option value="">Cualquier actitud</option>
+                        <option value="Tryhard">Competitivo / Tryhard</option>
+                        <option value="Chill">Casual / Chill</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Title -->
+            <div class="flex items-center mb-6">
+                <h2 class="text-2xl font-bold flex items-center">
+                    <svg class="w-6 h-6 mr-3 text-gamityPurple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    Encuentra tu equipo
+                </h2>
+                <span id="playerCount" class="ml-4 px-3 py-1 bg-gamityPurple/20 text-gamityPurple text-xs rounded-full font-medium">0 jugadores</span>
+            </div>
+
+            <!-- Grid Cards -->
+            <div id="usersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-24 md:pb-20">
+                <div class="col-span-full flex justify-center items-center py-10 opacity-50">
+                    <svg class="animate-spin -ml-1 mr-3 h-8 w-8 text-gamityPurple" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Cargando jugadores...
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Player Profile Modal -->
+    <div id="playerModal" class="modal-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center">
+        <div class="modal-content bg-surface rounded-2xl border border-white/5 w-full max-w-md mx-4 overflow-hidden shadow-2xl transform scale-95 opacity-0 transition-all duration-300">
+            <div class="h-28 bg-neon-gradient relative">
+                <button onclick="closePlayerModal()" class="absolute top-3 right-3 p-1.5 rounded-full bg-black/30 text-white/80 hover:text-white hover:bg-black/50 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="px-6 pb-6">
+                <div class="flex items-end gap-4 -mt-10 mb-4">
+                    <img id="modalAvatar" src="" class="w-20 h-20 rounded-xl border-4 border-surface object-cover shadow-lg">
+                    <div class="pb-1">
+                        <h3 id="modalUsername" class="text-xl font-black text-white"></h3>
+                        <div id="modalStatus"></div>
+                    </div>
+                </div>
+                <input type="hidden" id="modalUserId">
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wider">BiografÃ­a</label>
+                        <p id="modalBio" class="text-gray-300 text-sm mt-1 leading-relaxed"></p>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Juegos y Rangos</label>
+                        <div id="modalGamesContainer" class="mt-2 space-y-2"></div>
+                    </div>
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="bg-surfaceLight rounded-xl p-3 text-center">
+                            <p class="text-xs text-gray-500 font-medium mb-1">Actitud</p>
+                            <p id="modalAttitude" class="text-sm font-bold text-yellow-400"></p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3 pt-2">
+                        <button id="modalChatBtn" class="flex-1 py-2.5 rounded-xl bg-neon-gradient text-white font-bold hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all flex items-center justify-center gap-2 text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                            Enviar mensaje
+                        </button>
+                        <button onclick="closePlayerModal()" class="px-5 py-2.5 rounded-xl border border-white/10 text-gray-400 hover:text-white hover:border-white/30 transition-all text-sm font-medium">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Modal -->
+    <div id="reportModal" class="modal-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center">
+        <div class="bg-surface rounded-2xl border border-white/5 w-full max-w-md mx-4 p-6 shadow-2xl">
+            <div class="flex items-center gap-3 mb-5">
+                <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold">Reportar usuario</h3>
+                    <p class="text-sm text-gray-400">Reportando a <span id="reportUsername" class="text-red-400 font-semibold"></span></p>
+                </div>
+            </div>
+            <form id="reportForm">
+                <input type="hidden" id="reportUserId">
+                <textarea id="reportReason" rows="4" placeholder="Describe el motivo del reporte..." class="w-full px-4 py-3 rounded-xl bg-surfaceLight border border-white/10 text-white text-sm placeholder-gray-500 resize-none focus:border-red-500 focus:outline-none mb-4"></textarea>
+                <div class="flex gap-3">
+                    <button type="submit" class="flex-1 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold transition-all text-sm">Enviar reporte</button>
+                    <button type="button" onclick="closeReportModal()" class="px-5 py-2.5 rounded-xl border border-white/10 text-gray-400 hover:text-white hover:border-white/30 transition-all text-sm font-medium">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar (Solo MÃ³vil) -->
+    <nav class="fixed bottom-0 left-0 w-full z-50 bg-[#0a0a0b]/90 backdrop-blur-md border-t border-purple-500/20 md:hidden" style="padding-bottom: env(safe-area-inset-bottom, 12px)">
+        <div class="flex items-center justify-around h-16">
+            <a href="index.php" class="flex flex-col items-center gap-1 text-gamityPurple transition-colors relative">
+                <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-gamityPurple shadow-[0_0_6px_rgba(139,92,246,0.8)]"></div>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                <span class="text-[10px] font-bold">Inicio</span>
+            </a>
+            <a href="chat.php" class="flex flex-col items-center gap-1 text-gray-400 hover:text-gamityPurple transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                <span class="text-[10px] font-medium">Chats</span>
+            </a>
+            <a href="social.php" class="flex flex-col items-center gap-1 text-gray-400 hover:text-gamityPurple transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                <span class="text-[10px] font-medium">Social</span>
+            </a>
+            <a href="profile.php" class="flex flex-col items-center gap-1 text-gray-400 hover:text-gamityPurple transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                <span class="text-[10px] font-medium">Perfil</span>
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        const currentUserId = <?php echo $_SESSION['user_id'] ?? 'null'; ?>;
+        window.currentUserId = currentUserId;
+        window.apiBaseUrl = 'http://localhost:8082/api/v1';
+    </script>
+    <script src="js/index.js?v=<?php echo filemtime('js/index.js'); ?>"></script>
+    <script src="js/app.js?v=<?php echo filemtime('js/app.js'); ?>"></script>
         
 </body>
 </html>
