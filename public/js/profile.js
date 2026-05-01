@@ -124,3 +124,160 @@ function addGameRow(selectedGame = "", selectedRank = "") {
     `;
     container.appendChild(row);
 }
+// ===== INIT =====
+document.addEventListener("DOMContentLoaded", async () => {
+
+
+
+    // --- Add Game Button ---
+    const addGameBtn = document.getElementById("addGameBtn");
+    if (addGameBtn) {
+        addGameBtn.addEventListener("click", () => addGameRow());
+    }
+
+    // --- Avatar Upload Eliminado a favor de Modal ---
+
+    // --- Profile Form ---
+    const profileForm = document.getElementById("profileForm");
+    if (!profileForm) return;
+
+    const saveBtn = document.getElementById("saveBtn");
+    const saveResult = document.getElementById("saveResult");
+
+    // Load profile data
+    try {
+        if (typeof SESSION_USER_ID === 'undefined' || SESSION_USER_ID === null) return;
+        
+        const gc = document.getElementById("gamesContainer");
+        if (gc) gc.innerHTML = `<div class="flex-1 flex justify-center items-center py-6"><svg class="animate-spin h-8 w-8 text-gamityPurple" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg></div>`;
+        
+        const res = await fetch(`http://localhost:8082/api/v1/users/${SESSION_USER_ID}/profile`, {
+            headers: { 'X-User-Id': SESSION_USER_ID }
+        });
+        
+        if (res.status === 401 || res.status === 403) {
+            window.location.href = 'auth.php';
+            return;
+        }
+        
+        const data = await res.json();
+
+        if (data.success && data.profile) {
+            const p = data.profile;
+
+            const emailEl = document.getElementById("profileEmailDisplay");
+            if (emailEl) emailEl.textContent = p.email || "Sin correo";
+
+            const descEl = document.getElementById("inputDesc");
+            if (descEl) descEl.value = p.bio || "";
+
+            let games = [], ranks = [];
+            try { games = JSON.parse(p.main_game); } catch (e) { games = p.main_game ? [p.main_game] : []; }
+            try { ranks = JSON.parse(p.game_rank); } catch (e) { ranks = p.game_rank ? [p.game_rank] : []; }
+
+            const gc = document.getElementById("gamesContainer");
+            if (gc) {
+                gc.innerHTML = "";
+                if (games.length === 0) {
+                    addGameRow("", "");
+                } else {
+                    games.forEach((g, i) => addGameRow(g, ranks[i] || ""));
+                }
+            }
+
+            const attEl = document.getElementById("inputAttitude");
+            if (attEl) attEl.value = p.attitude || "";
+
+            const avatarUrl = p.avatar || "img/default.png";
+            const profileAvatar = document.getElementById("profileAvatar");
+            if (profileAvatar) profileAvatar.src = avatarUrl;
+
+            const headerAvatar = document.getElementById("headerAvatar");
+            if (headerAvatar) { headerAvatar.src = avatarUrl; headerAvatar.classList.remove("hidden"); }
+            const headerInitials = document.getElementById("headerInitials");
+            if (headerInitials) headerInitials.classList.add("hidden");
+        }
+    } catch (e) {
+        console.error("Error cargando perfil:", e);
+    }
+
+    // Save handler (TAREA 3: Guardado Integral en Java)
+    profileForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (saveBtn.disabled) return;
+        if (typeof SESSION_USER_ID === 'undefined' || SESSION_USER_ID === null) {
+            alert('Sesión no encontrada. Por favor, recarga la página.');
+            return;
+        }
+
+        const formData = new FormData(profileForm);
+        const jsonData = {};
+        
+        // Recoger formulario base
+        for (const [key, value] of formData.entries()) {
+            if (key.endsWith("[]")) {
+                const base = key.slice(0, -2);
+                if (!jsonData[base]) jsonData[base] = [];
+                jsonData[base].push(value);
+            } else {
+                jsonData[key] = value;
+            }
+        }
+
+        // Parsear arrays a strings tal como espera Java/BD
+        const mainGameStr = jsonData['main_game'] ? JSON.stringify(jsonData['main_game']) : "[]";
+        const gameRankStr = jsonData['game_rank'] ? JSON.stringify(jsonData['game_rank']) : "[]";
+
+        // Construir el FullProfileUpdateDTO exacto
+        const updatePayload = {
+            avatar: selectedAvatarSrc || document.getElementById('profileAvatar').getAttribute('src'),
+            bio: jsonData['bio'] || "",
+            main_game: mainGameStr,
+            game_rank: gameRankStr,
+            attitude: jsonData['attitude'] || ""
+        };
+
+        const originalText = "Guardar Cambios";
+        saveBtn.innerText = "Guardando...";
+        saveBtn.disabled = true;
+        saveBtn.style.opacity = "0.7";
+
+        try {
+            // Petición POST hacia Java
+            const res = await fetch(`http://localhost:8082/api/v1/users/${SESSION_USER_ID}/profile`, {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "X-User-Id": SESSION_USER_ID
+                },
+                body: JSON.stringify(updatePayload)
+            });
+            
+            if (res.status === 401 || res.status === 403) {
+                window.location.href = 'auth.php';
+                return;
+            }
+            const result = await res.json();
+
+            if (res.ok && result.success) {
+                saveResult.className = "text-emerald-400 font-medium flex items-center gap-1";
+                saveResult.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Guardado exitosamente!';
+                if (typeof showToast === "function") showToast("Perfil completo actualizado vía Spring Boot", "success");
+            } else {
+                saveResult.className = "text-red-400 font-medium flex items-center";
+                saveResult.textContent = result.error || "Error al guardar.";
+                if (typeof showToast === "function") showToast(result.error || "Error al guardar.", "error");
+            }
+        } catch (err) {
+            console.error(err);
+            saveResult.className = "text-red-400 font-medium flex items-center";
+            saveResult.textContent = "Error de conexión con el Backend Java.";
+            if (typeof showToast === "function") showToast("Error de conexión con Spring Boot.", "error");
+        } finally {
+            saveBtn.innerText = originalText;
+            saveBtn.disabled = false;
+            saveBtn.style.opacity = "1";
+            setTimeout(() => { saveResult.innerHTML = ""; }, 3000);
+        }
+    });
+});
