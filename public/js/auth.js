@@ -1,6 +1,7 @@
 /**
  * auth.js
- * Lógica de interfaz: Animación de paneles y visibilidad de contraseña.
+ * Lógica de autenticación: login, registro,
+ * animación de paneles, visibilidad de contraseña.
  */
 
 const showRegisterBtn = document.getElementById('showRegisterBtn');
@@ -47,6 +48,73 @@ showLoginBtn.addEventListener('click', () => {
     
     overlayRightContent.classList.remove('opacity-0', 'pointer-events-none');
     overlayRightContent.classList.add('opacity-100');
+});
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    formData.append('action', 'login');
+    try {
+        const res = await fetch('api/auth.php', { method: 'POST', body: formData });
+        const data = await res.json();
+        if(data.success) {
+            window.location.href = 'index.php';
+        } else {
+            const msg = document.getElementById('loginMessage');
+            msg.textContent = data.error || 'Error de inicio de sesión';
+            msg.classList.remove('hidden');
+        }
+    } catch (err) {
+        console.error(err);
+    }
+});
+
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    //Fetch transformando el form a un JSON limpio asimilable por el DTO de Java
+    const formData = new FormData(e.target);
+    const jsonPayload = Object.fromEntries(formData.entries());
+
+    const btn = e.target.querySelector('button[type="submit"]');
+    const originalBtnText = btn.innerText;
+    btn.innerText = "Registrando...";
+    btn.disabled = true;
+
+    try {
+        const res = await fetch('http://localhost:8082/api/v1/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(jsonPayload)
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+            // Hay éxito?: Nos lleva al panel de Login
+            showLoginBtn.click();
+            const msg = document.getElementById('loginMessage');
+            msg.textContent = 'Registro exitoso. Ahora inicia sesión.';
+            msg.classList.remove('hidden', 'text-red-500');
+            msg.classList.add('text-green-500');
+            document.getElementById('registerForm').reset();
+            
+            // Ocultar mensajes de error previos en register si existian
+            document.getElementById('registerMessage').classList.add('hidden');
+        } else {
+            // Componente de error manejado con estética
+            const msg = document.getElementById('registerMessage');
+            msg.textContent = data.error || 'Error al registrar usuario';
+            msg.classList.remove('hidden');
+        }
+    } catch (err) {
+        console.error("Fallo de conexión Core Java:", err);
+        const msg = document.getElementById('registerMessage');
+        msg.textContent = 'Error de conexión con el servidor (Spring Boot).';
+        msg.classList.remove('hidden');
+    } finally {
+        btn.innerText = originalBtnText;
+        btn.disabled = false;
+    }
 });
 
 // Función para la visibilidad de la contraseña con cambio de icono y efecto brillo
