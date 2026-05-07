@@ -123,4 +123,13 @@ endif; ?>
                 <span class="text-[10px] font-medium">Perfil</span>
             </a>
         </div>
-    </nav>s
+    </nav>
+
+     <script>
+        window.currentUserId = <?php echo $_SESSION['user_id']; ?>;
+        window.apiBaseUrl = 'http://localhost:8082/api/v1';
+    </script>
+    <script src="js/social.js?v=<?php echo filemtime('js/social.js'); ?>"></script>
+    <script src="js/app.js?v=<?php echo filemtime('js/app.js'); ?>"></script>
+</body>
+</html>
