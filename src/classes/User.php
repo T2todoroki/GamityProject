@@ -57,9 +57,8 @@ class User
             return "Error en el registro: " . $e->getMessage();
         }
     }
-}
 
-/**
+    /**
      * Inicia sesión verificando credenciales
      * 
      * @param string $email
