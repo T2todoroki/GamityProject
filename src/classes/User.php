@@ -1,5 +1,5 @@
 <?php
-// src/classes/User.php
+// src/classes/User.php funcional
 require_once __DIR__ . '/Database.php';
 
 class User
