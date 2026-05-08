@@ -223,7 +223,6 @@ if (is_dir($avatarDir)) {
             </div>
         </div>
     </div>
-    //script para pasar el user_id a JS y cargar el avatar al iniciar la página
     <script>
         const SESSION_USER_ID = <?php echo $_SESSION['user_id']; ?>;
     </script>
