@@ -1,9 +1,3 @@
-/* ============================================
-   GAMITY - profile.css
-   Estilos exclusivos del perfil: inputs neón,
-   cards, botón guardar, light mode overrides.
-   ============================================ */
-
 /* === Profile Card === */
 .profile-card {
     transition: border-color 0.3s ease;
