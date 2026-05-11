@@ -23,4 +23,14 @@ public class AuthController {
             return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
         }
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody com.gamity.gamity_api.domain.dto.LoginDTO dto) {
+        try {
+            com.gamity.gamity_api.domain.dto.LoginResponseDTO response = userService.loginUser(dto);
+            return ResponseEntity.ok().body(Map.of("success", true, "user", response));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(401).body(Map.of("success", false, "error", e.getMessage()));
+        }
+    }
 }

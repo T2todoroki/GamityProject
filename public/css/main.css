@@ -1,26 +1,37 @@
 /* ============================================
-   ESTILOS DE AUTENTICACIÓN (LOGIN/REGISTER)
+   ESTILOS GLOBALES (THEME VARS)
    ============================================ */
 
-/* Variables de color usadas en los formularios y fondos */
+/* Variables de color usadas en los formularios y fondos (Modo Oscuro - Por defecto) */
 :root {
     --bg-main: #0D0F16;        /* Color de fondo */
-    --bg-input: #222637;       /* Fondo de los campos de texto */
+    --bg-input: #222637;       /* Fondo de los campos de texto y areas secundarias */
     --border-color: #2D324F;   /* Color de los bordes de los inputs */
     --accent-primary: #9B5DE5; /* Color morado de Gamity */
     --text-primary: #E0E6ED;   /* Color del texto principal */
+    --bg-card: #151823;        /* Fondo para las tarjetas (surface) */
 }
 
-/* Estilos base del body del de Login */
+/* Variables de color para el Modo Claro */
+html.light {
+    --bg-main: #f1f5f9;
+    --bg-input: #f8fafc;
+    --border-color: #e2e8f0;
+    --text-primary: #111827;
+    --bg-card: #ffffff;
+}
+
+/* Estilos base del body */
 body {
     background-color: var(--bg-main);
     color: var(--text-primary);
     font-family: 'Inter', sans-serif;
     margin: 0;
     overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Scrollbar personalizado para que encaje con el diseño oscuro */
+/* Scrollbar personalizado para que encaje con el diseño */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -36,7 +47,7 @@ body {
     background: var(--border-color);
 }
 
-/* === Neon Borders (Dark Mode) === */
+/* === Neon Borders (Theme Adaptive) === */
 .neon-border-r {
     border-right: 1px solid var(--border-color);
     box-shadow: 1px 0 15px rgba(155, 93, 229, 0.05);
@@ -46,41 +57,39 @@ body {
     box-shadow: 0 1px 15px rgba(155, 93, 229, 0.05);
 }
 
-/* === Light Mode Global Overrides === */
-html.light body { background-color: #f1f5f9; color: #111827; }
-html.light .bg-surface { background-color: #ffffff; border-color: #e2e8f0; }
-html.light .bg-surfaceLight { background-color: #f8fafc; border-color: #e2e8f0; }
-html.light .text-white { color: #111827; }
-html.light .text-gray-400 { color: #6b7280; }
-html.light .border-white\/5 { border-color: #e2e8f0; }
-html.light ::-webkit-scrollbar-thumb { background: #cbd5e1; }
-html.light aside { background-color: #ffffff !important; }
-
-/* === Light Mode - Header Glass === */
-html.light .header-glass {
-    background-color: rgba(255, 255, 255, 0.8) !important;
-    backdrop-filter: blur(12px) !important;
-}
-
-/* === Light Mode - Neon Borders Override === */
-html.light .neon-border-r {
-    border-right: 1px solid #e2e8f0 !important;
-    box-shadow: none !important;
-}
+html.light .neon-border-r,
 html.light .neon-border-b {
-    border-bottom: 1px solid #e2e8f0 !important;
-    box-shadow: none !important;
+    box-shadow: none; /* Quitamos el brillo neón en modo claro para que sea más limpio */
 }
 
-/* === Light Mode - Inputs === */
-html.light .input-gamity,
-html.light #searchInput {
-    background-color: #f8fafc !important;
-    border-color: #e2e8f0 !important;
-    color: #1e293b !important;
+/* === Light Mode Fallbacks para clases directas de Tailwind === */
+/* Idealmente esto se haría cambiando el HTML a variables, pero esto mantiene compatibilidad */
+html.light .text-white { color: #111827 !important; }
+html.light .text-gray-200 { color: #374151 !important; }
+html.light .text-gray-300 { color: #4b5563 !important; }
+html.light .text-gray-400 { color: #6b7280 !important; }
+html.light .text-gray-500 { color: #9ca3af !important; }
+html.light .border-white\/5 { border-color: #e2e8f0 !important; }
+html.light .border-white\/10 { border-color: #cbd5e1 !important; }
+html.light ::-webkit-scrollbar-thumb { background: #cbd5e1; }
+
+/* === Header Glass === */
+.header-glass {
+    background-color: rgba(13, 15, 22, 0.85); /* fallback si no carga tailwind rgba */
+    backdrop-filter: blur(12px);
 }
-html.light #searchInput::placeholder, html.light .input-gamity::placeholder {
-    color: #94a3b8 !important;
+html.light .header-glass {
+    background-color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* === Inputs Gamity (Global) === */
+.input-gamity, #searchInput {
+    background-color: var(--bg-input);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+.input-gamity::placeholder, #searchInput::placeholder {
+    color: #6b7280;
 }
 
 /* === Input Gamity Focus (global) === */

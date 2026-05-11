@@ -85,4 +85,22 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public com.gamity.gamity_api.domain.dto.LoginResponseDTO loginUser(com.gamity.gamity_api.domain.dto.LoginDTO dto) {
+        User user = userRepository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new RuntimeException("Credenciales incorrectas"));
+
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Credenciales incorrectas");
+        }
+
+        return com.gamity.gamity_api.domain.dto.LoginResponseDTO.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .role(user.getRole() != null ? user.getRole() : "user")
+                .avatar(user.getAvatar() != null ? user.getAvatar() : "img/default.png")
+                .build();
+    }
 }

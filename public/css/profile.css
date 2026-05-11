@@ -8,7 +8,8 @@
     display: block;
     font-size: 0.75rem;
     font-weight: 600;
-    color: #9ca3af;
+    color: var(--text-primary);
+    opacity: 0.7;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     margin-bottom: 0.5rem;
@@ -17,8 +18,8 @@
 
 /* === Game Row Cards === */
 .profile-game-row {
-    background-color: rgba(31, 41, 55, 0.5);
-    border-color: 1px solid rgba(139, 92, 246, 0.15);
+    background-color: var(--bg-input);
+    border: 1px solid rgba(139, 92, 246, 0.15);
     border-radius: 0.75rem;
     padding: 1rem;
     position: relative;
@@ -38,36 +39,8 @@
     box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5), 0 0 15px rgba(16, 185, 129, 0.3);
 }
 
-/* LIGHT MODE OVERRIDES */
-html.light .profile-card {
-    background-color: #ffffff !important;
-    border-color: #e2e8f0 !important;
-}
-
-
-html.light .profile-label {
-    color: #64748b !important;
-}
-
-html.light .profile-game-row {
-    background-color: #f8fafc !important;
-    border-color: #e2e8f0 !important;
-}
-
-html.light .profile-game-row:hover {
-    border-color: #cbd5e1 !important;
-}
-
-html.light .profile-save-btn {
-    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2) !important;
-}
-
-html.light .profile-save-btn:hover {
-    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3) !important;
-}
-
 /* Light mode bottom nav */
 html.light nav.fixed {
     background-color: rgba(255, 255, 255, 0.9) !important;
-    border-color: #e2e8f0 !important;
+    border-color: var(--border-color) !important;
 }

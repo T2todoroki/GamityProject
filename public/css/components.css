@@ -186,28 +186,6 @@ html.light .contact-item:hover {
     background-color: rgba(0, 0, 0, 0.04);
 }
 
-/* === Chat Light Mode Extras === */
-html.light .bg-gamityDark {
-    background-color: #f1f5f9;
-}
-
-html.light .bg-gamityDark\/50 {
-    background-color: rgba(241, 245, 249, 0.5);
-}
-
-html.light input,
-html.light textarea {
-    color: #111827 !important;
-}
-
-html.light .text-gray-200 {
-    color: #374151;
-}
-
-html.light .text-gray-300 {
-    color: #374151;
-}
-
 /* === Admin Stat Cards === */
 .stat-card {
     transition: transform 0.2s, border-color 0.2s;
@@ -225,18 +203,4 @@ html.light .text-gray-300 {
 
 .user-row:hover {
     background-color: var(--bg-input);
-}
-
-/* === Input Gamity Light Mode === */
-html.light .input-gamity {
-    background-color: #f1f5f9 !important;
-    border-color: #e2e8f0 !important;
-    color: #1e293b !important;
-}
-html.light .input-gamity::placeholder {
-    color: #94a3b8 !important;
-}
-html.light .input-gamity:focus {
-    border-color: #8b5cf6 !important;
-    box-shadow: 0 0 10px rgba(139, 92, 246, 0.2) !important;
 }

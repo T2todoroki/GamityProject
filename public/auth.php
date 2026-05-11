@@ -18,30 +18,8 @@ if (isset($_SESSION['user_id'])) {
     <title>Gamity - Login & Regístrate</title>
     
     <!-- Usamos TailwindCSS a través de un enlace CDN externo. Esto me permite escribir clases de diseño (como 'flex' o 'text-white') directamente en el HTML en lugar de crear un archivo CSS gigante. -->
+    <script src="js/tailwind-config.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Aquí configuro mi propio tema de Tailwind. -->
-    <script>
-        // Le indico cuáles son los colores corporativos de Gamity. 
-        // Luego los uso en el body y los inputs.
-        tailwind.config = {
-            darkMode: 'class', // Habilito el modo oscuro
-            theme: {
-                extend: {
-                    colors: {
-                        gamityDark: '#0a0a0b', // Negro para el fondo
-                        gamityPurple: '#8b5cf6', // El morado claro
-                        gamityGreen: '#10b981', // El verde estilo neón
-                        surface: '#18181b' // Gris oscuro para los paneles y formularios
-                    },
-                    backgroundImage: {
-                        // Creo un degradado personalizado (mitad morado, mitad verde) es del banner lateral animado y en los botones.
-                        'neon-gradient': 'linear-gradient(135deg, #8b5cf6 0%, #10b981 100%)',
-                    }
-                }
-            }
-        }
-    </script>
     
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/components.css">
@@ -49,6 +27,12 @@ if (isset($_SESSION['user_id'])) {
 
 <!-- En el body uso Flexbox para centrar el cuadro de login en el medio de la pantalla ('min-h-screen') -->
 <body class="flex items-center justify-center min-h-screen relative">
+
+    <!-- Botón de Modo Claro/Oscuro -->
+    <button id="themeToggle" class="absolute top-6 right-6 p-3 text-gray-400 hover:text-gamityPurple transition-colors rounded-full bg-surface border border-white/5 shadow-lg z-50">
+        <svg id="themeIconDark" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+        <svg id="themeIconLight" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+    </button>
     
     <!-- Son círculos enormes de color fijados en las esquinas, a los que les aplico un difuminado extremo ('blur-[150px]') y poca opacidad para que parezca una iluminación ambiental detrás de mi menú. El 'pointer-events-none' es para que no molesten si el ratón pasa por encima. -->
     <div class="fixed top-[-10%] left-[-10%] w-96 h-96 bg-gamityPurple rounded-full blur-[150px] opacity-20 pointer-events-none"></div>
