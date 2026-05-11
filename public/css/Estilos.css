@@ -1,0 +1,102 @@
+/* Paleta: Azul Marino Profundo & Morado Neón Sutil */
+:root {
+    --bg-dark: #0f1218;
+    /* Azul casi negro */
+    --bg-medium: #161b22;
+    /* Azul marino para tarjetas */
+    --neon-purple: #9d50bb;
+    /* Morado amatista suave */
+    --neon-glow: rgba(157, 80, 187, 0.2);
+    --text-main: #e6edf3;
+    /* Blanco grisáceo (mejor para la vista) */
+    --border-dim: #30363d;
+}
+
+body {
+    /* Degradado muy suave y oscuro para no distraer */
+    background: radial-gradient(circle at center, #1a1f29 0%, var(--bg-dark) 100%);
+    background-attachment: fixed;
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* Tarjeta Profesional con borde morado sutil */
+.card-gamity {
+    background-color: var(--bg-medium);
+    border: 1px solid var(--neon-purple);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    margin-top: 60px;
+}
+
+.card-header-gamity {
+    background: linear-gradient(135deg, #6e48aa 0%, #9d50bb 100%);
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border: none;
+    padding: 20px !important;
+}
+
+/* Inputs de alta legibilidad */
+.form-control-gamity {
+    background-color: #0d1117 !important;
+    border: 1px solid var(--border-dim) !important;
+    color: white !important;
+    padding: 12px;
+    border-radius: 6px;
+}
+
+.form-control-gamity:focus {
+    border-color: var(--neon-purple) !important;
+    box-shadow: 0 0 0 3px var(--neon-glow);
+    outline: none;
+}
+
+/* Botón Elegante */
+.btn-gamity {
+    background-color: var(--neon-purple);
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.btn-gamity:hover {
+    filter: brightness(1.2);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(157, 80, 187, 0.4);
+}
+
+/* Intersecciones Ne�n (de perfil) */
+.neon-border-r {
+    border-right: 1px solid rgba(139, 92, 246, 0.2);
+    box-shadow: 1px 0 10px rgba(139, 92, 246, 0.1);
+}
+
+.neon-border-b {
+    border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+    box-shadow: 0 1px 10px rgba(139, 92, 246, 0.1);
+}
+
+html.light .header-glass {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(12px) !important;
+}
+
+html.light .neon-border-r {
+    border-right: 1px solid #e2e8f0 !important;
+    box-shadow: none !important;
+}
+
+html.light .neon-border-b {
+    border-bottom: 1px solid #e2e8f0 !important;
+    box-shadow: none !important;
+}
