@@ -24,7 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Preparamos los datos para enviarlos a la API de Java (Spring Boot)
-        $javaUrl = 'http://localhost:8082/api/v1/auth/login';
+        // Usamos 'gamity-api' en lugar de 'localhost' porque ambos están en Docker Compose
+        $javaUrl = 'http://gamity-api:8082/api/v1/auth/login';
         $postData = json_encode([
             'email' => $email,
             'password' => $password
