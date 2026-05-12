@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // ── API base URL y userId inyectados desde PHP (social.php) ──
-    const API_BASE = window.apiBaseUrl || 'http://localhost:8082/api/v1';
+    const API_BASE = window.GAMITY_API_URL || window.apiBaseUrl;
     const USER_ID  = window.currentUserId;
 
     const tabReq = document.getElementById('tabRequests');

@@ -147,7 +147,7 @@ async function submitReport(e) {
     }
 
     try {
-        const API_BASE = window.apiBaseUrl || 'http://localhost:8082/api/v1';
+        const API_BASE = window.GAMITY_API_URL || window.apiBaseUrl;
         const reporterId = window.currentUserId || (typeof currentUserId !== 'undefined' ? currentUserId : null);
         const res = await fetch(`${API_BASE}/reports`, {
             method: 'POST',
@@ -232,13 +232,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ===== NOTIFICACIONES SOCIALES GLOBALES =====
+    let pollingInterval = null;
+    
     async function checkPendingRequests() {
-        const API_BASE = window.apiBaseUrl || 'http://localhost:8082/api/v1';
+        const API_BASE = window.GAMITY_API_URL || window.apiBaseUrl;
         const userId = window.currentUserId || (typeof currentUserId !== 'undefined' ? currentUserId : null);
         if (!userId) return;
 
         try {
             const res = await fetch(`${API_BASE}/friendships/pending/${userId}`);
+            
+            // Si la sesión ha expirado o el usuario no está autorizado, detenemos el Polling
+            if (res.status === 401 || res.status === 403) {
+                if (pollingInterval) clearInterval(pollingInterval);
+                return;
+            }
+
             const data = await res.json();
 
             const socialLinks = document.querySelectorAll('a[href="social.php"]');
@@ -261,10 +270,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (badge) badge.remove();
                 });
             }
-        } catch (e) { }
+        } catch (e) {
+            // Si hay error de red también podríamos detener el polling si falla muchas veces, pero por ahora lo dejamos intentar.
+        }
     }
 
     // Check periodically every 15s and immediately on load
-    setInterval(checkPendingRequests, 15000);
+    pollingInterval = setInterval(checkPendingRequests, 15000);
     checkPendingRequests();
 });

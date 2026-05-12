@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     //API base URL inyectada desde PHP
-    const API_BASE = window.apiBaseUrl || 'http://localhost:8082/api/v1';
+    const API_BASE = window.GAMITY_API_URL || window.apiBaseUrl;
     const currentUserId = window.currentUserId;
     const prepopulatedUserId = window.prepopulatedUserId;
     

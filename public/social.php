@@ -11,6 +11,7 @@ if (!isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gamity - Social</title>
+    <script src="js/config.js"></script>
     <script src="js/tailwind-config.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/main.css">
@@ -127,7 +128,6 @@ endif; ?>
 
      <script>
         window.currentUserId = <?php echo $_SESSION['user_id']; ?>;
-        window.apiBaseUrl = 'http://localhost:8082/api/v1';
     </script>
     <script src="js/social.js?v=<?php echo filemtime('js/social.js'); ?>"></script>
     <script src="js/app.js?v=<?php echo filemtime('js/app.js'); ?>"></script>

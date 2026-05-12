@@ -18,6 +18,7 @@ if (isset($_SESSION['user_id'])) {
     <title>Gamity - Login & Regístrate</title>
     
     <!-- Usamos TailwindCSS a través de un enlace CDN externo. Esto me permite escribir clases de diseño (como 'flex' o 'text-white') directamente en el HTML en lugar de crear un archivo CSS gigante. -->
+    <script src="js/config.js"></script>
     <script src="js/tailwind-config.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     

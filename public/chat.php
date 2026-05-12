@@ -11,7 +11,8 @@ $selectedUserId = $_GET['user_id'] ?? null;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gamity - Mensajes</title>
+    <title>Gamity - Chats</title>
+    <script src="js/config.js"></script>
     <script src="js/tailwind-config.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/main.css">
@@ -123,14 +124,9 @@ endif; ?>
                         <svg class="w-5 h-5 transform rotate-90" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
                     </button>
                 </form>
-            </div>
-        </section>
-    </main>
-
-    <script>
+            <script>
         window.currentUserId = <?php echo $_SESSION['user_id']; ?>;
         window.prepopulatedUserId = <?php echo $selectedUserId ? $selectedUserId : 'null'; ?>;
-        window.apiBaseUrl = 'http://localhost:8082/api/v1';
     </script>
     <!-- Bottom Navigation Bar (Solo Móvil) -->
     <nav class="fixed bottom-0 left-0 w-full z-50 bg-[#0a0a0b]/90 backdrop-blur-md border-t border-purple-500/20 md:hidden" style="padding-bottom: env(safe-area-inset-bottom, 12px)">

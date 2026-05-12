@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Fetch del perfil global para mostrar el avatar en el header
     try {
         if (typeof currentUserId !== 'undefined' && currentUserId !== null) {
-            const globalRes = await fetch(`http://localhost:8082/api/v1/users/${currentUserId}/profile`, {
+            const globalRes = await fetch(`${window.GAMITY_API_URL}/users/${currentUserId}/profile`, {
                 headers: { 'X-User-Id': currentUserId }
             });
             const globalData = await globalRes.json();
@@ -36,7 +36,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         
         try {
-            const response = await fetch(`http://localhost:8082/api/matches?${params.toString()}`, {
+            // La ruta de matches no tenía /v1 en el JS original, adaptamos esto usando la constante si /api/matches pertenece al mismo server
+            const API_BASE = window.GAMITY_API_URL ? window.GAMITY_API_URL.replace('/v1', '') : 'http://localhost:8082/api';
+            const response = await fetch(`${API_BASE}/matches?${params.toString()}`, {
                 headers: { 'X-User-Id': currentUserId }
             });
             if (!response.ok) throw new Error("Error en la conexión a Java");
@@ -120,25 +122,45 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             // Determinar URL de avatar (fallback a UI Avatars si no hay avatar personalizado)
             const avatarUrl = user.avatar ? user.avatar : `https://ui-avatars.com/api/?name=${encodeURI(user.username)}&background=18181b&color=fff`;
-            const attitudeHTML = user.attitude ? `<span class="text-xs text-red-500 font-medium ml-2">${user.attitude}</span>` : '';
+            const attitudeHTML = user.attitude ? `<span class="text-xs text-red-500 font-medium ml-2">${escapeHTML(user.attitude)}</span>` : '';
 
-           // Escapar comillas simples para evitar romper los atributos onclick
-            const safeMainGame = (user.main_game || '').replace(/'/g, '\\&#39;');
-            const safeGameRank = (user.game_rank || '').replace(/'/g, '\\&#39;');
-            const safeBio = (user.bio || '').replace(/'/g, '\\&#39;');
+           // Escapar todos los datos para evitar vulnerabilidades XSS y roturas del DOM
+           // Si un usuario pone comillas dobles, saltos de línea o comillas simples en su biografía, esto lo neutraliza.
+            const escapeJSString = (str) => {
+                if (!str) return '';
+                return str.toString()
+                    .replace(/\\/g, '\\\\') // Escapar backslash
+                    .replace(/"/g, '&quot;') // Prevenir rotura del atributo HTML (onclick="...")
+                    .replace(/'/g, "\\'")    // Prevenir rotura del string de Javascript ('...')
+                    .replace(/\n/g, '\\n')   // Prevenir rotura de línea en JS
+                    .replace(/\r/g, '\\r');
+            };
+
+            const escapeHTML = (str) => {
+                if (!str) return '';
+                return str.toString().replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            };
+
+            const safeUsername = escapeJSString(user.username);
+            const safeBio = escapeJSString(user.bio);
+            const safeMainGame = escapeJSString(user.main_game);
+            const safeGameRank = escapeJSString(user.game_rank);
+            const safeAttitude = escapeJSString(user.attitude);
+            const safeAvatar = escapeJSString(user.avatar);
+            const safeStatus = escapeJSString(user.status);
 
             return `
                 <div class="bg-surface rounded-2xl p-6 border border-white/5 card-hover relative flex flex-col group h-full">
                     
                     <!-- Report Button -->
-                    <button onclick="event.stopPropagation(); openReportModal(${user.id}, '${user.username}')"
+                    <button onclick="event.stopPropagation(); openReportModal(${user.id}, '${safeUsername}')"
                             class="absolute top-3 right-3 p-1.5 rounded-lg text-gray-500 hover:text-red-400 hover:bg-red-500/10 transition-colors z-10 opacity-0 group-hover:opacity-100"
                             title="Reportar usuario">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
                     </button>
 
                     <!-- Header de tarjeta (clickable) -->
-                    <div class="flex items-start gap-4 mb-4 cursor-pointer" onclick="openPlayerModal(${user.id}, '${user.username}', '${safeBio}', '${safeMainGame}', '${safeGameRank}', '${user.attitude || ''}', '${user.avatar || ''}', '${user.status}')">
+                    <div class="flex items-start gap-4 mb-4 cursor-pointer" onclick="openPlayerModal(${user.id}, '${safeUsername}', '${safeBio}', '${safeMainGame}', '${safeGameRank}', '${safeAttitude}', '${safeAvatar}', '${safeStatus}')">
                         <div class="relative">
                             <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-gamityPurple/50">
                                 <img src="${avatarUrl}" alt="${user.username}" class="w-full h-full object-cover">
@@ -146,7 +168,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <div class="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-surface ${statusClass}"></div>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <h3 class="text-white font-bold text-lg truncate pr-4">${user.username}</h3>
+                            <h3 class="text-white font-bold text-lg truncate pr-4">${escapeHTML(user.username)}</h3>
                             <div class="flex items-center text-xs mt-1">
                                 <span class="${isOnline ? 'text-gamityGreen' : 'text-gray-500'} font-medium">${statusText}</span>
                                 ${attitudeHTML}
@@ -161,7 +183,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     
                     <!-- Description -->
                     <p class="text-gray-400 text-sm mb-6 flex-1 line-clamp-3 leading-relaxed">
-                        ${user.bio || 'Jugador dispuesto a formar equipo y pasarlo bien. Sin descripción.'}
+                        ${escapeHTML(user.bio) || 'Jugador dispuesto a formar equipo y pasarlo bien. Sin descripción.'}
                     </p>
                     
                     <!-- Action Button -->
@@ -203,7 +225,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Enviar solicitud de amistad (via Spring Boot)
 window.sendRequest = async (receiverId, btnElement) => {
-    const API_BASE = window.apiBaseUrl || 'http://localhost:8082/api/v1';
+    const API_BASE = window.GAMITY_API_URL || window.apiBaseUrl;
     const senderId = window.currentUserId || currentUserId;
 
     try {

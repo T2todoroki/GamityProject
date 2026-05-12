@@ -11,6 +11,8 @@ if (!isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gamity - Encuentra tu equipo</title>
+    <!-- Configuración Global (debe ir antes que otros scripts) -->
+    <script src="js/config.js"></script>
     <script src="js/tailwind-config.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/main.css">
@@ -242,8 +244,7 @@ endif; ?>
 
     <script>
         const currentUserId = <?php echo $_SESSION['user_id'] ?? 'null'; ?>;
-        window.currentUserId = currentUserId;
-        window.apiBaseUrl = 'http://localhost:8082/api/v1';
+        window.currentUserId = <?php echo $_SESSION['user_id']; ?>;
     </script>
     <script src="js/index.js?v=<?php echo filemtime('js/index.js'); ?>"></script>
     <script src="js/app.js?v=<?php echo filemtime('js/app.js'); ?>"></script>

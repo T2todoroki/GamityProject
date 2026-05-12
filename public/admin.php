@@ -20,6 +20,7 @@ $initials = strtoupper(substr($username, 0, 2));
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gamity - Panel de Administración</title>
+    <script src="js/config.js"></script>
     <script src="js/tailwind-config.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/main.css">
@@ -383,7 +384,7 @@ $initials = strtoupper(substr($username, 0, 2));
         document.addEventListener('DOMContentLoaded', () => { loadDashboard(); });
 
         function loadDashboard() {
-            fetch('http://localhost:8082/api/v1/admin/dashboard', {
+            fetch(`${window.GAMITY_API_URL}/admin/dashboard`, {
                 headers: { 'X-User-Id': '<?php echo $_SESSION["user_id"]; ?>' }
             })
                 .then(res => res.json())
@@ -472,7 +473,7 @@ $initials = strtoupper(substr($username, 0, 2));
                 status: document.getElementById('editStatus').value
             };
 
-            fetch(`http://localhost:8082/api/v1/admin/users/${userId}`, {
+            fetch(`${window.GAMITY_API_URL}/admin/users/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -496,7 +497,7 @@ $initials = strtoupper(substr($username, 0, 2));
         function deleteUser(userId, username) {
             if (!confirm(`¿Eliminar a "${username}"? Esta acción no se puede deshacer.`)) return;
 
-            fetch(`http://localhost:8082/api/v1/admin/users/${userId}`, {
+            fetch(`${window.GAMITY_API_URL}/admin/users/${userId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -559,7 +560,7 @@ $initials = strtoupper(substr($username, 0, 2));
 
         function updateReportStatus(reportId, newStatus) {
             const label = newStatus === 'reviewed' ? 'revisado' : 'descartado';
-            fetch(`http://localhost:8082/api/v1/admin/reports/${reportId}`, {
+            fetch(`${window.GAMITY_API_URL}/admin/reports/${reportId}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
