@@ -115,17 +115,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     badgesHTML = `<div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold badge-default"><span class="mr-1.5">🎲</span>Cualquier Juego - Unranked</div>`;
                 }
             }
-            // Determinar clase y texto de estado
-            const isOnline = user.status === 'online';
-            const statusClass = isOnline ? 'status-online' : 'status-offline';
-            const statusText = isOnline ? 'Online' : 'Offline';
-            
-            // Determinar URL de avatar (fallback a UI Avatars si no hay avatar personalizado)
-            const avatarUrl = user.avatar ? user.avatar : `https://ui-avatars.com/api/?name=${encodeURI(user.username)}&background=18181b&color=fff`;
-            const attitudeHTML = user.attitude ? `<span class="text-xs text-red-500 font-medium ml-2">${escapeHTML(user.attitude)}</span>` : '';
-
-           // Escapar todos los datos para evitar vulnerabilidades XSS y roturas del DOM
-           // Si un usuario pone comillas dobles, saltos de línea o comillas simples en su biografía, esto lo neutraliza.
+            // Escapar todos los datos para evitar vulnerabilidades XSS y roturas del DOM
+            // Si un usuario pone comillas dobles, saltos de línea o comillas simples en su biografía, esto lo neutraliza.
             const escapeJSString = (str) => {
                 if (!str) return '';
                 return str.toString()
@@ -140,6 +131,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (!str) return '';
                 return str.toString().replace(/</g, '&lt;').replace(/>/g, '&gt;');
             };
+
+            // Determinar clase y texto de estado
+            const isOnline = user.status === 'online';
+            const statusClass = isOnline ? 'status-online' : 'status-offline';
+            const statusText = isOnline ? 'Online' : 'Offline';
+            
+            // Determinar URL de avatar (fallback a UI Avatars si no hay avatar personalizado)
+            const avatarUrl = user.avatar ? user.avatar : `https://ui-avatars.com/api/?name=${encodeURI(user.username)}&background=18181b&color=fff`;
+            const attitudeHTML = user.attitude ? `<span class="text-xs text-red-500 font-medium ml-2">${escapeHTML(user.attitude)}</span>` : '';
+
+
 
             const safeUsername = escapeJSString(user.username);
             const safeBio = escapeJSString(user.bio);
