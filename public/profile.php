@@ -6,6 +6,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 $username = $_SESSION['username'];
 $initials = strtoupper(substr($username, 0, 2));
+$isNewUser = isset($_GET['welcome']) && $_GET['welcome'] === '1';
 
 // Obtener lista de avatares disponibles de la carpeta valorant
 $valorantAvatars = [];
@@ -95,6 +96,55 @@ if (is_dir($avatarDir)) {
             <div class="max-w-4xl mx-auto pb-24 md:pb-20 w-full">
 
                 <h1 class="text-3xl font-bold mb-8">Editar Perfil</h1>
+
+                <?php if ($isNewUser): ?>
+                <!-- Banner de Bienvenida (sólo aparece tras el registro) -->
+                <div id="welcomeBanner" class="relative mb-8 rounded-2xl overflow-hidden border border-gamityPurple/40 bg-gradient-to-r from-gamityPurple/20 via-purple-900/20 to-gamityPurple/10 p-5 flex items-start gap-4 animate-fade-in">
+                    <!-- Icono -->
+                    <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gamityPurple/20 border border-gamityPurple/30 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-gamityPurple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                        </svg>
+                    </div>
+                    <!-- Texto -->
+                    <div class="flex-1 min-w-0">
+                        <p class="text-white font-bold text-lg leading-tight">
+                            ¡Bienvenido a Gamity, <span class="text-gamityPurple"><?php echo htmlspecialchars($username); ?></span>! 🎉
+                        </p>
+                        <p class="text-gray-300 text-sm mt-1 leading-relaxed">
+                            Tu cuenta ha sido creada con éxito. Completa tu perfil &mdash; elige tu juego, rango y actitud &mdash; para aparecer en el matchmaking y que otros jugadores puedan encontrarte.
+                        </p>
+                    </div>
+                    <!-- Dismiss -->
+                    <button onclick="dismissWelcome()" class="flex-shrink-0 p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors" title="Cerrar">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                    <!-- Barra de progreso auto-dismiss -->
+                    <div class="absolute bottom-0 left-0 h-[3px] bg-gamityPurple/60 rounded-b-2xl" id="welcomeProgressBar" style="width:100%; transition: width 10s linear;"></div>
+                </div>
+                <script>
+                    // Limpiar ?welcome=1 de la URL sin recargar
+                    history.replaceState(null, '', 'profile.php');
+                    // Iniciar barra de progreso y auto-dismiss tras 10s
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            const bar = document.getElementById('welcomeProgressBar');
+                            if (bar) bar.style.width = '0%';
+                        });
+                    });
+                    setTimeout(() => dismissWelcome(), 10000);
+                    function dismissWelcome() {
+                        const banner = document.getElementById('welcomeBanner');
+                        if (!banner) return;
+                        banner.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                        banner.style.opacity = '0';
+                        banner.style.transform = 'translateY(-8px)';
+                        setTimeout(() => banner.remove(), 400);
+                    }
+                </script>
+                <?php endif; ?>
 
                 <!-- Profile Banner + Avatar Header -->
                 <div class="relative w-full rounded-2xl overflow-hidden mb-10">

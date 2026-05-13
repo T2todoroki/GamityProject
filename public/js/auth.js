@@ -15,18 +15,18 @@ const overlayLeftContent = document.getElementById('overlayLeftContent');
 showRegisterBtn.addEventListener('click', () => {
     overlayPanel.style.transform = 'translateX(-100%)';
     document.getElementById('formsContainer').style.transform = 'translateX(100%)';
-    
+
     // Ocultar login y quitar z-index
     loginFormContainer.classList.remove('opacity-100-custom', 'z-20');
     loginFormContainer.classList.add('opacity-0-custom', 'z-0');
-    
+
     // Mostrar registro y darle prioridad de z-index
     registerFormContainer.classList.remove('opacity-0-custom', 'z-0');
     registerFormContainer.classList.add('opacity-100-custom', 'z-20');
 
     overlayRightContent.classList.remove('opacity-100');
     overlayRightContent.classList.add('opacity-0', 'pointer-events-none');
-    
+
     overlayLeftContent.classList.remove('opacity-0', 'pointer-events-none');
     overlayLeftContent.classList.add('opacity-100');
 });
@@ -34,18 +34,18 @@ showRegisterBtn.addEventListener('click', () => {
 showLoginBtn.addEventListener('click', () => {
     overlayPanel.style.transform = 'translateX(0)';
     document.getElementById('formsContainer').style.transform = 'translateX(0)';
-    
+
     // Ocultar registro y quitar z-index
     registerFormContainer.classList.remove('opacity-100-custom', 'z-20');
     registerFormContainer.classList.add('opacity-0-custom', 'z-0');
-    
+
     // Mostrar login y darle prioridad de z-index
     loginFormContainer.classList.remove('opacity-0-custom', 'z-0');
     loginFormContainer.classList.add('opacity-100-custom', 'z-20');
 
     overlayLeftContent.classList.remove('opacity-100');
     overlayLeftContent.classList.add('opacity-0', 'pointer-events-none');
-    
+
     overlayRightContent.classList.remove('opacity-0', 'pointer-events-none');
     overlayRightContent.classList.add('opacity-100');
 });
@@ -57,7 +57,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     try {
         const res = await fetch('api/auth.php', { method: 'POST', body: formData });
         const data = await res.json();
-        if(data.success) {
+        if (data.success) {
             window.location.href = 'index.php';
         } else {
             const msg = document.getElementById('loginMessage');
@@ -71,7 +71,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    
+
     //Fetch transformando el form a un JSON limpio asimilable por el DTO de Java
     const formData = new FormData(e.target);
     const jsonPayload = Object.fromEntries(formData.entries());
@@ -90,15 +90,32 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
         const data = await res.json();
 
         if (res.ok && data.success) {
-            // Hay éxito?: Nos lleva al panel de Login
+
+            try {
+                const loginForm = new FormData();
+                loginForm.append('action', 'login');
+                loginForm.append('email', jsonPayload.email);
+                loginForm.append('password', jsonPayload.password);
+
+                const loginRes = await fetch('api/auth.php', { method: 'POST', body: loginForm });
+                const loginData = await loginRes.json();
+
+                if (loginData.success) {
+                    // Sesión creada en PHP → redirigir al perfil con banner de bienvenida
+                    window.location.href = 'profile.php?welcome=1';
+                    return;
+                }
+            } catch (loginErr) {
+                console.error('Auto-login fallido, redirigiendo al login manual:', loginErr);
+            }
+
+            // Fallback: si el auto-login falla, volvemos al panel de login normalmente
             showLoginBtn.click();
             const msg = document.getElementById('loginMessage');
             msg.textContent = 'Registro exitoso. Ahora inicia sesión.';
             msg.classList.remove('hidden', 'text-red-500');
             msg.classList.add('text-green-500');
             document.getElementById('registerForm').reset();
-            
-            // Ocultar mensajes de error previos en register si existian
             document.getElementById('registerMessage').classList.add('hidden');
         } else {
             // Componente de error manejado con estética
@@ -121,7 +138,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
 function togglePassword(inputId, button) {
     const input = document.getElementById(inputId);
     const icon = button.querySelector('.eye-icon');
-    
+
     if (input.type === 'password') {
         input.type = 'text';
         // Cambiar el icono visual a un "ojo tachado"
