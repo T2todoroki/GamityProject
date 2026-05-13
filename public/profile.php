@@ -276,6 +276,7 @@ if (is_dir($avatarDir)) {
     </div>
     <script>
         const SESSION_USER_ID = <?php echo $_SESSION['user_id']; ?>;
+        const SESSION_USER_HASH = '<?php echo $_SESSION['user_hash'] ?? ''; ?>';
     </script>
     <script src="js/app.js?v=<?php echo filemtime('js/app.js'); ?>"></script>
     <script src="js/profile.js?v=<?php echo filemtime('js/profile.js'); ?>"></script>

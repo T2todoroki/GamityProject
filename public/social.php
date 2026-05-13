@@ -128,6 +128,7 @@ endif; ?>
 
      <script>
         window.currentUserId = <?php echo $_SESSION['user_id']; ?>;
+        window.currentUserHash = '<?php echo $_SESSION['user_hash'] ?? ''; ?>';
     </script>
     <script src="js/social.js?v=<?php echo filemtime('js/social.js'); ?>"></script>
     <script src="js/app.js?v=<?php echo filemtime('js/app.js'); ?>"></script>

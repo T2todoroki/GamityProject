@@ -153,7 +153,8 @@ async function submitReport(e) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-User-Id': reporterId
+                'X-User-Id': reporterId,
+                'X-User-Hash': window.currentUserHash || window.SESSION_USER_HASH || ''
             },
             body: JSON.stringify({ reportedUserId: userId, reason: reason })
         });
@@ -240,7 +241,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!userId) return;
 
         try {
-            const res = await fetch(`${API_BASE}/friendships/pending/${userId}`);
+            const res = await fetch(`${API_BASE}/friendships/pending/${userId}`, {
+                headers: {
+                    'X-User-Id': userId,
+                    'X-User-Hash': window.currentUserHash || window.SESSION_USER_HASH || ''
+                }
+            });
             
             // Si la sesión ha expirado o el usuario no está autorizado, detenemos el Polling
             if (res.status === 401 || res.status === 403) {

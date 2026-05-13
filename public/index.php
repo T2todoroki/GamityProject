@@ -245,6 +245,7 @@ endif; ?>
     <script>
         const currentUserId = <?php echo $_SESSION['user_id'] ?? 'null'; ?>;
         window.currentUserId = <?php echo $_SESSION['user_id']; ?>;
+        window.currentUserHash = '<?php echo $_SESSION['user_hash'] ?? ''; ?>';
     </script>
     <script src="js/index.js?v=<?php echo filemtime('js/index.js'); ?>"></script>
     <script src="js/app.js?v=<?php echo filemtime('js/app.js'); ?>"></script>

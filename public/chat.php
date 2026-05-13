@@ -126,6 +126,7 @@ endif; ?>
                 </form>
             <script>
         window.currentUserId = <?php echo $_SESSION['user_id']; ?>;
+        window.currentUserHash = '<?php echo $_SESSION['user_hash'] ?? ''; ?>';
         window.prepopulatedUserId = <?php echo $selectedUserId ? $selectedUserId : 'null'; ?>;
     </script>
     <!-- Bottom Navigation Bar (Solo Móvil) -->

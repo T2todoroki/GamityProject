@@ -20,7 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadContacts() {
         try {
             const res = await fetch(`${API_BASE}/friendships/friends/${currentUserId}`, {
-                headers: { 'X-User-Id': currentUserId }
+                headers: { 
+                    'X-User-Id': currentUserId,
+                    'X-User-Hash': window.currentUserHash || ''
+                }
             });
             
             if (res.status === 401 || res.status === 403) {
@@ -127,7 +130,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const res = await fetch(`${API_BASE}/messages/history/${currentUserId}/${otherId}`, {
-                headers: { 'X-User-Id': currentUserId }
+                headers: { 
+                    'X-User-Id': currentUserId,
+                    'X-User-Hash': window.currentUserHash || ''
+                }
             });
             
             if (res.status === 401 || res.status === 403) {
@@ -218,7 +224,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST', 
                 headers: { 
                     'Content-Type': 'application/json',
-                    'X-User-Id': currentUserId
+                    'X-User-Id': currentUserId,
+                    'X-User-Hash': window.currentUserHash || ''
                 },
                 body: JSON.stringify(payload) 
             });

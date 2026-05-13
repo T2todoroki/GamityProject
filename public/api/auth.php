@@ -57,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['username'] = $userData['username'];
                 $_SESSION['user_role'] = $userData['role'] ?? 'user';
                 $_SESSION['avatar'] = $userData['avatar'] ?? 'img/default.png';
+                $_SESSION['user_hash'] = hash('sha256', $userData['id'] . 'GAMITY_TFG_SECRET_2024');
                 
                 echo json_encode(['success' => true]);
                 exit;
