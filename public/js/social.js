@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Función para escapar HTML y prevenir XSS
+    const escapeHTML = (str) => {
+        if (!str) return '';
+        return str.toString().replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    };
 
     // ── API base URL y userId inyectados desde PHP (social.php) ──
     const API_BASE = window.GAMITY_API_URL || window.apiBaseUrl;
@@ -37,7 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadRequests() {
         try {
             const res = await fetch(`${API_BASE}/friendships/pending/${USER_ID}`, {
-                headers: { 'X-User-Id': USER_ID }
+                headers: { 
+                    'X-User-Id': USER_ID,
+                    'X-User-Hash': window.currentUserHash || ''
+                }
             });
             if (res.status === 401 || res.status === 403) { window.location.href = 'auth.php'; return; }
             const data = await res.json();
@@ -45,6 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // El backend devuelve un array de FriendshipResponseDTO directamente
             if(Array.isArray(data) && data.length > 0) {
                 contReq.innerHTML = data.map(req => {
+                    const safeUsername = escapeHTML(req.senderUsername);
+                    const safeMainGame = escapeHTML(req.senderMainGame);
+                    const safeGameRank = escapeHTML(req.senderGameRank);
                     const avatarUrl = req.senderAvatar || `https://ui-avatars.com/api/?name=${encodeURI(req.senderUsername)}&background=18181b&color=fff`;
                     return `
                     <div class="bg-surface p-4 rounded-xl border border-white/5 flex items-center justify-between request-card">
@@ -53,8 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <img src="${avatarUrl}" class="w-full h-full object-cover">
                             </div>
                             <div>
-                                <h3 class="font-bold text-white text-lg">${req.senderUsername}</h3>
-                                <p class="text-xs text-gray-400 mt-1">${req.senderMainGame || 'Cualquier juego'}${req.senderGameRank ? ' · ' + req.senderGameRank : ''}</p>
+                                <h3 class="font-bold text-white text-lg">${safeUsername}</h3>
+                                <p class="text-xs text-gray-400 mt-1">${safeMainGame || 'Cualquier juego'}${safeGameRank ? ' · ' + safeGameRank : ''}</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-2">
@@ -83,13 +94,18 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadFriends() {
         try {
             const res = await fetch(`${API_BASE}/friendships/friends/${USER_ID}`, {
-                headers: { 'X-User-Id': USER_ID }
+                headers: { 
+                    'X-User-Id': USER_ID,
+                    'X-User-Hash': window.currentUserHash || ''
+                }
             });
             if (res.status === 401 || res.status === 403) { window.location.href = 'auth.php'; return; }
             const data = await res.json();
             
             if(Array.isArray(data) && data.length > 0) {
                 contFri.innerHTML = data.map(friend => {
+                    const safeUsername = escapeHTML(friend.username);
+                    const safeMainGame = escapeHTML(friend.mainGame);
                     const avatarUrl = friend.avatar || `https://ui-avatars.com/api/?name=${encodeURI(friend.username)}&background=18181b&color=fff`;
                     const isOnline = friend.status === 'online';
                     
@@ -101,10 +117,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                             <div>
                                 <h3 class="font-bold text-white text-lg flex items-center gap-2">
-                                    ${friend.username}
+                                    ${safeUsername}
                                     <span class="w-2 h-2 rounded-full ${isOnline ? 'bg-gamityGreen shadow-[0_0_5px_#10b981]' : 'bg-gray-500'}"></span>
                                 </h3>
-                                <p class="text-xs text-gray-400 mt-1">${friend.mainGame || 'Cualquier juego'}</p>
+                                <p class="text-xs text-gray-400 mt-1">${safeMainGame || 'Cualquier juego'}</p>
                             </div>
                         </div>
                         <div>
@@ -129,7 +145,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
-                    'X-User-Id': USER_ID 
+                    'X-User-Id': USER_ID,
+                    'X-User-Hash': window.currentUserHash || ''
                 },
                 body: JSON.stringify({ decision: decision })  // "accepted" o "rejected"
             });
@@ -162,7 +179,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
-                    'X-User-Id': USER_ID 
+                    'X-User-Id': USER_ID,
+                    'X-User-Hash': window.currentUserHash || ''
                 },
                 body: JSON.stringify({ senderId: USER_ID, receiverId: receiverId })
             });
