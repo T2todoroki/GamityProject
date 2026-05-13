@@ -39,8 +39,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
         try {
-            // La ruta de matches no tenía /v1 en el JS original, adaptamos esto usando la constante si /api/matches pertenece al mismo server
-            const API_BASE = window.GAMITY_API_URL || 'http://localhost:8082/api/v1';
+            // MatchController en Java está mapeado a /api/matches (no tiene /v1)
+            const API_BASE = window.GAMITY_API_URL ? window.GAMITY_API_URL.replace('/v1', '') : '';
             const response = await fetch(`${API_BASE}/matches?${params.toString()}`, {
                 headers: { 
                     'X-User-Id': currentUserId,
