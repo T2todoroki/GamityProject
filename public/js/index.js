@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderUsers(adaptedUsers);
         } catch (error) {
             console.error("Error fetching matches from Java API:", error);
-            usersGrid.innerHTML = `<div class="col-span-full text-center text-red-500 py-10">Error de conexión con el Matchmaking Server (Spring Boot).</div>`;
+            usersGrid.innerHTML = `<div class="col-span-full text-center text-red-500 py-10">Error de conexión con el Matchmaking Server (Spring Boot).<br><small class="text-gray-400">Detalle: ${error.message}</small></div>`;
         }
     };
     // Función para renderizar las cards de usuario en el DOM
