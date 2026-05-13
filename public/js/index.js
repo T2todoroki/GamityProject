@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    
+
 
     // Fetch del perfil global para mostrar el avatar en el header
     try {
@@ -8,11 +8,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 headers: { 'X-User-Id': currentUserId }
             });
             const globalData = await globalRes.json();
-            if(globalData.success && globalData.profile.avatar) {
+            if (globalData.success && globalData.profile.avatar) {
                 document.getElementById('headerAvatar').src = globalData.profile.avatar;
             }
         }
-    } catch(e) {}
+    } catch (e) { }
 
     // Elementos del DOM
     const usersGrid = document.getElementById('usersGrid');
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (filters.attitude.value) params.append('attitude', filters.attitude.value);
         params.append('currentUserId', currentUserId);
 
-        
+
         try {
             // La ruta de matches no tenía /v1 en el JS original, adaptamos esto usando la constante si /api/matches pertenece al mismo server
             const API_BASE = window.GAMITY_API_URL ? window.GAMITY_API_URL.replace('/v1', '') : 'http://localhost:8082/api';
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Función para renderizar las cards de usuario en el DOM
     const renderUsers = (users) => {
         playerCount.textContent = `${users.length} jugadores`;
-        
+
         if (users.length === 0) {
             usersGrid.innerHTML = `
                 <div class="col-span-full flex flex-col items-center justify-center py-20 text-gray-500">
@@ -82,21 +82,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             let games = [];
             let ranks = [];
             if (user.main_game && user.main_game !== 'null') {
-                try { games = JSON.parse(user.main_game); } catch(e) { games = [user.main_game]; }
+                try { games = JSON.parse(user.main_game); } catch (e) { games = [user.main_game]; }
             }
             if (user.game_rank && user.game_rank !== 'null') {
-                try { ranks = JSON.parse(user.game_rank); } catch(e) { ranks = [user.game_rank]; }
+                try { ranks = JSON.parse(user.game_rank); } catch (e) { ranks = [user.game_rank]; }
             }
             if (!Array.isArray(games)) games = games ? [games] : [];
             if (!Array.isArray(ranks)) ranks = ranks ? [ranks] : [];
 
             // Función para obtener clase e ícono según el juego
             function getGameBadge(gameName) {
-                if(gameName === 'Valorant') return { cls: 'badge-valorant', icon: '🔥' };
-                if(gameName === 'LoL' || gameName === 'League of Legends') return { cls: 'badge-lol', icon: '⚔️' };
-                if(gameName === 'CS2') return { cls: 'badge-cs2', icon: '🎯' };
-                if(gameName === 'Minecraft') return { cls: 'badge-minecraft', icon: '⛏️' };
-                if(gameName === 'Fortnite') return { cls: 'badge-fortnite', icon: '🎮' };
+                if (gameName === 'Valorant') return { cls: 'badge-valorant', icon: '🔥' };
+                if (gameName === 'LoL' || gameName === 'League of Legends') return { cls: 'badge-lol', icon: '⚔️' };
+                if (gameName === 'CS2') return { cls: 'badge-cs2', icon: '🎯' };
+                if (gameName === 'Minecraft') return { cls: 'badge-minecraft', icon: '⛏️' };
+                if (gameName === 'Fortnite') return { cls: 'badge-fortnite', icon: '🎮' };
                 return { cls: 'badge-default', icon: '🎲' };
             }
 
@@ -115,15 +115,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     badgesHTML = `<div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold badge-default"><span class="mr-1.5">🎲</span>Cualquier Juego - Unranked</div>`;
                 }
             }
-            // Escapar todos los datos para evitar vulnerabilidades XSS y roturas del DOM
-            // Si un usuario pone comillas dobles, saltos de línea o comillas simples en su biografía, esto lo neutraliza.
+
             const escapeJSString = (str) => {
                 if (!str) return '';
                 return str.toString()
-                    .replace(/\\/g, '\\\\') // Escapar backslash
-                    .replace(/"/g, '&quot;') // Prevenir rotura del atributo HTML (onclick="...")
-                    .replace(/'/g, "\\'")    // Prevenir rotura del string de Javascript ('...')
-                    .replace(/\n/g, '\\n')   // Prevenir rotura de línea en JS
+                    .replace(/\\/g, '\\\\')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, "\\'")
+                    .replace(/\n/g, '\\n')
                     .replace(/\r/g, '\\r');
             };
 
@@ -136,7 +135,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const isOnline = user.status === 'online';
             const statusClass = isOnline ? 'status-online' : 'status-offline';
             const statusText = isOnline ? 'Online' : 'Offline';
-            
+
             // Determinar URL de avatar (fallback a UI Avatars si no hay avatar personalizado)
             const avatarUrl = user.avatar ? user.avatar : `https://ui-avatars.com/api/?name=${encodeURI(user.username)}&background=18181b&color=fff`;
             const attitudeHTML = user.attitude ? `<span class="text-xs text-red-500 font-medium ml-2">${escapeHTML(user.attitude)}</span>` : '';
@@ -213,10 +212,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Agregamos event listeners a los filtros para refetch cada vez que cambien
     Object.values(filters).forEach(filter => {
         filter.addEventListener('change', fetchUsers);
-        if(filter === filters.search) {
+        if (filter === filters.search) {
             filter.addEventListener('keyup', (e) => {
-                 // debounce o delay podría ir aquí
-                 fetchUsers();
+                // debounce o delay podría ir aquí
+                fetchUsers();
             });
         }
     });
@@ -238,7 +237,7 @@ window.sendRequest = async (receiverId, btnElement) => {
 
         const response = await fetch(`${API_BASE}/friendships/send`, {
             method: 'POST',
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
                 'X-User-Id': senderId
             },
