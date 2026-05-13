@@ -5,7 +5,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         if (typeof currentUserId !== 'undefined' && currentUserId !== null) {
             const globalRes = await fetch(`${window.GAMITY_API_URL}/users/${currentUserId}/profile`, {
-                headers: { 'X-User-Id': currentUserId }
+                headers: { 
+                    'X-User-Id': currentUserId,
+                    'X-User-Hash': window.currentUserHash || '' 
+                }
             });
             const globalData = await globalRes.json();
             if (globalData.success && globalData.profile.avatar) {
@@ -37,9 +40,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         try {
             // La ruta de matches no tenía /v1 en el JS original, adaptamos esto usando la constante si /api/matches pertenece al mismo server
-            const API_BASE = window.GAMITY_API_URL ? window.GAMITY_API_URL.replace('/v1', '') : 'http://localhost:8082/api';
+            const API_BASE = window.GAMITY_API_URL || 'http://localhost:8082/api/v1';
             const response = await fetch(`${API_BASE}/matches?${params.toString()}`, {
-                headers: { 'X-User-Id': currentUserId }
+                headers: { 
+                    'X-User-Id': currentUserId,
+                    'X-User-Hash': window.currentUserHash || ''
+                }
             });
             if (!response.ok) throw new Error("Error en la conexión a Java");
             const data = await response.json();
@@ -239,7 +245,8 @@ window.sendRequest = async (receiverId, btnElement) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-User-Id': senderId
+                'X-User-Id': senderId,
+                'X-User-Hash': window.currentUserHash || ''
             },
             body: JSON.stringify({ senderId: senderId, receiverId: receiverId })
         });
