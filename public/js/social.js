@@ -32,9 +32,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const renderEmpty = (message, icon) => `
-        <div class="flex flex-col items-center justify-center py-20 text-gray-500">
-            <svg class="w-16 h-16 mb-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">${icon}</svg>
-            <p class="text-sm">${message}</p>
+        <div class="flex flex-col items-center justify-center py-20 text-gray-500 animate-slide-in">
+            <div class="relative mb-6">
+                <div class="absolute inset-0 bg-gamityPurple blur-xl opacity-20 rounded-full animate-pulse"></div>
+                <svg class="w-20 h-20 opacity-80 relative z-10 text-gamityPurple" fill="none" stroke="currentColor" viewBox="0 0 24 24">${icon}</svg>
+            </div>
+            <p class="text-lg font-medium text-white/70">${message}</p>
         </div>
     `;
 
@@ -58,24 +61,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     const safeGameRank = escapeHTML(req.senderGameRank);
                     const avatarUrl = req.senderAvatar || `https://ui-avatars.com/api/?name=${encodeURI(req.senderUsername)}&background=18181b&color=fff`;
                     return `
-                    <div class="bg-surface p-4 rounded-xl border border-white/5 flex items-center justify-between request-card">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-full overflow-hidden border border-gamityPurple/30">
+                    <div class="request-card-glass p-5 rounded-2xl border border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 animate-slide-in relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-gradient-to-r from-gamityPurple/0 via-gamityPurple/5 to-gamityPurple/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                        
+                        <div class="flex items-center gap-4 relative z-10 w-full md:w-auto">
+                            <div class="w-14 h-14 rounded-full overflow-hidden ring-2 ring-gamityPurple/30 shadow-[0_0_15px_rgba(139,92,246,0.2)]">
                                 <img src="${avatarUrl}" class="w-full h-full object-cover">
                             </div>
                             <div>
-                                <h3 class="font-bold text-white text-lg">${safeUsername}</h3>
-                                <p class="text-xs text-gray-400 mt-1">${safeMainGame || 'Cualquier juego'}${safeGameRank ? ' · ' + safeGameRank : ''}</p>
+                                <h3 class="font-bold text-white text-lg drop-shadow-md">${safeUsername}</h3>
+                                <p class="text-xs text-gamityPurple/80 font-medium tracking-wide uppercase mt-0.5">${safeMainGame || 'CUALQUIER JUEGO'}${safeGameRank ? ' · ' + safeGameRank : ''}</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="handleRequest(${req.id}, 'accepted')" class="px-4 py-2 bg-gamityGreen/10 hover:bg-gamityGreen border border-gamityGreen/20 text-gamityGreen hover:text-white rounded-lg text-sm font-medium transition flex items-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        <div class="flex items-center gap-3 w-full md:w-auto relative z-10">
+                            <button onclick="handleRequest(${req.id}, 'accepted')" class="flex-1 md:flex-none px-5 py-2.5 bg-gamityGreen/10 hover:bg-gamityGreen border border-gamityGreen/30 hover:border-gamityGreen text-gamityGreen hover:text-white rounded-xl text-sm font-bold transition-all shadow-[0_0_10px_rgba(16,185,129,0.1)] hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                 Aceptar
                             </button>
-                            <button onclick="handleRequest(${req.id}, 'rejected')" class="px-4 py-2 bg-red-500/10 hover:bg-red-500 border border-red-500/20 text-red-500 hover:text-white rounded-lg text-sm font-medium transition flex items-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                Rechazar
+                            <button onclick="handleRequest(${req.id}, 'rejected')" class="flex-1 md:flex-none p-2.5 bg-surfaceLight hover:bg-red-500/20 border border-white/5 hover:border-red-500/50 text-gray-400 hover:text-red-400 rounded-xl transition-all flex items-center justify-center" title="Rechazar">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                             </button>
                         </div>
                     </div>
@@ -110,22 +114,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     const isOnline = friend.status === 'online';
                     
                     return `
-                    <div class="bg-surface p-4 rounded-xl border border-white/5 flex items-center justify-between request-card">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-full overflow-hidden border border-white/10 relative">
+                    <div class="request-card-glass p-5 rounded-2xl border border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 animate-slide-in relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-gradient-to-r from-gamityPurple/0 via-gamityPurple/5 to-gamityPurple/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+
+                        <div class="flex items-center gap-4 relative z-10 w-full md:w-auto">
+                            <div class="w-14 h-14 rounded-full overflow-hidden ring-2 ${isOnline ? 'ring-gamityGreen/50 shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'ring-white/10'} relative">
                                 <img src="${avatarUrl}" class="w-full h-full object-cover">
                             </div>
                             <div>
-                                <h3 class="font-bold text-white text-lg flex items-center gap-2">
+                                <h3 class="font-bold text-white text-lg flex items-center gap-2 drop-shadow-md">
                                     ${safeUsername}
-                                    <span class="w-2 h-2 rounded-full ${isOnline ? 'bg-gamityGreen shadow-[0_0_5px_#10b981]' : 'bg-gray-500'}"></span>
+                                    <span class="w-2.5 h-2.5 rounded-full ${isOnline ? 'bg-gamityGreen shadow-[0_0_8px_#10b981]' : 'bg-gray-500'}"></span>
                                 </h3>
-                                <p class="text-xs text-gray-400 mt-1">${safeMainGame || 'Cualquier juego'}</p>
+                                <p class="text-xs text-gamityPurple/80 font-medium tracking-wide uppercase mt-0.5">${safeMainGame || 'CUALQUIER JUEGO'}</p>
                             </div>
                         </div>
-                        <div>
-                            <a href="chat.php?user_id=${friend.id}" class="px-4 py-2 bg-gamityPurple/10 hover:bg-gamityPurple border border-gamityPurple/20 text-gamityPurple hover:text-white rounded-lg text-sm font-medium transition flex items-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                        <div class="w-full md:w-auto relative z-10">
+                            <a href="chat.php?user_id=${friend.id}" class="w-full md:w-auto px-5 py-2.5 bg-gamityPurple/10 hover:bg-gamityPurple border border-gamityPurple/30 hover:border-gamityPurple text-gamityPurple hover:text-white rounded-xl text-sm font-bold transition-all shadow-[0_0_10px_rgba(139,92,246,0.1)] hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
                                 Chatear
                             </a>
                         </div>

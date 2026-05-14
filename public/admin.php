@@ -233,9 +233,13 @@ $initials = strtoupper(substr($username, 0, 2));
                             </svg>
                             Gestión de Usuarios
                         </h2>
-                        <span id="tableCount"
-                            class="px-3 py-1 bg-gamityPurple/20 text-gamityPurple text-xs rounded-full font-medium">0
-                            usuarios</span>
+                        <div class="flex items-center gap-4">
+                            <div class="relative">
+                                <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                <input type="text" id="searchUsers" placeholder="Buscar usuario..." class="bg-surfaceLight border border-white/10 text-white text-sm rounded-lg focus:border-gamityPurple focus:ring-1 focus:ring-gamityPurple outline-none pl-9 pr-3 py-1.5 w-48 transition-all">
+                            </div>
+                            <span id="tableCount" class="px-3 py-1 bg-gamityPurple/20 text-gamityPurple text-xs rounded-full font-medium whitespace-nowrap">0 usuarios</span>
+                        </div>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm">
@@ -381,7 +385,22 @@ $initials = strtoupper(substr($username, 0, 2));
             }, 3500);
         }
 
-        document.addEventListener('DOMContentLoaded', () => { loadDashboard(); });
+        document.addEventListener('DOMContentLoaded', () => { 
+            loadDashboard(); 
+            
+            // Search listener
+            document.getElementById('searchUsers').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                if (!window.allUsers) return;
+                
+                const filtered = window.allUsers.filter(u => 
+                    u.username.toLowerCase().includes(term) || 
+                    u.email.toLowerCase().includes(term) ||
+                    (u.main_game && u.main_game.toLowerCase().includes(term))
+                );
+                renderUsersTable(filtered);
+            });
+        });
 
         function loadDashboard() {
             fetch(`${window.GAMITY_API_URL}/admin/dashboard`, {
@@ -395,7 +414,8 @@ $initials = strtoupper(substr($username, 0, 2));
                         document.getElementById('statConnections').textContent = data.stats.active_connections;
                         document.getElementById('statMessages').textContent = data.stats.total_messages;
                         document.getElementById('statReports').textContent = data.stats.pending_reports;
-                        renderUsersTable(data.users);
+                        window.allUsers = data.users;
+                        renderUsersTable(window.allUsers);
                         renderReportsTable(data.reports || []);
                     } else {
                         showToast(data.error || 'Error al cargar el panel', 'error');
