@@ -47,6 +47,7 @@ public class UserController {
             java.util.Map<String, Object> profileData = new java.util.HashMap<>();
             profileData.put("email", user.getEmail());
             profileData.put("avatar", user.getAvatar());
+            profileData.put("premier_wins", user.getPremierWins() != null ? user.getPremierWins() : 0);
             if(user.getProfile() != null) {
                 profileData.put("bio", user.getProfile().getBio());
                 profileData.put("main_game", user.getProfile().getMainGame());
