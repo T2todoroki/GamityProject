@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `role` varchar(20) DEFAULT 'user',
   `avatar` varchar(255) DEFAULT 'img/default.png',
   `status` varchar(20) DEFAULT 'offline',
+  `premier_wins` int DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_r43af9ap4edm43mmtq01oddj6` (`username`),
   UNIQUE KEY `UK_6dotkpttghj45a1t9a93wqid8` (`email`)
