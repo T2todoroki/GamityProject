@@ -146,15 +146,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Load profile data
     try {
-        if (typeof SESSION_USER_ID === 'undefined' || SESSION_USER_ID === null) return;
+        if (typeof window.SESSION_USER_ID === 'undefined' || window.SESSION_USER_ID === null) return;
         
         const gc = document.getElementById("gamesContainer");
         if (gc) gc.innerHTML = `<div class="flex-1 flex justify-center items-center py-6"><svg class="animate-spin h-8 w-8 text-gamityPurple" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg></div>`;
         
         const API_BASE = window.GAMITY_API_URL || '';
-        const res = await fetch(`${API_BASE}/users/${SESSION_USER_ID}/profile`, {
+        const res = await fetch(`${API_BASE}/users/${window.SESSION_USER_ID}/profile`, {
             headers: { 
-                'X-User-Id': SESSION_USER_ID,
+                'X-User-Id': window.SESSION_USER_ID,
                 'X-User-Hash': window.SESSION_USER_HASH || ''
             }
         });
@@ -171,6 +171,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const emailEl = document.getElementById("profileEmailDisplay");
             if (emailEl) emailEl.textContent = p.email || "Sin correo";
+
+            if (p.premier_wins && p.premier_wins > 0) {
+                const badgeContainer = document.getElementById("premierBadgeContainer");
+                const badgeText = document.getElementById("premierBadgeText");
+                if (badgeContainer && badgeText) {
+                    badgeText.innerHTML = `<i class="fa-solid fa-trophy mr-1"></i> Premier Winner x${p.premier_wins}`;
+                    badgeContainer.classList.remove("hidden");
+                }
+            }
 
             const descEl = document.getElementById("inputDesc");
             if (descEl) descEl.value = p.bio || "";
@@ -209,7 +218,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     profileForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         if (saveBtn.disabled) return;
-        if (typeof SESSION_USER_ID === 'undefined' || SESSION_USER_ID === null) {
+        if (typeof window.SESSION_USER_ID === 'undefined' || window.SESSION_USER_ID === null) {
             alert('Sesión no encontrada. Por favor, recarga la página.');
             return;
         }
@@ -249,11 +258,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
             // Petición POST hacia Java
             const API_BASE = window.GAMITY_API_URL || '';
-            const res = await fetch(`${API_BASE}/users/${SESSION_USER_ID}/profile`, {
+            const res = await fetch(`${API_BASE}/users/${window.SESSION_USER_ID}/profile`, {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json",
-                    "X-User-Id": SESSION_USER_ID,
+                    "X-User-Id": window.SESSION_USER_ID,
                     "X-User-Hash": window.SESSION_USER_HASH || ''
                 },
                 body: JSON.stringify(updatePayload)
