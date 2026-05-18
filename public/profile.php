@@ -54,6 +54,10 @@ if (is_dir($avatarDir)) {
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                 <span class="hidden md:block ml-3 font-medium">Social</span>
             </a>
+            <a href="premier.php" class="flex items-center justify-center md:justify-start px-3 py-3 rounded-xl text-gray-400 hover:text-gamityPurple hover:bg-surfaceLight transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <span class="hidden md:block ml-3 font-medium">Premier</span>
+            </a>
             <a href="profile.php" class="flex items-center justify-center md:justify-start px-3 py-3 rounded-xl bg-gamityPurple/10 text-gamityPurple border border-gamityPurple/20 transition-colors">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                 <span class="hidden md:block ml-3 font-medium">Perfil</span>
@@ -167,6 +171,11 @@ if (is_dir($avatarDir)) {
                         </div>
                         <div class="mt-4 flex flex-col items-center pb-6">
                             <h2 class="text-2xl md:text-3xl font-black text-white"><?php echo htmlspecialchars($username); ?></h2>
+                            <div id="premierBadgeContainer" class="hidden mt-2">
+                                <span id="premierBadgeText" class="px-3 py-1 rounded-full bg-gamityPurple/20 text-gamityPurple border border-gamityPurple/30 font-bold text-xs shadow-[0_0_10px_rgba(139,92,246,0.3)]">
+                                    <i class="fa-solid fa-trophy mr-1"></i>
+                                </span>
+                            </div>
                             <p class="text-gamityGreen font-medium mt-1 flex items-center gap-2 text-sm" id="profileEmailDisplay">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                                 Cargando...
@@ -240,6 +249,10 @@ if (is_dir($avatarDir)) {
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                 <span class="text-[10px] font-medium">Social</span>
             </a>
+            <a href="premier.php" class="flex flex-col items-center gap-1 text-gray-400 hover:text-gamityPurple transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <span class="text-[10px] font-medium">Premier</span>
+            </a>
             <a href="profile.php" class="flex flex-col items-center gap-1 text-gamityPurple transition-colors relative">
                 <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-gamityPurple shadow-[0_0_6px_rgba(139,92,246,0.8)]"></div>
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
@@ -275,8 +288,11 @@ if (is_dir($avatarDir)) {
         </div>
     </div>
     <script>
-        const SESSION_USER_ID = <?php echo $_SESSION['user_id']; ?>;
-        const SESSION_USER_HASH = '<?php echo $_SESSION['user_hash'] ?? ''; ?>';
+        window.SESSION_USER_ID = <?php echo $_SESSION['user_id']; ?>;
+        window.SESSION_USER_HASH = '<?php echo $_SESSION['user_hash'] ?? ''; ?>';
+        // Compatibilidad con otros scripts
+        window.currentUserId = window.SESSION_USER_ID;
+        window.currentUserHash = window.SESSION_USER_HASH;
     </script>
     <script src="js/app.js?v=<?php echo filemtime('js/app.js'); ?>"></script>
     <script src="js/profile.js?v=<?php echo filemtime('js/profile.js'); ?>"></script>
