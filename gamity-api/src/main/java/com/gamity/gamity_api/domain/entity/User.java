@@ -39,6 +39,9 @@ public class User {
     @Column(columnDefinition = "varchar(20) default 'offline'")
     private String status;
 
+    @Column(name = "premier_wins", columnDefinition = "INT DEFAULT 0")
+    private Integer premierWins = 0;
+
 
     //Bi-directional one-to-one relationship with UserProfile
     //Relación OneToOne con CascadeType.ALL garantiza que el perfil 
