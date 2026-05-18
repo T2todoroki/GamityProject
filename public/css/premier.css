@@ -1,0 +1,46 @@
+/* ============================================
+   GAMITY PREMIER - Matchmaking Express Styles
+   ============================================ */
+
+/* === Premier Pulse Glow (Search Button) === */
+@keyframes premierPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(139,92,246,0.3), 0 0 40px rgba(139,92,246,0.1); }
+    50% { box-shadow: 0 0 30px rgba(139,92,246,0.5), 0 0 60px rgba(139,92,246,0.2); }
+}
+
+/* === Fade-in with slide up === */
+@keyframes premierFadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* === Shimmer background sweep === */
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* === Radar rotation for searching state === */
+@keyframes radarSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* === Utility Classes === */
+.animate-premierFadeIn {
+    animation: premierFadeIn 0.5s ease-out forwards;
+}
+
+.btn-premier-glow {
+    animation: premierPulse 2.5s ease-in-out infinite;
+}
+
+.shimmer-bg {
+    background: linear-gradient(90deg, transparent 0%, rgba(139,92,246,0.08) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+}
+
+.radar-spin {
+    animation: radarSpin 3s linear infinite;
+}
