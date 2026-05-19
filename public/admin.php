@@ -253,74 +253,73 @@ $initials = strtoupper(substr($username, 0, 2));
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                             <input type="text" id="searchUsers" placeholder="Buscar usuario, email o rango..."
-                                class="pl-10 pr-4 py-2 bg-surfaceLight border border-white/10 rounded-xl text-sm focus:outline-none focus:border-gamityPurple focus:ring-1 focus:ring-gamityPurple w-full sm:w-64 transition-all text-white placeholder-gray-500">
+                                class="input-gamity pl-10 w-full sm:w-64">
                         </div>
                     </div>
 
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="neon-border-b text-gray-400 uppercase text-xs tracking-wider">
+                                    <th class="px-6 py-4 text-left">ID</th>
+                                    <th class="px-6 py-4 text-left">Usuario</th>
+                                    <th class="px-6 py-4 text-left">Email</th>
+                                    <th class="px-6 py-4 text-left">Juego</th>
+                                    <th class="px-6 py-4 text-left">Rango</th>
+                                    <th class="px-6 py-4 text-left">Rol</th>
+                                    <th class="px-6 py-4 text-left">Estado</th>
+                                    <th class="px-6 py-4 text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr>
+                                    <td colspan="8" class="px-6 py-10 text-center text-gray-500">Cargando usuarios...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="neon-border-b text-gray-400 uppercase text-xs tracking-wider">
-                                <th class="px-6 py-4 text-left">ID</th>
-                                <th class="px-6 py-4 text-left">Usuario</th>
-                                <th class="px-6 py-4 text-left">Email</th>
-                                <th class="px-6 py-4 text-left">Juego</th>
-                                <th class="px-6 py-4 text-left">Rango</th>
-                                <th class="px-6 py-4 text-left">Rol</th>
-                                <th class="px-6 py-4 text-left">Estado</th>
-                                <th class="px-6 py-4 text-center">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="usersTableBody">
-                            <tr>
-                                <td colspan="8" class="px-6 py-10 text-center text-gray-500">Cargando usuarios...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
 
-            <!-- Reportes Section -->
-            <div class="bg-surface rounded-2xl border border-white/5 overflow-hidden mt-8">
-                <div class="p-6 neon-border-b flex items-center justify-between">
-                    <h2 class="text-xl font-bold flex items-center gap-2">
-                        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9">
-                            </path>
-                        </svg>
-                        Reportes de Usuarios
-                    </h2>
-                    <span id="reportsCount"
-                        class="px-3 py-1 bg-red-500/20 text-red-400 text-xs rounded-full font-medium">0
-                        reportes</span>
+                <!-- Reportes Section -->
+                <div class="bg-surface rounded-2xl border border-white/5 overflow-hidden mt-8">
+                    <div class="p-6 neon-border-b flex items-center justify-between">
+                        <h2 class="text-xl font-bold flex items-center gap-2">
+                            <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9">
+                                </path>
+                            </svg>
+                            Reportes de Usuarios
+                        </h2>
+                        <span id="reportsCount"
+                            class="px-3 py-1 bg-red-500/20 text-red-400 text-xs rounded-full font-medium">0
+                            reportes</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="neon-border-b text-gray-400 uppercase text-xs tracking-wider">
+                                    <th class="px-6 py-4 text-left">ID</th>
+                                    <th class="px-6 py-4 text-left">Reportado por</th>
+                                    <th class="px-6 py-4 text-left">Usuario reportado</th>
+                                    <th class="px-6 py-4 text-left">Motivo</th>
+                                    <th class="px-6 py-4 text-left">Estado</th>
+                                    <th class="px-6 py-4 text-left">Fecha</th>
+                                    <th class="px-6 py-4 text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportsTableBody">
+                                <tr>
+                                    <td colspan="7" class="px-6 py-10 text-center text-gray-500">Cargando reportes...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="neon-border-b text-gray-400 uppercase text-xs tracking-wider">
-                                <th class="px-6 py-4 text-left">ID</th>
-                                <th class="px-6 py-4 text-left">Reportado por</th>
-                                <th class="px-6 py-4 text-left">Usuario reportado</th>
-                                <th class="px-6 py-4 text-left">Motivo</th>
-                                <th class="px-6 py-4 text-left">Estado</th>
-                                <th class="px-6 py-4 text-left">Fecha</th>
-                                <th class="px-6 py-4 text-center">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="reportsTableBody">
-                            <tr>
-                                <td colspan="7" class="px-6 py-10 text-center text-gray-500">Cargando reportes...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
 
-        </div>
+            </div>
         </div>
     </main>
 
@@ -379,6 +378,9 @@ $initials = strtoupper(substr($username, 0, 2));
     <div id="toastContainer" class="fixed top-6 right-6 z-[100] flex flex-col gap-3 pointer-events-none"></div>
 
     <script>
+        const USER_ID = '<?php echo $_SESSION["user_id"]; ?>';
+        const USER_HASH = '<?php echo hash("sha256", $_SESSION["user_id"] . "GAMITY_TFG_SECRET_2024"); ?>';
+
         // --- TOAST NOTIFICATION SYSTEM ---
         function showToast(message, type = 'success') {
             const colors = {
@@ -402,11 +404,32 @@ $initials = strtoupper(substr($username, 0, 2));
             }, 3500);
         }
 
-        document.addEventListener('DOMContentLoaded', () => { loadDashboard(); });
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboard();
+
+            // Lógica para el buscador de usuarios en tiempo real
+            const searchInput = document.getElementById('searchUsers');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const term = e.target.value.toLowerCase();
+                    const rows = document.querySelectorAll('#usersTableBody .user-row');
+
+                    rows.forEach(row => {
+                        // Comprueba si el texto de la fila contiene lo que has escrito
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(term) ? '' : 'none';
+                    });
+                });
+            }
+        });
+
 
         function loadDashboard() {
             fetch(`${window.GAMITY_API_URL}/admin/dashboard`, {
-                headers: { 'X-User-Id': '<?php echo $_SESSION["user_id"]; ?>' }
+                headers: {
+                    'X-User-Id': USER_ID,
+                    'X-User-Hash': USER_HASH
+                }
             })
                 .then(res => res.json())
                 .then(data => {
@@ -498,7 +521,8 @@ $initials = strtoupper(substr($username, 0, 2));
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-User-Id': '<?php echo $_SESSION["user_id"]; ?>'
+                    'X-User-Id': USER_ID,
+                    'X-User-Hash': USER_HASH
                 },
                 body: JSON.stringify(body)
             })
@@ -522,7 +546,8 @@ $initials = strtoupper(substr($username, 0, 2));
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-User-Id': '<?php echo $_SESSION["user_id"]; ?>'
+                    'X-User-Id': USER_ID,
+                    'X-User-Hash': USER_HASH
                 }
             })
                 .then(res => res.json())
@@ -585,7 +610,8 @@ $initials = strtoupper(substr($username, 0, 2));
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-User-Id': '<?php echo $_SESSION["user_id"]; ?>'
+                    'X-User-Id': USER_ID,
+                    'X-User-Hash': USER_HASH
                 },
                 body: JSON.stringify({ status: newStatus })
             })
