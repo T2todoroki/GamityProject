@@ -71,6 +71,14 @@ $initials = strtoupper(substr($username, 0, 2));
                 </svg>
                 <span class="hidden md:block ml-3 font-medium">Social</span>
             </a>
+            <a href="premier.php"
+                class="flex items-center justify-center md:justify-start px-3 py-3 rounded-xl text-gray-400 hover:text-gamityPurple hover:bg-surfaceLight transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                <span class="hidden md:block ml-3 font-medium">Premier</span>
+            </a>
             <a href="profile.php"
                 class="flex items-center justify-center md:justify-start px-3 py-3 rounded-xl text-gray-400 hover:text-gamityPurple hover:bg-surfaceLight transition-colors">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -611,6 +619,14 @@ $initials = strtoupper(substr($username, 0, 2));
                     </path>
                 </svg>
                 <span class="text-[10px] font-medium">Social</span>
+            </a>
+            <a href="premier.php"
+                class="flex flex-col items-center gap-1 text-gray-400 hover:text-gamityPurple transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                <span class="text-[10px] font-medium">Premier</span>
             </a>
             <a href="profile.php"
                 class="flex flex-col items-center gap-1 text-gray-400 hover:text-gamityPurple transition-colors">

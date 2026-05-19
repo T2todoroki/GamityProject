@@ -26,6 +26,7 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./init_premier.sql:/docker-entrypoint-initdb.d/init_premier.sql
     networks:
       - gamity_network
     healthcheck:

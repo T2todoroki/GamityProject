@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         if (typeof currentUserId !== 'undefined' && currentUserId !== null) {
             const globalRes = await fetch(`${window.GAMITY_API_URL}/users/${currentUserId}/profile`, {
-                headers: { 
+                headers: {
                     'X-User-Id': currentUserId,
-                    'X-User-Hash': window.currentUserHash || '' 
+                    'X-User-Hash': window.currentUserHash || ''
                 }
             });
             const globalData = await globalRes.json();
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // MatchController en Java está mapeado a /api/matches (no tiene /v1)
             const API_BASE = window.GAMITY_API_URL ? window.GAMITY_API_URL.replace('/v1', '') : '';
             const response = await fetch(`${API_BASE}/matches?${params.toString()}`, {
-                headers: { 
+                headers: {
                     'X-User-Id': currentUserId,
                     'X-User-Hash': window.currentUserHash || ''
                 }
