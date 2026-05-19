@@ -231,83 +231,96 @@ $initials = strtoupper(substr($username, 0, 2));
 
                 <!-- Tabla de usuarios -->
                 <div class="bg-surface rounded-2xl border border-white/5 overflow-hidden">
-                    <div class="p-6 neon-border-b flex items-center justify-between">
-                        <h2 class="text-xl font-bold flex items-center gap-2">
-                            <svg class="w-5 h-5 text-gamityPurple" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
+                    <div class="p-6 neon-border-b flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <h2 class="text-xl font-bold flex items-center gap-2">
+                                <svg class="w-5 h-5 text-gamityPurple" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+                                    </path>
+                                </svg>
+                                Gestión de Usuarios
+                            </h2>
+                            <span id="tableCount"
+                                class="px-3 py-1 bg-gamityPurple/20 text-gamityPurple text-xs rounded-full font-medium">0
+                                usuarios</span>
+                        </div>
+                        <div class="relative w-full sm:w-auto">
+                            <svg class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
-                                </path>
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
-                            Gestión de Usuarios
-                        </h2>
-                        <span id="tableCount"
-                            class="px-3 py-1 bg-gamityPurple/20 text-gamityPurple text-xs rounded-full font-medium">0
-                            usuarios</span>
+                            <input type="text" id="searchUsers" placeholder="Buscar usuario, email o rango..."
+                                class="pl-10 pr-4 py-2 bg-surfaceLight border border-white/10 rounded-xl text-sm focus:outline-none focus:border-gamityPurple focus:ring-1 focus:ring-gamityPurple w-full sm:w-64 transition-all text-white placeholder-gray-500">
+                        </div>
                     </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead>
-                                <tr class="neon-border-b text-gray-400 uppercase text-xs tracking-wider">
-                                    <th class="px-6 py-4 text-left">ID</th>
-                                    <th class="px-6 py-4 text-left">Usuario</th>
-                                    <th class="px-6 py-4 text-left">Email</th>
-                                    <th class="px-6 py-4 text-left">Juego</th>
-                                    <th class="px-6 py-4 text-left">Rango</th>
-                                    <th class="px-6 py-4 text-left">Rol</th>
-                                    <th class="px-6 py-4 text-left">Estado</th>
-                                    <th class="px-6 py-4 text-center">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="usersTableBody">
-                                <tr>
-                                    <td colspan="8" class="px-6 py-10 text-center text-gray-500">Cargando usuarios...
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
 
-                <!-- Reportes Section -->
-                <div class="bg-surface rounded-2xl border border-white/5 overflow-hidden mt-8">
-                    <div class="p-6 neon-border-b flex items-center justify-between">
-                        <h2 class="text-xl font-bold flex items-center gap-2">
-                            <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9">
-                                </path>
-                            </svg>
-                            Reportes de Usuarios
-                        </h2>
-                        <span id="reportsCount"
-                            class="px-3 py-1 bg-red-500/20 text-red-400 text-xs rounded-full font-medium">0
-                            reportes</span>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead>
-                                <tr class="neon-border-b text-gray-400 uppercase text-xs tracking-wider">
-                                    <th class="px-6 py-4 text-left">ID</th>
-                                    <th class="px-6 py-4 text-left">Reportado por</th>
-                                    <th class="px-6 py-4 text-left">Usuario reportado</th>
-                                    <th class="px-6 py-4 text-left">Motivo</th>
-                                    <th class="px-6 py-4 text-left">Estado</th>
-                                    <th class="px-6 py-4 text-left">Fecha</th>
-                                    <th class="px-6 py-4 text-center">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="reportsTableBody">
-                                <tr>
-                                    <td colspan="7" class="px-6 py-10 text-center text-gray-500">Cargando reportes...
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
                 </div>
-
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="neon-border-b text-gray-400 uppercase text-xs tracking-wider">
+                                <th class="px-6 py-4 text-left">ID</th>
+                                <th class="px-6 py-4 text-left">Usuario</th>
+                                <th class="px-6 py-4 text-left">Email</th>
+                                <th class="px-6 py-4 text-left">Juego</th>
+                                <th class="px-6 py-4 text-left">Rango</th>
+                                <th class="px-6 py-4 text-left">Rol</th>
+                                <th class="px-6 py-4 text-left">Estado</th>
+                                <th class="px-6 py-4 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <tr>
+                                <td colspan="8" class="px-6 py-10 text-center text-gray-500">Cargando usuarios...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
+            <!-- Reportes Section -->
+            <div class="bg-surface rounded-2xl border border-white/5 overflow-hidden mt-8">
+                <div class="p-6 neon-border-b flex items-center justify-between">
+                    <h2 class="text-xl font-bold flex items-center gap-2">
+                        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9">
+                            </path>
+                        </svg>
+                        Reportes de Usuarios
+                    </h2>
+                    <span id="reportsCount"
+                        class="px-3 py-1 bg-red-500/20 text-red-400 text-xs rounded-full font-medium">0
+                        reportes</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="neon-border-b text-gray-400 uppercase text-xs tracking-wider">
+                                <th class="px-6 py-4 text-left">ID</th>
+                                <th class="px-6 py-4 text-left">Reportado por</th>
+                                <th class="px-6 py-4 text-left">Usuario reportado</th>
+                                <th class="px-6 py-4 text-left">Motivo</th>
+                                <th class="px-6 py-4 text-left">Estado</th>
+                                <th class="px-6 py-4 text-left">Fecha</th>
+                                <th class="px-6 py-4 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportsTableBody">
+                            <tr>
+                                <td colspan="7" class="px-6 py-10 text-center text-gray-500">Cargando reportes...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
         </div>
     </main>
 
@@ -370,13 +383,13 @@ $initials = strtoupper(substr($username, 0, 2));
         function showToast(message, type = 'success') {
             const colors = {
                 success: 'bg-gamityGreen/20 border-gamityGreen/40 text-gamityGreen',
-                error:   'bg-red-500/20 border-red-500/40 text-red-400',
-                info:    'bg-gamityPurple/20 border-gamityPurple/40 text-gamityPurple'
+                error: 'bg-red-500/20 border-red-500/40 text-red-400',
+                info: 'bg-gamityPurple/20 border-gamityPurple/40 text-gamityPurple'
             };
             const icons = {
                 success: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>',
-                error:   '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>',
-                info:    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>'
+                error: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>',
+                info: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>'
             };
             const toast = document.createElement('div');
             toast.className = `pointer-events-auto flex items-center gap-3 px-5 py-4 rounded-xl border backdrop-blur-md shadow-2xl text-sm font-medium transition-all duration-300 translate-x-20 opacity-0 ${colors[type]}`;
