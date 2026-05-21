@@ -195,8 +195,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     
                     <!-- Action Button -->
                     ${user.friendship_status === 'pending' ? `
-                        <button disabled class="mt-auto w-full py-2.5 rounded-xl bg-surfaceLight border border-gamityGreen/30 text-gamityGreen font-medium flex items-center justify-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <button disabled class="mt-auto w-full py-2.5 rounded-xl bg-surfaceLight border border-red-500/20 text-red-400 font-medium flex items-center justify-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.7)]"></span>
                             Pendiente
                         </button>
                     ` : user.friendship_status === 'accepted' ? `
@@ -254,9 +254,9 @@ window.sendRequest = async (receiverId, btnElement) => {
 
         // Actualizamos el botón según la respuesta
         if (data.success) {
-            btnElement.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Pendiente`;
-            btnElement.classList.replace('text-gamityPurple', 'text-gamityGreen');
-            btnElement.classList.replace('border-gamityPurple/30', 'border-gamityGreen/30');
+            btnElement.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.7)]"></span> Pendiente`;
+            btnElement.classList.replace('text-gamityPurple', 'text-red-400');
+            btnElement.classList.replace('border-gamityPurple/30', 'border-red-500/20');
         } else {
             btnElement.innerHTML = originalContent;
             btnElement.disabled = false;

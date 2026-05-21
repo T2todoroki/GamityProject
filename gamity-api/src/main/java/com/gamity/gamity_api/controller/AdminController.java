@@ -53,8 +53,10 @@ public class AdminController {
                 .sorted((a, b) -> {
                     boolean aAdmin = "admin".equalsIgnoreCase(a.getRole());
                     boolean bAdmin = "admin".equalsIgnoreCase(b.getRole());
-                    if (aAdmin && !bAdmin) return -1;
-                    if (!aAdmin && bAdmin) return 1;
+                    if (aAdmin && !bAdmin)
+                        return -1;
+                    if (!aAdmin && bAdmin)
+                        return 1;
                     return Long.compare(a.getId(), b.getId());
                 })
                 .map(u -> {
@@ -78,15 +80,21 @@ public class AdminController {
         // Reportes (pendientes primero)
         List<Map<String, Object>> reports = reportRepository.findAll().stream()
                 .sorted((a, b) -> {
-                    if ("pending".equals(a.getStatus()) && !"pending".equals(b.getStatus())) return -1;
-                    if (!"pending".equals(a.getStatus()) && "pending".equals(b.getStatus())) return 1;
+                    if ("pending".equals(a.getStatus()) && !"pending".equals(b.getStatus()))
+                        return -1;
+                    if (!"pending".equals(a.getStatus()) && "pending".equals(b.getStatus()))
+                        return 1;
                     return 0;
                 })
                 .map(r -> {
                     Map<String, Object> map = new HashMap<>();
                     map.put("id", r.getId());
-                    map.put("reporter_name", userRepository.findById(r.getReporterId()).map(User::getUsername).orElse("Desconocido"));
-                    map.put("reported_name", userRepository.findById(r.getReportedUserId()).map(User::getUsername).orElse("Desconocido"));
+                    map.put("reporter_id", r.getReporterId());
+                    map.put("reported_id", r.getReportedUserId());
+                    map.put("reporter_name",
+                            userRepository.findById(r.getReporterId()).map(User::getUsername).orElse("Desconocido"));
+                    map.put("reported_name", userRepository.findById(r.getReportedUserId()).map(User::getUsername)
+                            .orElse("Desconocido"));
                     map.put("reason", r.getReason());
                     map.put("status", r.getStatus());
                     map.put("created_at", r.getCreatedAt() != null ? r.getCreatedAt().toString() : "");
@@ -129,7 +137,8 @@ public class AdminController {
             return ResponseEntity.status(403).body(Map.of("success", false, "error", "Acceso denegado"));
         }
         if (id.equals(adminId)) {
-            return ResponseEntity.badRequest().body(Map.of("success", false, "error", "No puedes eliminar tu propia cuenta de administrador"));
+            return ResponseEntity.badRequest()
+                    .body(Map.of("success", false, "error", "No puedes eliminar tu propia cuenta de administrador"));
         }
 
         reportRepository.deleteByReporterIdOrReportedUserId(id, id);

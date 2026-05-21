@@ -283,18 +283,31 @@ $initials = strtoupper(substr($username, 0, 2));
 
                 <!-- Reportes Section -->
                 <div class="bg-surface rounded-2xl border border-white/5 overflow-hidden mt-8">
-                    <div class="p-6 neon-border-b flex items-center justify-between">
-                        <h2 class="text-xl font-bold flex items-center gap-2">
-                            <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9">
-                                </path>
-                            </svg>
-                            Reportes de Usuarios
-                        </h2>
-                        <span id="reportsCount"
-                            class="px-3 py-1 bg-red-500/20 text-red-400 text-xs rounded-full font-medium">0
-                            reportes</span>
+                    <div class="p-6 neon-border-b flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <h2 class="text-xl font-bold flex items-center gap-2">
+                                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9">
+                                    </path>
+                                </svg>
+                                Reportes de Usuarios
+                            </h2>
+                            <span id="reportsCount"
+                                class="px-3 py-1 bg-red-500/20 text-red-400 text-xs rounded-full font-medium">0
+                                reportes</span>
+                        </div>
+                        <!-- Filtros Rápidos de Reportes -->
+                        <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+                            <button onclick="filterReports('all')" id="btnReportFilter-all"
+                                class="px-3 py-1.5 rounded-full text-xs font-semibold bg-gamityPurple/10 text-gamityPurple border border-gamityPurple/20 transition-all">Todos</button>
+                            <button onclick="filterReports('pending')" id="btnReportFilter-pending"
+                                class="px-3 py-1.5 rounded-full text-xs font-semibold bg-surfaceLight text-gray-400 border border-white/5 hover:text-white transition-all">Pendientes</button>
+                            <button onclick="filterReports('reviewed')" id="btnReportFilter-reviewed"
+                                class="px-3 py-1.5 rounded-full text-xs font-semibold bg-surfaceLight text-gray-400 border border-white/5 hover:text-white transition-all">Revisados</button>
+                            <button onclick="filterReports('dismissed')" id="btnReportFilter-dismissed"
+                                class="px-3 py-1.5 rounded-full text-xs font-semibold bg-surfaceLight text-gray-400 border border-white/5 hover:text-white transition-all">Descartados</button>
+                        </div>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm">
@@ -371,6 +384,70 @@ $initials = strtoupper(substr($username, 0, 2));
                         class="px-6 py-2.5 rounded-xl bg-neon-gradient text-white font-bold hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all text-sm">Guardar</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal Detalles de Reporte -->
+    <div id="reportDetailsModal"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center">
+        <div class="bg-surface rounded-2xl border border-white/5 w-full max-w-lg mx-4 p-8 shadow-2xl relative">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold flex items-center gap-2">
+                    <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9">
+                        </path>
+                    </svg>
+                    Detalles del Reporte <span id="detailReportId" class="text-gray-500 font-mono text-lg">#0</span>
+                </h3>
+                <button onclick="closeReportDetailsModal()" class="text-gray-400 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <div class="space-y-5">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="p-4 bg-surfaceLight/50 rounded-xl border border-white/5">
+                        <span
+                            class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Denunciante</span>
+                        <div>
+                            <p id="detailReporterName" class="font-bold text-white text-base"></p>
+                            <p id="detailReporterId" class="text-xs text-gray-400 font-mono mt-0.5"></p>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-red-500/5 rounded-xl border border-red-500/10">
+                        <span class="block text-[10px] font-bold text-red-400 uppercase tracking-wider mb-1">Usuario
+                            Reportado</span>
+                        <div>
+                            <p id="detailReportedName" class="font-bold text-white text-base"></p>
+                            <p id="detailReportedId" class="text-xs text-red-400/80 font-mono mt-0.5"></p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <span class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Fecha del
+                        Reporte</span>
+                    <p id="detailReportDate" class="text-sm text-gray-300"></p>
+                </div>
+                <div>
+                    <span class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Motivo del
+                        Reporte</span>
+                    <div class="p-4 bg-surfaceLight rounded-xl border border-white/5 text-sm text-gray-200 whitespace-pre-wrap leading-relaxed max-h-40 overflow-y-auto"
+                        id="detailReportReason"></div>
+                </div>
+                <div>
+                    <span class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Estado del
+                        Reporte</span>
+                    <div id="detailReportStatusBadge"></div>
+                </div>
+                <div class="pt-6 border-t border-white/5 flex flex-wrap gap-2 justify-end">
+                    <button type="button" onclick="closeReportDetailsModal()"
+                        class="px-5 py-2.5 rounded-xl border border-white/10 text-gray-400 hover:text-white hover:border-white/30 transition-all text-sm font-medium">Cerrar</button>
+                    <div id="detailReportActions" class="flex gap-2"></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -562,16 +639,42 @@ $initials = strtoupper(substr($username, 0, 2));
                 .catch(() => showToast('Error de conexión con la API', 'error'));
         }
 
-        function renderReportsTable(reports) {
-            const tbody = document.getElementById('reportsTableBody');
-            document.getElementById('reportsCount').textContent = `${reports.length} reportes`;
+        window.allReports = [];
+        window.currentReportFilter = 'all';
 
-            if (reports.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-10 text-center text-gray-500">No hay reportes registrados. ¡La comunidad está tranquila!</td></tr>';
+        function filterReports(status) {
+            window.currentReportFilter = status;
+            const statuses = ['all', 'pending', 'reviewed', 'dismissed'];
+            statuses.forEach(s => {
+                const btn = document.getElementById(`btnReportFilter-${s}`);
+                if (btn) {
+                    if (s === status) {
+                        btn.className = 'px-3 py-1.5 rounded-full text-xs font-semibold bg-gamityPurple/10 text-gamityPurple border border-gamityPurple/20 transition-all';
+                    } else {
+                        btn.className = 'px-3 py-1.5 rounded-full text-xs font-semibold bg-surfaceLight text-gray-400 border border-white/5 hover:text-white transition-all';
+                    }
+                }
+            });
+            renderReportsTable(window.allReports);
+        }
+
+        function renderReportsTable(reports) {
+            window.allReports = reports;
+            const tbody = document.getElementById('reportsTableBody');
+
+            const filteredReports = reports.filter(r => {
+                if (window.currentReportFilter === 'all') return true;
+                return r.status === window.currentReportFilter;
+            });
+
+            document.getElementById('reportsCount').textContent = `${filteredReports.length} reportes`;
+
+            if (filteredReports.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-10 text-center text-gray-500">No hay reportes en esta categoría.</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = reports.map(r => {
+            tbody.innerHTML = filteredReports.map(r => {
                 const statusBadge = {
                     'pending': '<span class="px-2 py-1 rounded-full bg-yellow-500/20 text-yellow-400 text-xs font-bold">Pendiente</span>',
                     'reviewed': '<span class="px-2 py-1 rounded-full bg-gamityGreen/20 text-gamityGreen text-xs font-bold">Revisado</span>',
@@ -580,15 +683,18 @@ $initials = strtoupper(substr($username, 0, 2));
                 const date = new Date(r.created_at).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
 
                 return `
-                    <tr class="user-row neon-border-b">
+                    <tr class="user-row neon-border-b cursor-pointer hover:bg-white/[0.02] transition-colors" onclick="openReportDetails(${r.id})">
                         <td class="px-6 py-4 text-gray-400 font-mono">#${r.id}</td>
                         <td class="px-6 py-4 font-semibold">${r.reporter_name}</td>
                         <td class="px-6 py-4 text-red-400 font-semibold">${r.reported_name}</td>
                         <td class="px-6 py-4 text-gray-300 max-w-xs truncate">${r.reason}</td>
                         <td class="px-6 py-4">${statusBadge[r.status] || r.status}</td>
                         <td class="px-6 py-4 text-gray-400 text-xs">${date}</td>
-                        <td class="px-6 py-4 text-center">
+                        <td class="px-6 py-4 text-center" onclick="event.stopPropagation()">
                             <div class="flex items-center justify-center gap-2">
+                                <button onclick="openReportDetails(${r.id})" class="p-2 rounded-lg text-gray-400 hover:text-gamityPurple hover:bg-gamityPurple/10 transition-colors" title="Ver Detalles">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                </button>
                                 ${r.status === 'pending' ? `
                                     <button onclick="updateReportStatus(${r.id}, 'reviewed')" class="p-2 rounded-lg text-gray-400 hover:text-gamityGreen hover:bg-gamityGreen/10 transition-colors" title="Marcar revisado">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
@@ -602,6 +708,87 @@ $initials = strtoupper(substr($username, 0, 2));
                     </tr>
                 `;
             }).join('');
+        }
+
+        function openReportDetails(reportId) {
+            const report = (window.allReports || []).find(r => r.id === reportId);
+            if (!report) return;
+
+            document.getElementById('detailReportId').textContent = `#${report.id}`;
+            document.getElementById('detailReporterName').textContent = report.reporter_name;
+            document.getElementById('detailReporterId').textContent = report.reporter_id ? `ID: #${report.reporter_id}` : 'ID: N/A';
+            document.getElementById('detailReportedName').textContent = report.reported_name;
+            document.getElementById('detailReportedId').textContent = report.reported_id ? `ID: #${report.reported_id}` : 'ID: N/A';
+
+            const date = new Date(report.created_at).toLocaleString('es-ES', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            document.getElementById('detailReportDate').textContent = date;
+            document.getElementById('detailReportReason').textContent = report.reason;
+
+            const statusBadgeContainer = document.getElementById('detailReportStatusBadge');
+            const statusBadges = {
+                'pending': '<span class="px-3 py-1.5 rounded-full bg-yellow-500/20 text-yellow-400 text-xs font-bold inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></span> Pendiente de Revisión</span>',
+                'reviewed': '<span class="px-3 py-1.5 rounded-full bg-gamityGreen/20 text-gamityGreen text-xs font-bold inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gamityGreen"></span> Revisado</span>',
+                'dismissed': '<span class="px-3 py-1.5 rounded-full bg-gray-500/20 text-gray-400 text-xs font-bold inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gray-500"></span> Descartado</span>'
+            };
+            statusBadgeContainer.innerHTML = statusBadges[report.status] || report.status;
+
+            const actionsContainer = document.getElementById('detailReportActions');
+            if (report.status === 'pending') {
+                actionsContainer.innerHTML = `
+                    <button onclick="updateReportStatus(${report.id}, 'dismissed'); closeReportDetailsModal();" 
+                        class="px-4 py-2 rounded-xl border border-white/10 text-gray-400 hover:text-white hover:border-white/30 transition-all text-sm font-medium">
+                        Denegar
+                    </button>
+                    <button onclick="updateReportStatus(${report.id}, 'reviewed'); closeReportDetailsModal();" 
+                        class="px-4 py-2 bg-gamityGreen/10 hover:bg-gamityGreen border border-gamityGreen/30 text-gamityGreen hover:text-white rounded-xl text-sm font-bold transition-all">
+                        Aceptar
+                    </button>
+                    ${report.reported_id ? `
+                        <button onclick="deleteUserFromReport(${report.reported_id}, '${report.reported_name}', ${report.id})" 
+                            class="px-4 py-2 bg-red-500/10 hover:bg-red-500 border border-red-500/30 text-red-500 hover:text-white rounded-xl text-sm font-bold transition-all">
+                            Sancionar y Eliminar
+                        </button>
+                    ` : ''}
+                `;
+            } else {
+                actionsContainer.innerHTML = `
+                    <span class="text-xs text-gray-400 font-medium italic self-center">Procesado</span>
+                `;
+            }
+
+            const modal = document.getElementById('reportDetailsModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeReportDetailsModal() {
+            const modal = document.getElementById('reportDetailsModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function deleteUserFromReport(userId, username, reportId) {
+            if (!confirm(`¿Eliminar al usuario "${username}"? Esta acción no se puede deshacer y resolverá el reporte.`)) return;
+
+            fetch(`${window.GAMITY_API_URL}/admin/users/${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-User-Id': USER_ID,
+                    'X-User-Hash': USER_HASH
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast(`Usuario "${username}" eliminado y reporte resuelto`, 'success');
+                        closeReportDetailsModal();
+                        loadDashboard();
+                    } else {
+                        showToast(data.error || 'Error al eliminar usuario', 'error');
+                    }
+                })
+                .catch(() => showToast('Error de conexión con la API', 'error'));
         }
 
         function updateReportStatus(reportId, newStatus) {

@@ -38,6 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
     `;
 
+    // Buscador de amigos listener
+    const searchFriendsInput = document.getElementById('searchFriendsInput');
+    if (searchFriendsInput) {
+        searchFriendsInput.addEventListener('input', () => {
+            renderFriends(window.allFriends || []);
+        });
+    }
+
     // ── Load Pending Requests (desde Spring Boot) ──
     async function loadRequests() {
         try {
@@ -50,8 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res.status === 401 || res.status === 403) { window.location.href = 'auth.php'; return; }
             const data = await res.json();
 
-            // El backend devuelve un array de FriendshipResponseDTO directamente
+            // Agregar o eliminar indicador de solicitud pendiente en el Tab
+            let badge = tabReq.querySelector('.pending-indicator-dot');
             if (Array.isArray(data) && data.length > 0) {
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.className = 'pending-indicator-dot w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)] ml-1';
+                    tabReq.appendChild(badge);
+                }
+
                 contReq.innerHTML = data.map(req => {
                     const safeUsername = escapeHTML(req.senderUsername);
                     const safeMainGame = escapeHTML(req.senderMainGame);
@@ -59,29 +74,32 @@ document.addEventListener('DOMContentLoaded', () => {
                     const avatarUrl = req.senderAvatar || `https://ui-avatars.com/api/?name=${encodeURI(req.senderUsername)}&background=18181b&color=fff`;
                     return `
                     <div class="request-card p-5 rounded-2xl border border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 animate-slide-in relative overflow-hidden group">
-    <!-- Brillo de fondo al pasar el ratón -->
-    <div class="absolute inset-0 bg-gradient-to-r from-gamityPurple/0 via-gamityPurple/5 to-gamityPurple/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-    
-    <div class="flex items-center gap-4 relative z-10 w-full md:w-auto">
-        <div class="w-14 h-14 rounded-full overflow-hidden ring-2 ring-gamityPurple/30 shadow-[0_0_15px_rgba(139,92,246,0.3)]">
-            <img src="${avatarUrl}" class="w-full h-full object-cover">
-        </div>
-        <div>
-            <h3 class="font-bold text-white text-lg drop-shadow-md">${safeUsername}</h3>
-            <p class="text-xs text-gamityPurple/80 font-medium tracking-wide uppercase mt-0.5">${safeMainGame}</p>
-        </div>
-    </div>
-    <div class="flex items-center gap-3 w-full md:w-auto relative z-10">
-        <button onclick="handleRequest(${req.id}, 'accepted')" class="flex-1 md:flex-none px-5 py-2.5 bg-gamityGreen/10 hover:bg-gamityGreen border border-gamityGreen/30 hover:border-gamityGreen text-gamityGreen hover:text-white rounded-xl text-sm font-bold transition-all shadow-[0_0_10px_rgba(16,185,129,0.1)] hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] flex items-center justify-center gap-2">
-            Aceptar
-        </button>
-        <!-- Botón de rechazar con estilo sutil -->
-    </div>
-</div>
-
+                        <!-- Brillo de fondo al pasar el ratón -->
+                        <div class="absolute inset-0 bg-gradient-to-r from-gamityPurple/0 via-gamityPurple/5 to-gamityPurple/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        
+                        <div class="flex items-center gap-4 relative z-10 w-full md:w-auto">
+                            <div class="w-14 h-14 rounded-full overflow-hidden ring-2 ring-gamityPurple/30 shadow-[0_0_15px_rgba(139,92,246,0.3)] relative">
+                                <img src="${avatarUrl}" class="w-full h-full object-cover">
+                                <span class="absolute top-0 right-0 w-3 h-3 rounded-full bg-red-500 animate-pulse border-2 border-surface shadow-[0_0_8px_rgba(239,68,68,0.8)] z-10"></span>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-white text-lg drop-shadow-md">${safeUsername}</h3>
+                                <p class="text-xs text-gamityPurple/80 font-medium tracking-wide uppercase mt-0.5">${safeMainGame}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 w-full md:w-auto relative z-10">
+                            <button onclick="handleRequest(${req.id}, 'rejected')" class="flex-1 md:flex-none px-5 py-2.5 bg-red-500/10 hover:bg-red-500 border border-red-500/30 hover:border-red-500 text-red-400 hover:text-white rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2">
+                                Rechazar
+                            </button>
+                            <button onclick="handleRequest(${req.id}, 'accepted')" class="flex-1 md:flex-none px-5 py-2.5 bg-gamityGreen/10 hover:bg-gamityGreen border border-gamityGreen/30 hover:border-gamityGreen text-gamityGreen hover:text-white rounded-xl text-sm font-bold transition-all shadow-[0_0_10px_rgba(16,185,129,0.1)] hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] flex items-center justify-center gap-2">
+                                Aceptar
+                            </button>
+                        </div>
+                    </div>
                     `;
                 }).join('');
             } else {
+                if (badge) badge.remove();
                 contReq.innerHTML = renderEmpty('No tienes solicitudes pendientes', '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>');
             }
         } catch (e) {
@@ -102,40 +120,54 @@ document.addEventListener('DOMContentLoaded', () => {
             if (res.status === 401 || res.status === 403) { window.location.href = 'auth.php'; return; }
             const data = await res.json();
 
-            if (Array.isArray(data) && data.length > 0) {
-                contFri.innerHTML = data.map(friend => {
-                    const safeUsername = escapeHTML(friend.username);
-                    const safeMainGame = escapeHTML(friend.mainGame);
-                    const avatarUrl = friend.avatar || `https://ui-avatars.com/api/?name=${encodeURI(friend.username)}&background=18181b&color=fff`;
-                    const isOnline = friend.status === 'online';
+            window.allFriends = Array.isArray(data) ? data : [];
+            renderFriends(window.allFriends);
+        } catch (e) {
+            console.error('Error cargando amigos:', e);
+        }
+    }
 
-                    return `
-                    <div class="bg-surface p-4 rounded-xl border border-white/5 flex items-center justify-between request-card">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-full overflow-hidden border border-white/10 relative">
-                                <img src="${avatarUrl}" class="w-full h-full object-cover">
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-white text-lg flex items-center gap-2">
-                                    ${safeUsername}
-                                    <span class="w-2 h-2 rounded-full ${isOnline ? 'bg-gamityGreen shadow-[0_0_5px_#10b981]' : 'bg-gray-500'}"></span>
-                                </h3>
-                                <p class="text-xs text-gray-400 mt-1">${safeMainGame || 'Cualquier juego'}</p>
-                            </div>
+    function renderFriends(friends) {
+        const container = document.getElementById('friendsListContainer') || contFri;
+        const query = (document.getElementById('searchFriendsInput')?.value || '').toLowerCase().trim();
+
+        const filtered = friends.filter(friend => {
+            return friend.username.toLowerCase().includes(query);
+        });
+
+        if (filtered.length > 0) {
+            container.innerHTML = filtered.map(friend => {
+                const safeUsername = escapeHTML(friend.username);
+                const safeMainGame = escapeHTML(friend.mainGame);
+                const avatarUrl = friend.avatar || `https://ui-avatars.com/api/?name=${encodeURI(friend.username)}&background=18181b&color=fff`;
+                const isOnline = friend.status === 'online';
+
+                return `
+                <div class="bg-surface p-4 rounded-xl border border-white/5 flex items-center justify-between request-card">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full overflow-hidden border border-white/10 relative">
+                            <img src="${avatarUrl}" class="w-full h-full object-cover">
                         </div>
                         <div>
-                            <a href="chat.php?user_id=${friend.id}" class="px-4 py-2 bg-gamityPurple/10 hover:bg-gamityPurple border border-gamityPurple/20 text-gamityPurple hover:text-white rounded-lg text-sm font-medium transition flex items-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-                                Chatear
-                            </a>
+                            <h3 class="font-bold text-white text-lg flex items-center gap-2">
+                                ${safeUsername}
+                                <span class="w-2 h-2 rounded-full ${isOnline ? 'bg-gamityGreen shadow-[0_0_5px_#10b981]' : 'bg-gray-500'}"></span>
+                            </h3>
+                            <p class="text-xs text-gray-400 mt-1">${safeMainGame || 'Cualquier juego'}</p>
                         </div>
                     </div>
-                    `;
-                }).join('');
-            } else {
-                contFri.innerHTML = renderEmpty('Aún no tienes amigos en tu lista', '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>');
-            }
-        } catch (e) { console.error('Error cargando amigos:', e); }
+                    <div>
+                        <a href="chat.php?user_id=${friend.id}" class="px-4 py-2 bg-gamityPurple/10 hover:bg-gamityPurple border border-gamityPurple/20 text-gamityPurple hover:text-white rounded-lg text-sm font-medium transition flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                            Chatear
+                        </a>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        } else {
+            container.innerHTML = renderEmpty(query ? 'No se encontraron amigos con ese nombre' : 'Aún no tienes amigos en tu lista', '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>');
+        }
     }
 
     // ── Handle Accept / Reject (via Spring Boot) ──
