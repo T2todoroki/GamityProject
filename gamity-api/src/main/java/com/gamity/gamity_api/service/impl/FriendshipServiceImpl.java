@@ -22,6 +22,8 @@ public class FriendshipServiceImpl implements FriendshipService {
 
     private final FriendshipRequestRepository friendshipRepo;
     private final UserRepository userRepository;
+    private final com.gamity.gamity_api.repository.BlockRepository blockRepository;
+    private final com.gamity.gamity_api.repository.MessageRepository messageRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -115,14 +117,32 @@ public class FriendshipServiceImpl implements FriendshipService {
             dto.setId(friend.getId());
             dto.setUsername(friend.getUsername());
             dto.setAvatar(friend.getAvatar());
-            dto.setStatus(friend.getStatus() != null ? friend.getStatus() : "offline");
-
-            // Enriquecer con datos del perfil del amigo
-            UserProfile profile = friend.getProfile();
-            if (profile != null) {
-                dto.setMainGame(profile.getMainGame());
-                dto.setGameRank(profile.getGameRank());
+            
+            // Si hay bloqueo de alguna parte, se ve desconectado
+            boolean isBlockedByMe = blockRepository.existsByBlockerIdAndBlockedId(userId, friendId);
+            boolean hasBlockedMe = blockRepository.existsByBlockerIdAndBlockedId(friendId, userId);
+            
+            if (hasBlockedMe) {
+                // Si el amigo me ha bloqueado, no puedo ver su foto, ni su estado real, ni su juego
+                dto.setStatus("offline");
+                dto.setAvatar("img/default.png");
+                dto.setMainGame(null);
+                dto.setGameRank(null);
+            } else {
+                // Si yo lo he bloqueado a él (isBlockedByMe), sigo viendo su info real
+                dto.setStatus(friend.getStatus() != null ? friend.getStatus() : "offline");
+                
+                // Enriquecer con datos del perfil del amigo
+                UserProfile profile = friend.getProfile();
+                if (profile != null) {
+                    dto.setMainGame(profile.getMainGame());
+                    dto.setGameRank(profile.getGameRank());
+                }
             }
+
+            // Obtener mensajes no leídos de este usuario en específico
+            long unreadCount = messageRepository.countUnreadFromUser(friendId, userId);
+            dto.setUnreadCount(unreadCount);
 
             return dto;
         }).filter(dto -> dto != null).collect(Collectors.toList());
