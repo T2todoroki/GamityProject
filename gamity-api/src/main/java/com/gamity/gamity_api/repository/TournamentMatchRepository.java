@@ -15,11 +15,13 @@ public interface TournamentMatchRepository extends JpaRepository<TournamentMatch
 
     // Partida pendiente donde participa un equipo
     @Query("SELECT m FROM TournamentMatch m " +
-           "WHERE (m.team1Id = :teamId OR m.team2Id = :teamId) " +
-           "AND m.status IN ('awaiting_reports', 'pending') " +
-           "ORDER BY m.round ASC")
+            "WHERE (m.team1Id = :teamId OR m.team2Id = :teamId) " +
+            "AND m.status IN ('awaiting_reports', 'pending') " +
+            "ORDER BY m.round ASC")
     Optional<TournamentMatch> findPendingMatchByTeamId(Integer teamId);
 
     // Partidas de una ronda
     List<TournamentMatch> findByTournamentIdAndRoundOrderByMatchOrderAsc(Integer tournamentId, Integer round);
+
+    List<TournamentMatch> findByStatus(String status);
 }

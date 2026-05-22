@@ -2,10 +2,14 @@ package com.gamity.gamity_api.controller;
 
 import com.gamity.gamity_api.domain.entity.Report;
 import com.gamity.gamity_api.domain.entity.User;
+import com.gamity.gamity_api.domain.entity.TournamentMatch;
 import com.gamity.gamity_api.repository.FriendshipRequestRepository;
 import com.gamity.gamity_api.repository.MessageRepository;
 import com.gamity.gamity_api.repository.ReportRepository;
 import com.gamity.gamity_api.repository.UserRepository;
+import com.gamity.gamity_api.repository.TournamentRepository;
+import com.gamity.gamity_api.repository.TournamentMatchRepository;
+import com.gamity.gamity_api.repository.TournamentTeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +29,9 @@ public class AdminController {
     private final ReportRepository reportRepository;
     private final MessageRepository messageRepository;
     private final FriendshipRequestRepository friendshipRepository;
+    private final TournamentRepository tournamentRepository;
+    private final TournamentMatchRepository tournamentMatchRepository;
+    private final TournamentTeamRepository tournamentTeamRepository;
 
     @GetMapping("/dashboard")
     public ResponseEntity<?> getDashboard(
@@ -46,6 +53,9 @@ public class AdminController {
         stats.put("active_connections", friendshipRepository.count()); // Conexiones entre usuarios
         stats.put("total_messages", messageRepository.count());
         stats.put("pending_reports", reportRepository.countByStatus("pending"));
+        stats.put("total_tournaments", tournamentRepository.count());
+        long disputedCount = tournamentMatchRepository.findByStatus("disputed").size();
+        stats.put("disputed_matches", disputedCount);
         response.put("stats", stats);
 
         // Lista de usuarios (admins primero, luego por id)
@@ -102,6 +112,28 @@ public class AdminController {
                     return map;
                 }).collect(Collectors.toList());
         response.put("reports", reports);
+
+        // Partidas disputadas en Premier (para la sección de reportes)
+        List<Map<String, Object>> disputedMatches = tournamentMatchRepository.findByStatus("disputed").stream()
+                .map(m -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id", m.getId());
+                    map.put("tournament_id", m.getTournamentId());
+                    map.put("round", m.getRound());
+                    map.put("status", m.getStatus());
+                    String team1Name = tournamentTeamRepository.findById(m.getTeam1Id())
+                            .map(t -> t.getName()).orElse("Equipo " + m.getTeam1Id());
+                    String team2Name = tournamentTeamRepository.findById(m.getTeam2Id())
+                            .map(t -> t.getName()).orElse("Equipo " + m.getTeam2Id());
+                    map.put("team1_id", m.getTeam1Id());
+                    map.put("team2_id", m.getTeam2Id());
+                    map.put("team1_name", team1Name);
+                    map.put("team2_name", team2Name);
+                    map.put("team1_reported_winner", m.getTeam1ReportedWinner());
+                    map.put("team2_reported_winner", m.getTeam2ReportedWinner());
+                    return map;
+                }).collect(Collectors.toList());
+        response.put("disputed_matches", disputedMatches);
 
         return ResponseEntity.ok(response);
     }
@@ -162,6 +194,30 @@ public class AdminController {
                 .orElseThrow(() -> new RuntimeException("Reporte no encontrado"));
         report.setStatus(body.get("status"));
         reportRepository.save(report);
+        return ResponseEntity.ok(Map.of("success", true));
+    }
+
+    @PatchMapping("/matches/{id}/resolve")
+    public ResponseEntity<?> resolveDisputedMatch(
+            @PathVariable Integer id,
+            @RequestHeader(value = "X-User-Id", defaultValue = "0") Long adminId,
+            @RequestBody Map<String, Object> body) {
+
+        User requester = userRepository.findById(adminId).orElse(null);
+        if (requester == null || !"admin".equalsIgnoreCase(requester.getRole())) {
+            return ResponseEntity.status(403).body(Map.of("success", false, "error", "Acceso denegado"));
+        }
+
+        TournamentMatch match = tournamentMatchRepository.findById(id).orElse(null);
+        if (match == null) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "error", "Partida no encontrada"));
+        }
+
+        Integer winnerId = Integer.valueOf(body.get("winner_team_id").toString());
+        match.setWinnerId(winnerId);
+        match.setStatus("validated");
+        tournamentMatchRepository.save(match);
+
         return ResponseEntity.ok(Map.of("success", true));
     }
 }

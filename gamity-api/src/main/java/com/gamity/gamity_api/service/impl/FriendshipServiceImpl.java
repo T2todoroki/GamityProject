@@ -104,26 +104,29 @@ public class FriendshipServiceImpl implements FriendshipService {
         List<FriendshipRequest> accepted = friendshipRepo
                 .findBySenderIdAndStatusOrReceiverIdAndStatus(userId, "accepted", userId, "accepted");
 
-        // Mapear cada solicitud aceptada a un DTO de amigo, obteniendo los datos del "otro" usuario
+        // Mapear cada solicitud aceptada a un DTO de amigo, obteniendo los datos del
+        // "otro" usuario
         return accepted.stream().map(req -> {
             // El amigo es el "otro" usuario en la relación
             Long friendId = req.getSenderId().equals(userId) ? req.getReceiverId() : req.getSenderId();
             User friend = userRepository.findById(friendId).orElse(null);
 
-            if (friend == null) return null;
+            if (friend == null)
+                return null;
 
             // Mapear a DTO de amigo con datos enriquecidos
             FriendDTO dto = new FriendDTO();
             dto.setId(friend.getId());
             dto.setUsername(friend.getUsername());
             dto.setAvatar(friend.getAvatar());
-            
+
             // Si hay bloqueo de alguna parte, se ve desconectado
             boolean isBlockedByMe = blockRepository.existsByBlockerIdAndBlockedId(userId, friendId);
             boolean hasBlockedMe = blockRepository.existsByBlockerIdAndBlockedId(friendId, userId);
-            
+
             if (hasBlockedMe) {
-                // Si el amigo me ha bloqueado, no puedo ver su foto, ni su estado real, ni su juego
+                // Si el amigo me ha bloqueado, no puedo ver su foto, ni su estado real, ni su
+                // juego
                 dto.setStatus("offline");
                 dto.setAvatar("img/default.png");
                 dto.setMainGame(null);
@@ -131,7 +134,7 @@ public class FriendshipServiceImpl implements FriendshipService {
             } else {
                 // Si yo lo he bloqueado a él (isBlockedByMe), sigo viendo su info real
                 dto.setStatus(friend.getStatus() != null ? friend.getStatus() : "offline");
-                
+
                 // Enriquecer con datos del perfil del amigo
                 UserProfile profile = friend.getProfile();
                 if (profile != null) {
@@ -148,4 +151,3 @@ public class FriendshipServiceImpl implements FriendshipService {
         }).filter(dto -> dto != null).collect(Collectors.toList());
     }
 }
-

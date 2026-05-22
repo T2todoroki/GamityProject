@@ -23,6 +23,7 @@ $initials = strtoupper(substr($username, 0, 2));
     <script src="js/config.js"></script>
     <script src="js/tailwind-config.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/components.css">
 </head>
@@ -229,6 +230,33 @@ $initials = strtoupper(substr($username, 0, 2));
                     </div>
                 </div>
 
+                <!-- Gráficos de Estadísticas -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <!-- Gráfico de Usuarios -->
+                    <div class="bg-surface rounded-2xl border border-white/5 p-6 flex flex-col items-center justify-center relative overflow-hidden">
+                        <div class="absolute -top-10 -right-10 w-32 h-32 bg-gamityPurple/10 rounded-full blur-2xl"></div>
+                        <h3 class="text-lg font-bold w-full text-left mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-gamityPurple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
+                            Estado de Usuarios
+                        </h3>
+                        <div class="w-full h-64 flex items-center justify-center">
+                            <canvas id="usersChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico de Actividad -->
+                    <div class="bg-surface rounded-2xl border border-white/5 p-6 relative overflow-hidden">
+                        <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
+                        <h3 class="text-lg font-bold w-full text-left mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                            Actividad Reciente
+                        </h3>
+                        <div class="w-full h-64">
+                            <canvas id="activityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Tabla de usuarios -->
                 <div class="bg-surface rounded-2xl border border-white/5 overflow-hidden">
                     <div class="p-6 neon-border-b flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -246,14 +274,20 @@ $initials = strtoupper(substr($username, 0, 2));
                                 class="px-3 py-1 bg-gamityPurple/20 text-gamityPurple text-xs rounded-full font-medium">0
                                 usuarios</span>
                         </div>
-                        <div class="relative w-full sm:w-auto">
-                            <svg class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
-                            <input type="text" id="searchUsers" placeholder="Buscar usuario, email o rango..."
-                                class="input-gamity pl-10 w-full sm:w-64">
+                        <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+                            <button onclick="exportUsersCSV()" class="px-4 py-2 bg-gamityPurple/10 hover:bg-gamityPurple hover:text-white text-gamityPurple border border-gamityPurple/20 transition-all rounded-xl text-sm font-bold flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                Exportar CSV
+                            </button>
+                            <div class="relative w-full sm:w-auto">
+                                <svg class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                                <input type="text" id="searchUsers" placeholder="Buscar usuario, email o rango..."
+                                    class="input-gamity pl-10 w-full sm:w-64">
+                            </div>
                         </div>
                     </div>
 
@@ -275,6 +309,69 @@ $initials = strtoupper(substr($username, 0, 2));
                                 <tr>
                                     <td colspan="8" class="px-6 py-10 text-center text-gray-500">Cargando usuarios...
                                     </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Paginación -->
+                    <div id="usersPagination" class="p-4 border-t border-white/5 flex items-center justify-between">
+                        <span id="paginationInfo" class="text-xs text-gray-400">Mostrando 0 de 0 usuarios</span>
+                        <div class="flex items-center gap-2">
+                            <button id="prevPageBtn" onclick="changeUsersPage(-1)" disabled
+                                class="p-2 rounded-lg border border-white/10 text-gray-400 hover:text-white hover:border-gamityPurple/30 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                            </button>
+                            <span id="pageIndicator"
+                                class="text-xs font-bold text-gamityPurple bg-gamityPurple/10 px-3 py-1.5 rounded-full border border-gamityPurple/20">1
+                                / 1</span>
+                            <button id="nextPageBtn" onclick="changeUsersPage(1)" disabled
+                                class="p-2 rounded-lg border border-white/10 text-gray-400 hover:text-white hover:border-gamityPurple/30 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Premier Section - Partidas Disputadas -->
+                <div id="premierSection"
+                    class="bg-surface rounded-2xl border border-yellow-500/20 overflow-hidden mt-8 hidden">
+                    <div class="p-6 neon-border-b flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <h2 class="text-xl font-bold flex items-center gap-2">
+                                <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                                Premier — Partidas Disputadas
+                            </h2>
+                            <span id="disputedCount"
+                                class="px-3 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded-full font-medium">0
+                                disputas</span>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="neon-border-b text-gray-400 uppercase text-xs tracking-wider">
+                                    <th class="px-6 py-4 text-left">Match ID</th>
+                                    <th class="px-6 py-4 text-left">Equipo 1</th>
+                                    <th class="px-6 py-4 text-left">Equipo 2</th>
+                                    <th class="px-6 py-4 text-left">Reporte Eq1</th>
+                                    <th class="px-6 py-4 text-left">Reporte Eq2</th>
+                                    <th class="px-6 py-4 text-center">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="disputedMatchesBody">
+                                <tr>
+                                    <td colspan="6" class="px-6 py-10 text-center text-gray-500">No hay partidas
+                                        disputadas</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -329,6 +426,29 @@ $initials = strtoupper(substr($username, 0, 2));
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <!-- Paginación Reportes -->
+                    <div id="reportsPagination" class="p-4 border-t border-white/5 flex items-center justify-between">
+                        <span id="reportsPaginationInfo" class="text-xs text-gray-400">Mostrando 0 de 0 reportes</span>
+                        <div class="flex items-center gap-2">
+                            <button id="prevReportsPageBtn" onclick="changeReportsPage(-1)" disabled
+                                class="p-2 rounded-lg border border-white/10 text-gray-400 hover:text-white hover:border-gamityPurple/30 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                            </button>
+                            <span id="reportsPageIndicator"
+                                class="text-xs font-bold text-gamityPurple bg-gamityPurple/10 px-3 py-1.5 rounded-full border border-gamityPurple/20">1
+                                / 1</span>
+                            <button id="nextReportsPageBtn" onclick="changeReportsPage(1)" disabled
+                                class="p-2 rounded-lg border border-white/10 text-gray-400 hover:text-white hover:border-gamityPurple/30 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -438,7 +558,8 @@ $initials = strtoupper(substr($username, 0, 2));
                         id="detailReportReason"></div>
                 </div>
                 <div>
-                    <span class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Evidencia (Últimos 10 mensajes)</span>
+                    <span class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Evidencia
+                        (Últimos 10 mensajes)</span>
                     <div class="p-4 bg-[#18181b] rounded-xl border border-white/5 text-xs text-gray-400 whitespace-pre-wrap font-mono leading-relaxed max-h-60 overflow-y-auto"
                         id="detailReportEvidence"></div>
                 </div>
@@ -489,18 +610,11 @@ $initials = strtoupper(substr($username, 0, 2));
         document.addEventListener('DOMContentLoaded', () => {
             loadDashboard();
 
-            // Lógica para el buscador de usuarios en tiempo real
             const searchInput = document.getElementById('searchUsers');
             if (searchInput) {
-                searchInput.addEventListener('input', (e) => {
-                    const term = e.target.value.toLowerCase();
-                    const rows = document.querySelectorAll('#usersTableBody .user-row');
-
-                    rows.forEach(row => {
-                        // Comprueba si el texto de la fila contiene lo que has escrito
-                        const text = row.textContent.toLowerCase();
-                        row.style.display = text.includes(term) ? '' : 'none';
-                    });
+                searchInput.addEventListener('input', () => {
+                    window.currentUsersPage = 1;
+                    renderPaginatedUsers();
                 });
             }
         });
@@ -523,6 +637,8 @@ $initials = strtoupper(substr($username, 0, 2));
                         document.getElementById('statReports').textContent = data.stats.pending_reports;
                         renderUsersTable(data.users);
                         renderReportsTable(data.reports || []);
+                        renderDisputedMatches(data.disputed_matches || []);
+                        initCharts(data.stats);
                     } else {
                         showToast(data.error || 'Error al cargar el panel', 'error');
                     }
@@ -530,28 +646,129 @@ $initials = strtoupper(substr($username, 0, 2));
                 .catch(() => showToast('No se puede conectar con el servidor API', 'error'));
         }
 
-        function renderUsersTable(users) {
-            const tbody = document.getElementById('usersTableBody');
-            document.getElementById('tableCount').textContent = `${users.length} usuarios`;
+        let usersChartInstance = null;
+        let activityChartInstance = null;
 
-            if (users.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-10 text-center text-gray-500">No hay usuarios registrados.</td></tr>';
+        function initCharts(stats) {
+            Chart.defaults.color = '#9ca3af';
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            
+            // Gráfico de Usuarios (Donut)
+            const usersCtx = document.getElementById('usersChart').getContext('2d');
+            const offlineUsers = stats.total_users - stats.online_users;
+            
+            if (usersChartInstance) usersChartInstance.destroy();
+            usersChartInstance = new Chart(usersCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Online', 'Offline'],
+                    datasets: [{
+                        data: [stats.online_users, offlineUsers],
+                        backgroundColor: ['#10B981', '#4B5563'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
+                    }
+                }
+            });
+
+            // Gráfico de Actividad (Bar)
+            const activityCtx = document.getElementById('activityChart').getContext('2d');
+            
+            if (activityChartInstance) activityChartInstance.destroy();
+            activityChartInstance = new Chart(activityCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Conexiones', 'Mensajes', 'Reportes', 'Disputas'],
+                    datasets: [{
+                        label: 'Métricas Totales',
+                        data: [stats.active_connections, stats.total_messages, stats.pending_reports, stats.disputed_matches || 0],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.8)', // blue
+                            'rgba(234, 179, 8, 0.8)',  // yellow
+                            'rgba(239, 68, 68, 0.8)',  // red
+                            'rgba(139, 92, 246, 0.8)'  // purple
+                        ],
+                        borderRadius: 6,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(255, 255, 255, 0.05)' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        window.allUsers = [];
+        window.currentUsersPage = 1;
+        const usersPerPage = 10;
+
+        function renderUsersTable(users) {
+            window.allUsers = users;
+            window.currentUsersPage = 1;
+            document.getElementById('tableCount').textContent = `${users.length} usuarios`;
+            renderPaginatedUsers();
+        }
+
+        function renderPaginatedUsers() {
+            const tbody = document.getElementById('usersTableBody');
+
+            // Search filter logic
+            const searchTerm = (document.getElementById('searchUsers').value || '').toLowerCase();
+            const filteredUsers = window.allUsers.filter(u =>
+                u.username.toLowerCase().includes(searchTerm) ||
+                u.email.toLowerCase().includes(searchTerm) ||
+                (u.game_rank && u.game_rank.toLowerCase().includes(searchTerm)) ||
+                (u.main_game && u.main_game.toLowerCase().includes(searchTerm))
+            );
+
+            const totalPages = Math.ceil(filteredUsers.length / usersPerPage) || 1;
+            if (window.currentUsersPage > totalPages) window.currentUsersPage = totalPages;
+
+            const startIndex = (window.currentUsersPage - 1) * usersPerPage;
+            const endIndex = startIndex + usersPerPage;
+            const currentUsers = filteredUsers.slice(startIndex, endIndex);
+
+            document.getElementById('paginationInfo').textContent = `Mostrando ${currentUsers.length > 0 ? startIndex + 1 : 0} a ${Math.min(endIndex, filteredUsers.length)} de ${filteredUsers.length} usuarios`;
+            document.getElementById('pageIndicator').textContent = `${window.currentUsersPage} / ${totalPages}`;
+
+            document.getElementById('prevPageBtn').disabled = window.currentUsersPage === 1;
+            document.getElementById('nextPageBtn').disabled = window.currentUsersPage === totalPages;
+
+            if (currentUsers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-10 text-center text-gray-500">No se encontraron usuarios.</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = users.map(u => {
+            tbody.innerHTML = currentUsers.map(u => {
                 const isOnline = u.status === 'online';
                 const roleLabel = u.role === 'admin'
                     ? '<span class="px-2 py-1 rounded-full bg-gamityPurple/20 text-gamityPurple text-xs font-bold">Admin</span>'
                     : '<span class="px-2 py-1 rounded-full bg-surfaceLight text-gray-400 text-xs font-medium">Usuario</span>';
                 const statusDot = isOnline
-                    ? '<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gamityGreen"></span> Online</span>'
+                    ? '<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gamityGreen shadow-[0_0_8px_#10B981]"></span> Online</span>'
                     : '<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gray-500"></span> Offline</span>';
 
                 return `
-                    <tr class="user-row neon-border-b">
+                    <tr class="user-row neon-border-b hover:bg-white/[0.02] transition-colors">
                         <td class="px-6 py-4 text-gray-400 font-mono">#${u.id}</td>
-                        <td class="px-6 py-4 font-semibold">${u.username}</td>
+                        <td class="px-6 py-4 font-semibold flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-gamityPurple/20 flex items-center justify-center text-gamityPurple font-bold text-xs">${u.username.substring(0, 2).toUpperCase()}</div>
+                            ${u.username}
+                        </td>
                         <td class="px-6 py-4 text-gray-300">${u.email}</td>
                         <td class="px-6 py-4 text-gray-300">${u.main_game || '-'}</td>
                         <td class="px-6 py-4 text-gray-300">${u.game_rank || '-'}</td>
@@ -559,7 +776,7 @@ $initials = strtoupper(substr($username, 0, 2));
                         <td class="px-6 py-4 text-sm">${statusDot}</td>
                         <td class="px-6 py-4 text-center">
                             <div class="flex items-center justify-center gap-2">
-                                <button onclick="openEdit(${u.id}, '${u.username}', '${u.email}', ${u.role}, '${u.status}')" class="p-2 rounded-lg text-gray-400 hover:text-gamityPurple hover:bg-gamityPurple/10 transition-colors" title="Editar">
+                                <button onclick="openEdit(${u.id}, '${u.username}', '${u.email}', '${u.role === 'admin' ? 1 : 0}', '${u.status}')" class="p-2 rounded-lg text-gray-400 hover:text-gamityPurple hover:bg-gamityPurple/10 transition-colors" title="Editar">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                 </button>
                                 <button onclick="deleteUser(${u.id}, '${u.username}')" class="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-500/10 transition-colors" title="Eliminar">
@@ -570,6 +787,46 @@ $initials = strtoupper(substr($username, 0, 2));
                     </tr>
                 `;
             }).join('');
+        }
+
+        function changeUsersPage(direction) {
+            window.currentUsersPage += direction;
+            renderPaginatedUsers();
+        }
+
+        function exportUsersCSV() {
+            if (!window.allUsers || window.allUsers.length === 0) {
+                showToast('No hay datos para exportar', 'error');
+                return;
+            }
+
+            const headers = ['ID', 'Username', 'Email', 'Rol', 'Estado', 'Juego Principal', 'Rango'];
+            const csvRows = [headers.join(',')];
+
+            window.allUsers.forEach(u => {
+                const row = [
+                    u.id,
+                    `"${u.username}"`,
+                    `"${u.email}"`,
+                    `"${u.role}"`,
+                    `"${u.status}"`,
+                    `"${u.main_game || ''}"`,
+                    `"${u.game_rank || ''}"`
+                ];
+                csvRows.push(row.join(','));
+            });
+
+            const csvData = csvRows.join('\n');
+            const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `gamity_users_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Archivo CSV descargado con éxito', 'success');
         }
 
         function openEdit(id, username, email, role, status) {
@@ -646,9 +903,12 @@ $initials = strtoupper(substr($username, 0, 2));
 
         window.allReports = [];
         window.currentReportFilter = 'all';
+        window.currentReportsPage = 1;
+        const reportsPerPage = 10;
 
         function filterReports(status) {
             window.currentReportFilter = status;
+            window.currentReportsPage = 1;
             const statuses = ['all', 'pending', 'reviewed', 'dismissed'];
             statuses.forEach(s => {
                 const btn = document.getElementById(`btnReportFilter-${s}`);
@@ -660,26 +920,44 @@ $initials = strtoupper(substr($username, 0, 2));
                     }
                 }
             });
-            renderReportsTable(window.allReports);
+            renderPaginatedReports();
         }
 
         function renderReportsTable(reports) {
             window.allReports = reports;
+            window.currentReportsPage = 1;
+            renderPaginatedReports();
+        }
+
+        function renderPaginatedReports() {
             const tbody = document.getElementById('reportsTableBody');
 
-            const filteredReports = reports.filter(r => {
+            const filteredReports = window.allReports.filter(r => {
                 if (window.currentReportFilter === 'all') return true;
                 return r.status === window.currentReportFilter;
             });
 
             document.getElementById('reportsCount').textContent = `${filteredReports.length} reportes`;
 
-            if (filteredReports.length === 0) {
+            const totalPages = Math.ceil(filteredReports.length / reportsPerPage) || 1;
+            if (window.currentReportsPage > totalPages) window.currentReportsPage = totalPages;
+
+            const startIndex = (window.currentReportsPage - 1) * reportsPerPage;
+            const endIndex = startIndex + reportsPerPage;
+            const currentReports = filteredReports.slice(startIndex, endIndex);
+
+            document.getElementById('reportsPaginationInfo').textContent = `Mostrando ${currentReports.length > 0 ? startIndex + 1 : 0} a ${Math.min(endIndex, filteredReports.length)} de ${filteredReports.length} reportes`;
+            document.getElementById('reportsPageIndicator').textContent = `${window.currentReportsPage} / ${totalPages}`;
+
+            document.getElementById('prevReportsPageBtn').disabled = window.currentReportsPage === 1;
+            document.getElementById('nextReportsPageBtn').disabled = window.currentReportsPage === totalPages;
+
+            if (currentReports.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-10 text-center text-gray-500">No hay reportes en esta categoría.</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = filteredReports.map(r => {
+            tbody.innerHTML = currentReports.map(r => {
                 const statusBadge = {
                     'pending': '<span class="px-2 py-1 rounded-full bg-yellow-500/20 text-yellow-400 text-xs font-bold">Pendiente</span>',
                     'reviewed': '<span class="px-2 py-1 rounded-full bg-gamityGreen/20 text-gamityGreen text-xs font-bold">Revisado</span>',
@@ -713,6 +991,11 @@ $initials = strtoupper(substr($username, 0, 2));
                     </tr>
                 `;
             }).join('');
+        }
+
+        function changeReportsPage(direction) {
+            window.currentReportsPage += direction;
+            renderPaginatedReports();
         }
 
         function openReportDetails(reportId) {
@@ -815,6 +1098,72 @@ $initials = strtoupper(substr($username, 0, 2));
                         loadDashboard();
                     } else {
                         showToast(data.error || 'Error al actualizar reporte', 'error');
+                    }
+                })
+                .catch(() => showToast('Error de conexión con la API', 'error'));
+        }
+
+        function renderDisputedMatches(matches) {
+            const premierSection = document.getElementById('premierSection');
+            const tbody = document.getElementById('disputedMatchesBody');
+            document.getElementById('disputedCount').textContent = `${matches.length} disputas`;
+
+            if (matches.length > 0) {
+                premierSection.classList.remove('hidden');
+            } else {
+                premierSection.classList.add('hidden');
+                return;
+            }
+
+            tbody.innerHTML = matches.map(m => {
+                const team1ReportedWinner = m.team1_reported_winner ? 'Ganador: Equipo ' + m.team1_reported_winner : 'No reportado';
+                const team2ReportedWinner = m.team2_reported_winner ? 'Ganador: Equipo ' + m.team2_reported_winner : 'No reportado';
+
+                return `
+                    <tr class="user-row neon-border-b hover:bg-white/[0.02] transition-colors">
+                        <td class="px-6 py-4 text-yellow-400 font-mono">#${m.id}</td>
+                        <td class="px-6 py-4 font-bold text-white">${m.team1_name}</td>
+                        <td class="px-6 py-4 font-bold text-white">${m.team2_name}</td>
+                        <td class="px-6 py-4 text-gray-300">
+                            <span class="px-3 py-1 bg-surfaceLight border border-white/5 rounded-lg text-xs font-medium block w-max">${team1ReportedWinner}</span>
+                        </td>
+                        <td class="px-6 py-4 text-gray-300">
+                            <span class="px-3 py-1 bg-surfaceLight border border-white/5 rounded-lg text-xs font-medium block w-max">${team2ReportedWinner}</span>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <div class="flex items-center justify-center gap-2">
+                                <button onclick="resolveDisputedMatch(${m.id}, ${m.team1_id})" class="px-3 py-2 rounded-xl bg-gamityPurple/10 hover:bg-gamityPurple/30 text-gamityPurple border border-gamityPurple/20 transition-all text-xs font-bold" title="Dar victoria al Equipo 1">
+                                    Gana Eq 1
+                                </button>
+                                <button onclick="resolveDisputedMatch(${m.id}, ${m.team2_id})" class="px-3 py-2 rounded-xl bg-gamityGreen/10 hover:bg-gamityGreen/30 text-gamityGreen border border-gamityGreen/20 transition-all text-xs font-bold" title="Dar victoria al Equipo 2">
+                                    Gana Eq 2
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function resolveDisputedMatch(matchId, winnerTeamId) {
+            if (!confirm('¿Estás seguro de resolver esta disputa dando la victoria a este equipo?')) return;
+
+            fetch(`${window.GAMITY_API_URL}/admin/matches/${matchId}/resolve`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-User-Id': USER_ID,
+                    'X-User-Hash': USER_HASH
+                },
+                body: JSON.stringify({ winner_team_id: winnerTeamId })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('Disputa resuelta correctamente', 'success');
+                        loadDashboard();
+                    } else {
+                        showToast(data.error || 'Error al resolver la disputa', 'error');
                     }
                 })
                 .catch(() => showToast('Error de conexión con la API', 'error'));

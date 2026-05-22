@@ -245,6 +245,52 @@ if (!isset($_SESSION['user_id'])) {
         </div>
     </nav>
 
+    <!-- Modal de Reporte de Usuario -->
+    <div id="reportModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] hidden items-center justify-center">
+        <div class="bg-surface rounded-2xl border border-white/5 w-full max-w-md mx-4 p-8 shadow-2xl relative">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold flex items-center gap-2">
+                    <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                    Reportar Usuario
+                </h3>
+                <button onclick="closeReportModal()" class="text-gray-400 hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <form id="reportForm" class="space-y-4">
+                <input type="hidden" id="reportUserId">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-400 mb-1">Usuario a reportar</label>
+                    <input type="text" id="reportUsername" class="w-full input-gamity bg-surfaceLight cursor-not-allowed" disabled>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-400 mb-1">Motivo principal</label>
+                    <select id="reportReasonSelect" class="w-full input-gamity appearance-none cursor-pointer" required>
+                        <option value="" disabled selected>Selecciona un motivo...</option>
+                        <option value="Comportamiento tóxico o insultos">Comportamiento tóxico o insultos</option>
+                        <option value="Trampas o uso de hacks">Trampas o uso de hacks</option>
+                        <option value="Spam o publicidad">Spam o publicidad</option>
+                        <option value="Acoso">Acoso</option>
+                        <option value="Otro">Otro motivo</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-400 mb-1">Detalles adicionales</label>
+                    <textarea id="reportDetails" rows="4" class="w-full input-gamity resize-none" placeholder="Proporciona más contexto (opcional)..."></textarea>
+                </div>
+                <div class="pt-4 border-t border-white/5 flex justify-end gap-3">
+                    <button type="button" onclick="closeReportModal()" class="px-5 py-2.5 rounded-xl border border-white/10 text-gray-400 hover:text-white hover:border-white/30 transition-all text-sm font-medium">Cancelar</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-red-500/20 hover:bg-red-500 border border-red-500/30 text-red-400 hover:text-white font-bold transition-all text-sm">Enviar Reporte</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed top-6 right-6 z-[100] flex flex-col gap-3 pointer-events-none"></div>
+
     <script>
         window.currentUserId = <?php echo $_SESSION['user_id']; ?>;
         window.currentUserHash = '<?php echo $_SESSION['user_hash'] ?? ''; ?>';
