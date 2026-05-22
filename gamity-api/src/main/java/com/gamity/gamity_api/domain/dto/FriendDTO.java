@@ -19,4 +19,5 @@ public class FriendDTO {
     private String status;     // "online" / "offline"
     private String mainGame;
     private String gameRank;
+    private long unreadCount;
 }

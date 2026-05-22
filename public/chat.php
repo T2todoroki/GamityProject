@@ -105,9 +105,27 @@ endif; ?>
                         <p id="chatSubtitle" class="text-xs text-gamityGreen flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-gamityGreen mr-1.5"></span> En línea <span class="text-gray-500 ml-2 border-l border-white/10 pl-2">Juego - Rango</span></p>
                     </div>
                 </div>
-                <button class="text-gray-400 hover:text-white transition p-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
-                </button>
+                <div class="relative">
+                    <button id="chatOptionsBtn" class="text-gray-400 hover:text-white transition p-2 rounded-full hover:bg-white/5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
+                    </button>
+                    <!-- Menú de Opciones (Dropdown) -->
+                    <div id="chatOptionsMenu" class="absolute right-0 mt-2 w-48 bg-[#1f2937] border border-white/10 rounded-xl shadow-2xl py-2 hidden z-50">
+                        <button onclick="window.confirmClearChat()" class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            Vaciar Chat
+                        </button>
+                        <button onclick="window.reportUser()" class="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
+                            Reportar
+                        </button>
+                        <hr class="border-white/10 my-1">
+                        <button onclick="window.toggleBlockUser()" id="blockUserBtn" class="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                            <span>Bloquear</span>
+                        </button>
+                    </div>
+                </div>
             </header>
 
             <!-- Historial de Mensajes -->
@@ -127,9 +145,13 @@ endif; ?>
                         <svg class="w-5 h-5 transform rotate-90" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
                     </button>
                 </form>
-            <script>
+            </div>
+        </section>
+    </main>
+
+    <script>
         window.currentUserId = <?php echo $_SESSION['user_id']; ?>;
-        window.currentUserHash = '<?php echo $_SESSION['user_hash'] ?? ''; ?>';
+        window.currentUserHash = '<?php echo $_SESSION['user_hash'] ?? '';  ?>';
         window.prepopulatedUserId = <?php echo $selectedUserId ? $selectedUserId : 'null'; ?>;
     </script>
     <!-- Bottom Navigation Bar (Solo Móvil) -->
@@ -161,5 +183,34 @@ endif; ?>
 
     <script src="js/chat.js?v=<?php echo filemtime('js/chat.js'); ?>"></script>
     <script src="js/app.js?v=<?php echo filemtime('js/app.js'); ?>"></script>
+
+    <!-- Modal Vaciar Chat -->
+    <div id="clearChatModal" class="fixed inset-0 z-[100] flex items-center justify-center hidden bg-black/60 backdrop-blur-sm">
+        <div class="bg-[#18181b] p-6 rounded-2xl max-w-sm w-full shadow-2xl border border-white/10 mx-4">
+            <h3 class="text-xl font-bold mb-2 text-white">Vaciar chat</h3>
+            <p class="text-gray-400 text-sm mb-6">¿Estás seguro de que quieres vaciar este chat? Los mensajes se borrarán para ti, pero la otra persona los seguirá viendo.</p>
+            <div class="flex justify-end gap-3">
+                <button onclick="document.getElementById('clearChatModal').classList.add('hidden')" class="px-4 py-2 text-sm text-gray-300 hover:text-white transition">Cancelar</button>
+                <button onclick="window.executeClearChat()" class="px-4 py-2 text-sm bg-red-500/20 text-red-500 rounded-lg hover:bg-red-500/30 transition">Vaciar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Reportar -->
+    <div id="reportModal" class="fixed inset-0 z-[100] flex items-center justify-center hidden bg-black/60 backdrop-blur-sm">
+        <div class="bg-[#18181b] p-6 rounded-2xl max-w-md w-full shadow-2xl border border-white/10 mx-4">
+            <h3 class="text-xl font-bold mb-2 text-white">Reportar Usuario</h3>
+            <p class="text-gray-400 text-sm mb-4">¿Por qué deseas reportar a este usuario?</p>
+            <select id="reportReason" class="w-full bg-surfaceLight border border-white/10 rounded-lg p-3 text-white mb-6 focus:ring-1 focus:ring-gamityPurple focus:outline-none">
+                <option class="bg-[#18181b] text-white" value="Spam o publicidad">Spam o publicidad</option>
+                <option class="bg-[#18181b] text-white" value="Acoso o insultos">Acoso o insultos</option>
+                <option class="bg-[#18181b] text-white" value="Fraude o estafa">Fraude o estafa</option>
+            </select>
+            <div class="flex justify-end gap-3">
+                <button onclick="document.getElementById('reportModal').classList.add('hidden')" class="px-4 py-2 text-sm text-gray-300 hover:text-white transition">Cancelar</button>
+                <button onclick="window.executeReport()" class="px-4 py-2 text-sm bg-gamityPurple text-white rounded-lg hover:bg-gamityPurple/80 transition">Enviar Reporte</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
