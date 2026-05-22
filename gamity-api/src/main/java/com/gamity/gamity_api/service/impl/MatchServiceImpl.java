@@ -45,6 +45,7 @@ public class MatchServiceImpl implements MatchService {
                 .id(user.getId())
                 .username(user.getUsername())
                 .avatar(user.getAvatar())
+                .status(user.getStatus() != null ? user.getStatus() : "offline")
                 .game(user.getProfile() != null ? user.getProfile().getMainGame() : null)
                 .rank(user.getProfile() != null ? user.getProfile().getGameRank() : null)
                 .attitude(user.getProfile() != null ? user.getProfile().getAttitude() : null)

@@ -17,4 +17,5 @@ public class UserDTO {
     private String game;
     private String rank;
     private String attitude;
+    private String status;
 }

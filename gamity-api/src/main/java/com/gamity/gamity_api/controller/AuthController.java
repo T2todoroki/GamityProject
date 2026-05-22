@@ -33,4 +33,14 @@ public class AuthController {
             return ResponseEntity.status(401).body(Map.of("success", false, "error", e.getMessage()));
         }
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("X-User-Id") Long userId) {
+        try {
+            userService.logoutUser(userId);
+            return ResponseEntity.ok().body(Map.of("success", true, "message", "Sesión cerrada con éxito"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
+        }
+    }
 }

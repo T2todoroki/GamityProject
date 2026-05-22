@@ -59,8 +59,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 main_game: u.game,
                 game_rank: u.rank,
                 attitude: u.attitude,
-                status: 'offline', // Spring envía solo lo esencial en DTO
-                friendship_status: null // La query de Java ya descarta amigos y pendientes! Magia PURA.
+                status: u.status || 'offline', 
+                friendship_status: null 
             }));
 
             renderUsers(adaptedUsers);

@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ===== NOTIFICACIONES SOCIALES GLOBALES =====
     let pollingInterval = null;
-    
+
     async function checkPendingRequests() {
         const API_BASE = window.GAMITY_API_URL || window.apiBaseUrl;
         const userId = window.currentUserId || (typeof currentUserId !== 'undefined' ? currentUserId : null);
@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     'X-User-Hash': window.currentUserHash || window.SESSION_USER_HASH || ''
                 }
             });
-            
+
             // Si la sesión ha expirado o el usuario no está autorizado, detenemos el Polling
             if (res.status === 401 || res.status === 403) {
                 if (pollingInterval) clearInterval(pollingInterval);
@@ -281,7 +281,53 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Check periodically every 15s and immediately on load
-    pollingInterval = setInterval(checkPendingRequests, 15000);
+    window.checkUnreadMessages = async function() {
+        const API_BASE = window.GAMITY_API_URL || window.apiBaseUrl;
+        const userId = window.currentUserId || (typeof currentUserId !== 'undefined' ? currentUserId : null);
+        if (!userId) return;
+
+        try {
+            const res = await fetch(`${API_BASE}/messages/unread/${userId}`, {
+                headers: {
+                    'X-User-Id': userId,
+                    'X-User-Hash': window.currentUserHash || window.SESSION_USER_HASH || ''
+                }
+            });
+
+            if (res.status === 401 || res.status === 403) return;
+
+            const data = await res.json();
+
+            const chatLinks = document.querySelectorAll('a[href="chat.php"]');
+            const isOnChatPage = window.location.pathname.includes('chat.php');
+
+            if (data.success && data.count > 0 && !isOnChatPage) {
+                const count = data.count;
+                chatLinks.forEach(link => {
+                    link.classList.add('relative');
+                    let badge = link.querySelector('.chat-badge-count');
+                    if (!badge) {
+                        badge = document.createElement('span');
+                        badge.className = 'chat-badge-count absolute top-0 -right-1 md:top-2 md:right-2 w-5 h-5 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full shadow-[0_0_10px_rgba(239,68,68,0.5)] animate-pulse';
+                        link.appendChild(badge);
+                    }
+                    badge.textContent = count;
+                });
+            } else {
+                chatLinks.forEach(link => {
+                    const badge = link.querySelector('.chat-badge-count');
+                    if (badge) badge.remove();
+                });
+            }
+        } catch (e) { }
+    }
+
+    // mirar cada 15 segundos periodicamente para que aparezcan los iconos de notificaciones
+    pollingInterval = setInterval(() => {
+        checkPendingRequests();
+        window.checkUnreadMessages();
+    }, 15000);
+
     checkPendingRequests();
+    window.checkUnreadMessages();
 });

@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public com.gamity.gamity_api.domain.dto.LoginResponseDTO loginUser(com.gamity.gamity_api.domain.dto.LoginDTO dto) {
         User user = userRepository.findByEmail(dto.getEmail())
                 .orElseThrow(() -> new RuntimeException("Credenciales incorrectas"));
@@ -96,11 +96,23 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Credenciales incorrectas");
         }
 
+        user.setStatus("online");
+        userRepository.save(user);
+
         return com.gamity.gamity_api.domain.dto.LoginResponseDTO.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .role(user.getRole() != null ? user.getRole() : "user")
                 .avatar(user.getAvatar() != null ? user.getAvatar() : "img/default.png")
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public void logoutUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        user.setStatus("offline");
+        userRepository.save(user);
     }
 }
