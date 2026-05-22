@@ -96,6 +96,7 @@ public class AdminController {
                     map.put("reported_name", userRepository.findById(r.getReportedUserId()).map(User::getUsername)
                             .orElse("Desconocido"));
                     map.put("reason", r.getReason());
+                    map.put("evidence", r.getEvidence());
                     map.put("status", r.getStatus());
                     map.put("created_at", r.getCreatedAt() != null ? r.getCreatedAt().toString() : "");
                     return map;

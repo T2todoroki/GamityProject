@@ -438,6 +438,11 @@ $initials = strtoupper(substr($username, 0, 2));
                         id="detailReportReason"></div>
                 </div>
                 <div>
+                    <span class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Evidencia (Últimos 10 mensajes)</span>
+                    <div class="p-4 bg-[#18181b] rounded-xl border border-white/5 text-xs text-gray-400 whitespace-pre-wrap font-mono leading-relaxed max-h-60 overflow-y-auto"
+                        id="detailReportEvidence"></div>
+                </div>
+                <div>
                     <span class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Estado del
                         Reporte</span>
                     <div id="detailReportStatusBadge"></div>
@@ -723,6 +728,7 @@ $initials = strtoupper(substr($username, 0, 2));
             const date = new Date(report.created_at).toLocaleString('es-ES', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
             document.getElementById('detailReportDate').textContent = date;
             document.getElementById('detailReportReason').textContent = report.reason;
+            document.getElementById('detailReportEvidence').textContent = report.evidence || 'No se adjuntó evidencia.';
 
             const statusBadgeContainer = document.getElementById('detailReportStatusBadge');
             const statusBadges = {
