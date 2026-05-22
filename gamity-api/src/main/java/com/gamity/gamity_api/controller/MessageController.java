@@ -36,4 +36,34 @@ public class MessageController {
             return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
         }
     }
+
+    @DeleteMapping("/clear/{userId}/{otherId}")
+    public ResponseEntity<?> clearConversation(@PathVariable Long userId, @PathVariable Long otherId) {
+        try {
+            messageService.clearConversation(userId, otherId);
+            return ResponseEntity.ok(Map.of("success", true, "message", "Conversación vaciada correctamente"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
+        }
+    }
+
+    @PutMapping("/read/{senderId}/{receiverId}")
+    public ResponseEntity<?> markAsRead(@PathVariable Long senderId, @PathVariable Long receiverId) {
+        try {
+            messageService.markMessagesAsRead(senderId, receiverId);
+            return ResponseEntity.ok(Map.of("success", true));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/unread/{userId}")
+    public ResponseEntity<?> getUnreadCount(@PathVariable Long userId) {
+        try {
+            long count = messageService.getUnreadCount(userId);
+            return ResponseEntity.ok(Map.of("success", true, "count", count));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "error", e.getMessage()));
+        }
+    }
 }
