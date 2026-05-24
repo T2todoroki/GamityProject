@@ -67,6 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        const previousScroll = contactsList.scrollTop;
+
         contactsList.innerHTML = friends.map(friend => {
             const avatarUrl = friend.avatar || `https://ui-avatars.com/api/?name=${encodeURI(friend.username)}&background=18181b&color=fff`;
             const isOnline = friend.status === 'online';
@@ -93,12 +95,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         }).join('');
+
+        contactsList.scrollTop = previousScroll;
     }
 
     window.openConversation = (friend) => {
         // Resetear variables de estado para el nuevo chat
         previousHasBlockedMe = null;
         previousFriendStatus = null;
+        previousIsBlockedByMe = null;
         
         // Mostrar sección de chat y ocultar mensaje de "selecciona un chat"
         noChatSelected.classList.add('hidden');
@@ -159,6 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // SISTEMA DE BLOQUEO Y ESTADO EN TIEMPO REAL
     let previousHasBlockedMe = null;
     let previousFriendStatus = null;
+    let previousIsBlockedByMe = null;
 
     async function checkBlockStatus(otherId) {
         try {
@@ -227,7 +233,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 previousHasBlockedMe = hasBlockedMe;
                 previousFriendStatus = data.friendStatus;
 
-                updateChatUIForBlock();
+                if (previousIsBlockedByMe !== isBlockedByMe) {
+                    updateChatUIForBlock();
+                    previousIsBlockedByMe = isBlockedByMe;
+                }
             }
         } catch (e) { console.error('Error checking block status', e); }
     }
@@ -302,11 +311,40 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('reportModal').classList.remove('hidden');
     };
 
+    // TOAST PERSONALIZADO PARA CHAT
+    function showChatToast(message, type = 'success') {
+        const existing = document.getElementById('chatToastNotif');
+        if (existing) existing.remove();
+
+        const colors = {
+            success: 'bg-gamityGreen/20 border-gamityGreen/40 text-gamityGreen',
+            error: 'bg-red-500/20 border-red-500/40 text-red-400'
+        };
+        const icons = {
+            success: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>',
+            error: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>'
+        };
+
+        const toast = document.createElement('div');
+        toast.id = 'chatToastNotif';
+        toast.className = `fixed bottom-6 right-6 z-[999] flex items-center gap-3 px-5 py-4 rounded-xl border backdrop-blur-md shadow-2xl text-sm font-medium transition-all duration-300 translate-y-4 opacity-0 ${colors[type]}`;
+        toast.innerHTML = `<svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path ${icons[type]}/></svg><span>${message}</span>`;
+        document.body.appendChild(toast);
+
+        requestAnimationFrame(() => {
+            toast.classList.remove('translate-y-4', 'opacity-0');
+        });
+        setTimeout(() => {
+            toast.classList.add('translate-y-4', 'opacity-0');
+            setTimeout(() => toast.remove(), 300);
+        }, 3500);
+    }
+
     window.executeReport = async () => {
         const otherId = window.currentActiveChatId;
         const reason = document.getElementById('reportReason').value;
         try {
-            // Capturar la evidencia (últimos 10 mensajes)
+            // Capturar la evidencia (últimos 10 mensajes o los que haya)
             let evidenceText = "No hay mensajes recientes.";
             const historyRes = await fetch(`${API_BASE}/messages/history/${currentUserId}/${otherId}`, {
                 headers: { 
@@ -317,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (historyRes.ok) {
                 const historyData = await historyRes.json();
                 if (historyData.success && historyData.messages) {
-                    const lastMessages = historyData.messages.slice(-10);
+                    const lastMessages = historyData.messages.slice(-10); // Toma los últimos 10, o los que haya si son menos
                     if (lastMessages.length > 0) {
                         evidenceText = lastMessages.map(m => {
                             const date = new Date(m.created_at);
@@ -343,8 +381,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
             });
             document.getElementById('reportModal').classList.add('hidden');
-            alert('Reporte enviado correctamente. Nuestro equipo lo revisará pronto.');
-        } catch (e) { console.error('Error reporting', e); }
+            showChatToast('✅ Reporte enviado. Nuestro equipo lo revisará pronto.');
+        } catch (e) { 
+            console.error('Error reporting', e);
+            showChatToast('Error al enviar el reporte. Inténtalo de nuevo.', 'error');
+        }
     };
 
     async function fetchMessages(otherId, isPolling = false) {
@@ -532,4 +573,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Carga inicial de contactos
     loadContacts();
+
+    // Polling global para mantener la lista de contactos (y notificaciones) actualizada
+    // Esto se ejecuta independientemente de si hay un chat abierto o no.
+    setInterval(() => {
+        loadContacts();
+    }, 5000); // Actualiza la lista de chats y bolitas rojas cada 5 segundos
 });

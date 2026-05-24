@@ -252,34 +252,38 @@ $initials = strtoupper(substr($username, 0, 2));
 
     <!-- Modal de Chat -->
     <div id="chat-modal" class="hidden fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4">
-        <div
-            class="bg-surface border border-gamityPurple/30 rounded-2xl w-full max-w-md h-[500px] flex flex-col relative overflow-hidden">
-            <div class="p-4 bg-surfaceLight border-b border-white/10 flex justify-between items-center">
-                <h3 class="font-bold text-white flex items-center gap-2">
-                    <svg class="w-5 h-5 text-gamityPurple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z">
-                        </path>
-                    </svg>
-                    Chat del Equipo
-                </h3>
-                <button onclick="closeChat()" class="text-gray-400 hover:text-white">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                        </path>
+        <div class="bg-surface border border-gamityPurple/30 rounded-2xl w-full max-w-md h-[600px] flex flex-col relative overflow-hidden shadow-2xl">
+            <div class="p-6 bg-surfaceLight border-b border-white/10 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <div class="w-12 h-12 rounded-full bg-gamityPurple/20 border-2 border-gamityPurple/40 flex items-center justify-center">
+                            <i class="fa-solid fa-users text-gamityPurple text-xl"></i>
+                        </div>
+                        <div class="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-surface bg-gamityGreen"></div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-white text-lg flex items-center gap-2">Chat del Equipo</h3>
+                        <p class="text-xs text-gamityGreen flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-gamityGreen mr-1.5"></span> Premier 5v5</p>
+                    </div>
+                </div>
+                <button onclick="closeChat()" class="text-gray-400 hover:text-white transition p-3 rounded-full hover:bg-white/5 bg-surfaceLight border border-white/5">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             </div>
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4">
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4 bg-gamityDark/50 flex-col">
                 <!-- Mensajes aquí -->
             </div>
-            <div class="p-4 bg-surfaceLight border-t border-white/10">
-                <form id="chat-form" class="flex gap-2">
-                    <input type="text" id="chat-input"
-                        class="flex-1 bg-surface border border-white/10 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-gamityPurple"
-                        placeholder="Escribe un mensaje...">
-                    <button type="submit"
-                        class="bg-gamityPurple text-white px-4 py-2 rounded-xl hover:bg-purple-600 transition">Enviar</button>
+            <div class="p-6 bg-gamityDark/50 border-t border-white/5">
+                <form id="chat-form" class="flex gap-4 items-end bg-surfaceLight rounded-2xl border border-white/10 p-2 relative shadow-lg">
+                    <button type="button" class="p-3 text-gray-400 hover:text-gamityPurple transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </button>
+                    <textarea id="chat-input" rows="1" placeholder="Escribe un mensaje..." class="flex-1 bg-transparent border-none outline-none focus:ring-0 resize-none text-white placeholder-gray-500 py-3 block w-full"></textarea>
+                    <button type="submit" class="p-3 bg-gamityPurple text-white rounded-xl hover:bg-gamityPurple/80 transition transform hover:scale-105 shadow-[0_0_10px_rgba(139,92,246,0.5)]">
+                        <svg class="w-5 h-5 transform rotate-90" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
+                    </button>
                 </form>
             </div>
         </div>

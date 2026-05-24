@@ -410,7 +410,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="space-y-6">
                             <div class="bg-surfaceLight border border-gamityPurple/20 p-6 rounded-2xl shadow-inner relative overflow-hidden group">
-                                <div class="absolute -right-6 -bottom-6 text-gamityPurple/5 text-9xl pointer-events-none group-hover:text-gamityPurple/10 transition-colors">
+                                <div class="absolute -right-2 -bottom-2 text-gamityPurple/5 text-7xl pointer-events-none group-hover:text-gamityPurple/10 transition-colors z-0">
                                     <i class="fa-solid fa-comments"></i>
                                 </div>
                                 <div class="relative z-10">
@@ -670,6 +670,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const content = input.value.trim();
         if (!content || !currentTeamChatId) return;
 
+        input.value = '';
+
         fetch(`${window.GAMITY_API_URL}/tournaments/teams/${currentTeamChatId}/chat`, {
             method: 'POST',
             headers: {
@@ -687,10 +689,19 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(data => {
                 if (data?.success) {
-                    input.value = '';
                     fetchMessages(currentTeamChatId);
                 }
             });
     });
+
+    const chatInputElem = document.getElementById('chat-input');
+    if (chatInputElem) {
+        chatInputElem.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                document.getElementById('chat-form').dispatchEvent(new Event('submit'));
+            }
+        });
+    }
 
 });

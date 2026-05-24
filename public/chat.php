@@ -201,7 +201,7 @@ endif; ?>
         <div class="bg-[#18181b] p-6 rounded-2xl max-w-md w-full shadow-2xl border border-white/10 mx-4">
             <h3 class="text-xl font-bold mb-2 text-white">Reportar Usuario</h3>
             <p class="text-gray-400 text-sm mb-4">¿Por qué deseas reportar a este usuario?</p>
-            <select id="reportReason" class="w-full bg-surfaceLight border border-white/10 rounded-lg p-3 text-white mb-6 focus:ring-1 focus:ring-gamityPurple focus:outline-none">
+            <select id="reportReason" class="w-full bg-[#18181b] border border-white/10 rounded-lg p-3 text-white mb-6 focus:ring-1 focus:ring-gamityPurple focus:outline-none" style="color-scheme: dark;">
                 <option class="bg-[#18181b] text-white" value="Spam o publicidad">Spam o publicidad</option>
                 <option class="bg-[#18181b] text-white" value="Acoso o insultos">Acoso o insultos</option>
                 <option class="bg-[#18181b] text-white" value="Fraude o estafa">Fraude o estafa</option>
