@@ -419,7 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     </h4>
                                     <p class="text-sm text-gray-400 mb-6 leading-relaxed">Comunícate con tus compañeros para planear estrategias y ganar la partida.</p>
                                     <button onclick="openTeamChat(${team.id})" class="w-full py-4 bg-gamityPurple/10 border border-gamityPurple/30 text-gamityPurple font-bold rounded-xl text-sm transition-all duration-300 ease-in-out hover:bg-gamityPurple hover:text-white hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] flex items-center justify-center gap-2">
-                                        Abrir Chat Grupal <i class="fa-solid fa-arrow-right"></i>
+                                        Abrir Chat Grupal
                                     </button>
                                 </div>
                             </div>
@@ -630,7 +630,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     function fetchMessages(teamId) {
-        fetch(`${window.GAMITY_API_URL}/tournaments/teams/${teamId}/chat`, {
+        fetch(`${window.GAMITY_API_URL}/tournaments/team/${teamId}/chat`, {
             headers: { 
                 'X-User-Id': window.currentUserId,
                 'X-User-Hash': window.currentUserHash || ''
@@ -646,33 +646,47 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!messages || !Array.isArray(messages)) return;
                 const container = document.getElementById('chat-messages');
                 container.innerHTML = messages.map(m => {
-                    const isMe = m.user_id == window.currentUserId;
-                    return `
-                    <div class="flex ${isMe ? 'justify-end' : 'justify-start'}">
-                        <div class="flex gap-3 max-w-[85%] ${isMe ? 'flex-row-reverse' : 'flex-row'}">
-                            <img src="${m.avatar}" class="w-8 h-8 rounded-full object-cover shrink-0 border border-white/10 mt-1">
-                            <div class="${isMe ? 'bg-gamityPurple text-white' : 'bg-surfaceLight border border-white/5 text-gray-200'} px-4 py-2.5 rounded-2xl ${isMe ? 'rounded-tr-sm' : 'rounded-tl-sm'} shadow-sm">
-                                ${!isMe ? `<p class="text-[11px] ${isMe ? 'text-white/70' : 'text-gamityPurple'} font-bold mb-1 tracking-wide">${m.username}</p>` : ''}
+                    const isMe = (m.user_id || m.sender_id) == window.currentUserId;
+                    const timeStr = m.created_at ? new Date(m.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+                    
+                    if (isMe) {
+                        return `
+                        <div class="flex justify-end mb-2 w-full">
+                            <div class="bg-gamityPurple text-white px-3 py-1.5 rounded-xl rounded-tr-sm shadow-md max-w-[85%] flex flex-col">
                                 <p class="text-sm leading-relaxed">${m.content}</p>
+                                <span class="text-[10px] text-white/70 text-right mt-0.5 ml-4 flex items-center justify-end gap-1">${timeStr} <i class="fa-solid fa-check-double text-[10px]"></i></span>
                             </div>
                         </div>
-                    </div>
-                `;
+                        `;
+                    } else {
+                        const colors = ['text-red-400', 'text-blue-400', 'text-green-400', 'text-yellow-400', 'text-pink-400', 'text-cyan-400'];
+                        const nameColor = colors[(m.user_id || m.sender_id || 0) % colors.length];
+                        
+                        return `
+                        <div class="flex justify-start mb-2 w-full">
+                            <div class="bg-surfaceLight border border-white/5 text-gray-200 px-3 py-1.5 rounded-xl rounded-tl-sm shadow-md max-w-[85%] flex flex-col">
+                                <span class="text-xs font-bold mb-0.5 ${nameColor}">${m.username || 'Usuario'}</span>
+                                <p class="text-sm leading-relaxed">${m.content}</p>
+                                <span class="text-[10px] text-white/40 text-right mt-0.5 ml-4">${timeStr}</span>
+                            </div>
+                        </div>
+                        `;
+                    }
                 }).join('');
                 container.scrollTop = container.scrollHeight;
             })
             .catch(err => console.error('Error fetching chat', err));
     }
 
-    document.getElementById('chat-form')?.addEventListener('submit', (e) => {
-        e.preventDefault();
+    function sendTeamMessage() {
         const input = document.getElementById('chat-input');
+        if (!input) return;
         const content = input.value.trim();
         if (!content || !currentTeamChatId) return;
 
         input.value = '';
 
-        fetch(`${window.GAMITY_API_URL}/tournaments/teams/${currentTeamChatId}/chat`, {
+        fetch(`${window.GAMITY_API_URL}/tournaments/team/${currentTeamChatId}/chat`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -692,6 +706,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     fetchMessages(currentTeamChatId);
                 }
             });
+    }
+
+    document.getElementById('chat-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        sendTeamMessage();
     });
 
     const chatInputElem = document.getElementById('chat-input');
@@ -699,7 +718,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chatInputElem.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                document.getElementById('chat-form').dispatchEvent(new Event('submit'));
+                sendTeamMessage();
             }
         });
     }
