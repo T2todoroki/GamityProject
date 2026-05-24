@@ -12,15 +12,15 @@ public class ProfileRequirementRule implements MatchmakingRule {
         if (user.getProfile() == null) {
             return "Debes configurar tu perfil antes de jugar en Premier.";
         }
-        
+
         if (user.getProfile().getGameRank() == null || user.getProfile().getGameRank().trim().isEmpty()) {
             return "Es obligatorio establecer tu Rango (ej. Valorant, LoL) en tu perfil para buscar partida.";
         }
-        
+
         if (user.getProfile().getMainGame() == null || user.getProfile().getMainGame().trim().isEmpty()) {
             return "Es obligatorio establecer tu Juego Principal en tu perfil para jugar en Premier.";
         }
-        
+
         return null; // Todo correcto
     }
 }
