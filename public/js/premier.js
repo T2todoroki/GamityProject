@@ -535,7 +535,12 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
         
-        fetch(`${window.GAMITY_API_URL}/tournaments/champions`)
+        fetch(`${window.GAMITY_API_URL}/tournaments/champions`, {
+            headers: { 
+                'X-User-Id': window.currentUserId,
+                'X-User-Hash': window.currentUserHash || ''
+            }
+        })
             .then(async res => {
                 const text = await res.text();
                 if (!text) return null;
@@ -559,19 +564,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     return `
                     <div class="flex items-center justify-between p-5 bg-surfaceLight rounded-2xl border ${isLatest ? 'border-yellow-500/50 bg-yellow-500/5' : 'border-white/5 hover:border-gamityPurple/30'} transition-all group">
                         <div class="flex items-center gap-5">
-                            <div class="w-14 h-14 rounded-xl ${isLatest ? 'bg-gradient-to-br from-yellow-400 to-yellow-600 text-white shadow-[0_0_15px_rgba(234,179,8,0.4)]' : 'bg-surface border border-white/10 text-gamityPurple group-hover:border-gamityPurple/50'} flex items-center justify-center transition-colors">
-                                <i class="fa-solid fa-crown text-2xl ${isLatest ? 'drop-shadow-md' : ''}"></i>
+                            <div class="relative">
+                                <img src="${c.avatar}" class="w-14 h-14 rounded-xl object-cover border-2 ${isLatest ? 'border-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.4)]' : 'border-gamityPurple/50'}" />
+                                ${isLatest ? '<div class="absolute -top-3 -right-3 text-yellow-500 text-xl drop-shadow-md"><i class="fa-solid fa-crown"></i></div>' : ''}
                             </div>
                             <div>
-                                <h4 class="font-black ${isLatest ? 'text-yellow-500 text-xl' : 'text-white text-lg'}">${c.winner_team || 'Equipo Campeón'}</h4>
-                                <p class="text-xs text-gray-400 flex items-center gap-2 mt-1">
-                                    <i class="fa-solid fa-calendar text-gray-500"></i> ${new Date(c.date).toLocaleDateString()}
+                                <h4 class="font-black ${isLatest ? 'text-yellow-500 text-xl' : 'text-white text-lg'}">${c.username}</h4>
+                                <p class="text-xs text-gray-400 flex items-center gap-2 mt-1 font-bold">
+                                    <i class="fa-solid fa-medal text-gamityPurple"></i> ${c.premier_wins} Victorias en la Temporada
                                 </p>
                             </div>
                         </div>
                         <div class="text-right hidden sm:block">
                             <span class="inline-block px-4 py-1.5 rounded-lg ${isLatest ? 'bg-yellow-500/20 text-yellow-500 border border-yellow-500/30' : 'bg-gamityPurple/10 text-gamityPurple border border-gamityPurple/20'} text-xs font-bold tracking-wider uppercase">
-                                <i class="fa-solid fa-trophy mr-1"></i> Victoria 5v5
+                                TOP #${index + 1}
                             </span>
                         </div>
                     </div>
