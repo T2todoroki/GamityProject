@@ -2,6 +2,7 @@ package com.gamity.gamity_api.service.impl;
 
 import com.gamity.gamity_api.domain.entity.*;
 import com.gamity.gamity_api.repository.*;
+import com.gamity.gamity_api.service.MatchmakingRule;
 import com.gamity.gamity_api.service.TournamentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class TournamentServiceImpl implements TournamentService {
     private final UserBadgeRepository badgeRepository;
     private final UserRepository userRepository;
     private final FriendshipRequestRepository friendshipRequestRepository;
+    private final List<MatchmakingRule> matchmakingRules;
 
     @Override
     public Map<String, Object> getActiveTournament(Long userId) {
@@ -69,6 +71,14 @@ public class TournamentServiceImpl implements TournamentService {
 
         if (registrationRepository.existsByTournamentIdAndUserId(tournamentId, userId)) {
             return Map.of("success", false, "message", "Ya estás en la cola");
+        }
+
+        User user = userRepository.findById(userId).orElseThrow();
+        for (MatchmakingRule rule : matchmakingRules) {
+            String errorMsg = rule.validate(user);
+            if (errorMsg != null) {
+                return Map.of("success", false, "message", errorMsg);
+            }
         }
 
         int count = registrationRepository.countByTournamentId(tournamentId);
@@ -121,6 +131,14 @@ public class TournamentServiceImpl implements TournamentService {
         }
 
         if (!registrationRepository.existsByTournamentIdAndUserId(t.getId(), userId)) {
+            User user = userRepository.findById(userId).orElseThrow();
+            for (MatchmakingRule rule : matchmakingRules) {
+                String errorMsg = rule.validate(user);
+                if (errorMsg != null) {
+                    return Map.of("success", false, "message", errorMsg);
+                }
+            }
+
             TournamentRegistration reg = new TournamentRegistration();
             reg.setTournamentId(t.getId());
             reg.setUserId(userId);
@@ -321,27 +339,7 @@ public class TournamentServiceImpl implements TournamentService {
         }).collect(Collectors.toList());
     }
 
-    @Override
-    public List<Map<String, Object>> getRecentChampions() {
-        List<Tournament> history = tournamentRepository.findByStatusOrderByCreatedAtDesc("finished");
-        return history.stream().limit(10).map(t -> {
-            Map<String, Object> map = new HashMap<>();
-            map.put("tournament_name", t.getName());
-            map.put("date", t.getCreatedAt());
 
-            // Find winner match
-            List<TournamentMatch> matches = matchRepository.findByTournamentIdOrderByRoundAscMatchOrderAsc(t.getId());
-            if (!matches.isEmpty()) {
-                TournamentMatch finalMatch = matches.get(matches.size() - 1);
-                if (finalMatch.getWinnerId() != null) {
-                    teamRepository.findById(finalMatch.getWinnerId()).ifPresent(team -> {
-                        map.put("winner_team", team.getName());
-                    });
-                }
-            }
-            return map;
-        }).collect(Collectors.toList());
-    }
 
     @Override
     @Transactional

@@ -32,8 +32,6 @@ public interface TournamentService {
     // Historial de torneos del usuario
     List<Map<String, Object>> getUserHistory(Long userId);
 
-    // Obtener historial de campeones recientes
-    List<Map<String, Object>> getRecentChampions();
 
     // Badges del usuario
     List<Map<String, Object>> getUserBadges(Long userId);
