@@ -295,19 +295,19 @@ public class TournamentServiceImpl implements TournamentService {
         }
 
         matchRepository.save(match);
-        
+
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
         response.put("matchStatus", match.getStatus());
         response.put("winnerId", match.getWinnerId());
-        
+
         if ("validated".equals(match.getStatus())) {
             Tournament t = tournamentRepository.findById(match.getTournamentId()).orElse(null);
             response.put("tournamentFinished", t != null && "finished".equals(t.getStatus()));
         } else {
             response.put("tournamentFinished", false);
         }
-        
+
         return response;
     }
 
@@ -338,8 +338,6 @@ public class TournamentServiceImpl implements TournamentService {
             return map;
         }).collect(Collectors.toList());
     }
-
-
 
     @Override
     @Transactional
@@ -528,6 +526,5 @@ public class TournamentServiceImpl implements TournamentService {
         m.setStatus("pending");
         return matchRepository.save(m);
     }
-
 
 }

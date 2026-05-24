@@ -17,7 +17,8 @@ public interface TournamentRepository extends JpaRepository<Tournament, Integer>
     // Torneos donde un usuario ha participado (para historial)
     @Query("SELECT DISTINCT t FROM Tournament t " +
             "JOIN TournamentRegistration r ON r.tournamentId = t.id " +
-            "WHERE r.userId = :userId AND t.status IN ('completed', 'in_progress', 'finished', 'active', 'awaiting_reports') " +
+            "WHERE r.userId = :userId AND t.status IN ('completed', 'in_progress', 'finished', 'active', 'awaiting_reports') "
+            +
             "ORDER BY t.createdAt DESC")
     List<Tournament> findTournamentsByUserId(Long userId);
 }
