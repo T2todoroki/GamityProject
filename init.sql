@@ -64,20 +64,19 @@ INSERT INTO `users` (`id`, `username`, `email`, `password`, `role`, `avatar`, `s
 
 INSERT INTO `user_profiles` (`user_id`, `attitude`, `bio`, `game_rank`, `main_game`) VALUES
 (1, 'Administrador', 'Cuenta Oficial del Sistema.', 'Admin', 'Gamity'),
-(2, 'Competitivo', 'Si no vas a ganar, no me agregues.', 'Diamante', 'Valorant'),
+(2, 'Competitivo', 'Agregame.', 'Diamante', 'Valorant'),
 (3, 'Casual', 'A jugar unas normales depsues del curro.', 'Plata', 'League of Legends'),
-(4, 'Competitivo', 'Main support buscando duo para subir.', 'Platino', 'Overwatch 2'),
+(4, 'Competitivo', 'Busco duo.', 'Platino', 'Overwatch 2'),
 (5, 'Chill', 'Amo construir casitas.', 'Unranked', 'Minecraft'),
-(6, 'Tryhard', 'Quiero llegar al mundial este año.', 'Radiante', 'Valorant'),
+(6, 'Tryhard', 'Reprobe el año ahora juego solamene.', 'Radiante', 'Valorant'),
 (7, 'Casual', 'Juego de todo un poco.', 'Oro', 'Apex Legends'),
 (8, 'Tryhard', 'Ex-jugador profesional.', 'Challenger', 'League of Legends'),
 (9, 'Chill', 'Enseñando a los nuevos a jugar.', 'Plata', 'Counter-Strike 2'),
-(10, 'Tóxico', 'Si feedeas te reporto al instante.', 'Hierro', 'League of Legends');
+(10, 'Tóxico', 'feedeame y veras.', 'Hierro', 'League of Legends');
 
--- ============================================
+
 -- GAMITY PREMIER - Sistema de Torneos Valorant 5v5
 -- Script SQL para ejecutar en phpMyAdmin
--- ============================================
 
 -- 1. Tabla de Torneos
 CREATE TABLE IF NOT EXISTS `tournaments` (
@@ -88,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `tournaments` (
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
--- status: open, closed, in_progress, completed, cancelled
+
 
 -- 2. Tabla de Inscripciones Individuales
 CREATE TABLE IF NOT EXISTS `tournament_registrations` (
@@ -154,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `tournament_matches` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 -- status: pending, awaiting_reports, validated, disputed
 
--- 6. Tabla de Chats de Equipo
+-- 6.Tabla de Chats de Equipo
 CREATE TABLE IF NOT EXISTS `tournament_team_chats` (
   `id` int NOT NULL AUTO_INCREMENT,
   `team_id` int NOT NULL,
@@ -167,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `tournament_team_chats` (
   CONSTRAINT `fk_chat_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 7. Tabla de Notificaciones
+-- 7.Tabla de Notificaciones
 CREATE TABLE IF NOT EXISTS `notifications` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` bigint NOT NULL,
