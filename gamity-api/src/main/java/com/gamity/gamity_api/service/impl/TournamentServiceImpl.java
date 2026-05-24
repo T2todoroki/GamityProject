@@ -48,10 +48,7 @@ public class TournamentServiceImpl implements TournamentService {
             t.setName("Matchmaking 5v5");
             t.setStatus("open");
             t.setMaxPlayers(10);
-            t.setRegistrationOpensAt(java.time.LocalDateTime.now());
-            t.setRegistrationClosesAt(java.time.LocalDateTime.now().plusDays(1));
-            t.setStartsAt(java.time.LocalDateTime.now().plusDays(1));
-            t.setFormat("final");
+
             t = tournamentRepository.save(t);
         } else {
             t = opt.get();
@@ -326,11 +323,11 @@ public class TournamentServiceImpl implements TournamentService {
 
     @Override
     public List<Map<String, Object>> getRecentChampions() {
-        List<Tournament> history = tournamentRepository.findByStatusOrderByStartsAtDesc("finished");
+        List<Tournament> history = tournamentRepository.findByStatusOrderByCreatedAtDesc("finished");
         return history.stream().limit(10).map(t -> {
             Map<String, Object> map = new HashMap<>();
             map.put("tournament_name", t.getName());
-            map.put("date", t.getStartsAt());
+            map.put("date", t.getCreatedAt());
 
             // Find winner match
             List<TournamentMatch> matches = matchRepository.findByTournamentIdOrderByRoundAscMatchOrderAsc(t.getId());
@@ -512,7 +509,7 @@ public class TournamentServiceImpl implements TournamentService {
         List<TournamentTeam> teams = teamRepository.findByTournamentIdOrderBySeedAsc(tournamentId);
 
         if (teams.size() >= 2) {
-            t.setFormat("final");
+
             t.setStatus("active");
             tournamentRepository.save(t);
             createMatch(tournamentId, 1, 1, teams.get(0).getId(), teams.get(1).getId(), null);
@@ -534,19 +531,5 @@ public class TournamentServiceImpl implements TournamentService {
         return matchRepository.save(m);
     }
 
-    @Scheduled(cron = "0 0 * * * *") // Cada hora en punto
-    public void scheduledTournamentTask() {
-        Optional<Tournament> active = tournamentRepository.findActiveTournament();
-        if (active.isPresent() && "open".equals(active.get().getStatus())) {
-            Tournament t = active.get();
-            // Verifica si falta 1 hora o menos para el inicio del torneo
-            if (java.time.LocalDateTime.now().plusHours(1).isAfter(t.getStartsAt())
-                    || java.time.LocalDateTime.now().plusHours(1).isEqual(t.getStartsAt())) {
-                this.closeAndGenerateTeams(t.getId());
-                this.generateBracket(t.getId());
-                System.out.println("Cron ejecutado: Torneo " + t.getId()
-                        + " cerrado y generado bracket mediante Snake Algorithm.");
-            }
-        }
-    }
+
 }

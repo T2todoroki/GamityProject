@@ -28,19 +28,6 @@ public class Tournament {
     @Column(name = "max_players", nullable = false)
     private Integer maxPlayers;
 
-    @Column(name = "registration_opens_at", nullable = false)
-    private LocalDateTime registrationOpensAt;
-
-    @Column(name = "registration_closes_at", nullable = false)
-    private LocalDateTime registrationClosesAt;
-
-    @Column(name = "starts_at", nullable = false)
-    private LocalDateTime startsAt;
-
-    // final, semifinals, quarterfinals
-    @Column(length = 20)
-    private String format;
-
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
