@@ -157,55 +157,48 @@ document.addEventListener('DOMContentLoaded', async () => {
             const safeStatus = escapeJSString(user.status);
 
             return `
-                <div class="bg-surface rounded-2xl p-6 border border-white/5 card-hover relative flex flex-col group h-full">
-                    
-                    <!-- Report Button -->
+                <div class="player-card card-hover">
+
                     <button onclick="event.stopPropagation(); openReportModal(${user.id}, '${safeUsername}')"
-                            class="absolute top-3 right-3 p-1.5 rounded-lg text-gray-500 hover:text-red-400 hover:bg-red-500/10 transition-colors z-10 opacity-0 group-hover:opacity-100"
-                            title="Reportar usuario">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
+                            class="player-card__report-btn" title="Reportar usuario">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path>
+                        </svg>
                     </button>
 
-                    <!-- Header de tarjeta (clickable) -->
-                    <div class="flex items-start gap-4 mb-4 cursor-pointer" onclick="openPlayerModal(${user.id}, '${safeUsername}', '${safeBio}', '${safeMainGame}', '${safeGameRank}', '${safeAttitude}', '${safeAvatar}', '${safeStatus}')">
-                        <div class="relative">
-                            <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-gamityPurple/50">
-                                <img src="${avatarUrl}" alt="${user.username}" class="w-full h-full object-cover">
+                    <div class="player-card__header" onclick="openPlayerModal(${user.id}, '${safeUsername}', '${safeBio}', '${safeMainGame}', '${safeGameRank}', '${safeAttitude}', '${safeAvatar}', '${safeStatus}')">
+                        <div class="player-card__avatar-wrap">
+                            <div class="player-card__avatar">
+                                <img src="${avatarUrl}" alt="${escapeHTML(user.username)}">
                             </div>
-                            <div class="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-surface ${statusClass}"></div>
+                            <div class="player-card__status-dot ${statusClass}"></div>
                         </div>
-                        <div class="flex-1 min-w-0">
-                            <h3 class="text-white font-bold text-lg truncate pr-4">${escapeHTML(user.username)}</h3>
-                            <div class="flex items-center text-xs mt-1">
-                                <span class="${isOnline ? 'text-gamityGreen' : 'text-gray-500'} font-medium">${statusText}</span>
+                        <div class="player-card__info">
+                            <h3 class="player-card__name">${escapeHTML(user.username)}</h3>
+                            <div style="display:flex;align-items:center;font-size:0.75rem;margin-top:0.25rem;">
+                                <span style="color:${isOnline ? '#10b981' : '#6b7280'};font-weight:500;">${statusText}</span>
                                 ${attitudeHTML}
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Badges (multiple games) -->
-                    <div class="mb-4 flex flex-wrap gap-2">
-                        ${badgesHTML}
-                    </div>
-                    
-                    <!-- Description -->
-                    <p class="text-gray-400 text-sm mb-6 flex-1 line-clamp-3 leading-relaxed">
+
+                    <div class="player-card__badges">${badgesHTML}</div>
+
+                    <p class="player-card__bio">
                         ${escapeHTML(user.bio) || 'Jugador dispuesto a formar equipo y pasarlo bien. Sin descripción.'}
                     </p>
-                    
-                    <!-- Action Button -->
+
                     ${user.friendship_status === 'pending' ? `
-                        <button disabled class="mt-auto w-full py-2.5 rounded-xl bg-surfaceLight border border-red-500/20 text-red-400 font-medium flex items-center justify-center gap-2">
-                            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.7)]"></span>
-                            Pendiente
+                        <button disabled class="btn-friend btn-friend--pending">
+                            <span class="status-pulse-red"></span> Pendiente
                         </button>
                     ` : user.friendship_status === 'accepted' ? `
-                        <button disabled class="mt-auto w-full py-2.5 rounded-xl bg-surfaceLight border border-gamityPurple/30 text-gamityPurple font-medium flex items-center justify-center gap-2 opacity-60">
+                        <button disabled class="btn-friend btn-friend--accepted">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                             Amigos
                         </button>
                     ` : `
-                        <button onclick="sendRequest(${user.id}, this)" class="mt-auto w-full py-2.5 rounded-xl bg-gamityPurple/10 border border-gamityPurple/30 text-gamityPurple font-medium hover:bg-gamityPurple hover:text-white transition-all flex items-center justify-center gap-2 group-hover:shadow-[0_0_15px_rgba(155,93,229,0.3)]">
+                        <button onclick="sendRequest(${user.id}, this)" class="btn-friend btn-friend--request">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
                             Enviar solicitud
                         </button>
