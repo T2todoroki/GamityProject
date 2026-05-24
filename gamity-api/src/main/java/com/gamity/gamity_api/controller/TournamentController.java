@@ -1,5 +1,6 @@
 package com.gamity.gamity_api.controller;
 
+import com.gamity.gamity_api.service.SeasonLeaderboardService;
 import com.gamity.gamity_api.service.TournamentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.util.Map;
 public class TournamentController {
 
     private final TournamentService tournamentService;
+    private final SeasonLeaderboardService leaderboardService;
 
     @GetMapping("/active")
     public ResponseEntity<?> getActiveTournament(@RequestHeader("X-User-Id") Long userId) {
@@ -46,7 +48,7 @@ public class TournamentController {
 
     @GetMapping("/champions")
     public ResponseEntity<?> getRecentChampions() {
-        return ResponseEntity.ok(tournamentService.getRecentChampions());
+        return ResponseEntity.ok(leaderboardService.getTopPlayers());
     }
 
     @PostMapping("/match/{matchId}/report")
