@@ -28,6 +28,7 @@ public class SeasonLeaderboardServiceImpl implements SeasonLeaderboardService {
         
         return topUsers.stream()
             .filter(u -> u.getPremierWins() != null && u.getPremierWins() > 0)
+            .filter(u -> !u.getUsername().startsWith("Bot_"))
             .map(u -> {
                 Map<String, Object> map = new HashMap<>();
                 map.put("username", u.getUsername());

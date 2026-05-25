@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `tournaments` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `status` varchar(20) NOT NULL DEFAULT 'open',
-  `max_players` int NOT NULL DEFAULT 40,
+  `max_players` int NOT NULL DEFAULT 10,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

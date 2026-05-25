@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import org.springframework.scheduling.annotation.Scheduled;
 
 @Service
 @RequiredArgsConstructor
@@ -63,6 +62,7 @@ public class TournamentServiceImpl implements TournamentService {
     }
 
     @Override
+    @Transactional
     public Map<String, Object> registerUser(Integer tournamentId, Long userId) {
         Tournament t = tournamentRepository.findById(tournamentId).orElseThrow();
         if (!"open".equals(t.getStatus())) {
@@ -268,7 +268,7 @@ public class TournamentServiceImpl implements TournamentService {
                     List<TournamentTeamMember> winners = memberRepository.findByTeamId(match.getWinnerId());
                     for (TournamentTeamMember w : winners) {
                         User user = userRepository.findById(w.getUserId()).orElse(null);
-                        if (user != null) {
+                        if (user != null && !user.getUsername().startsWith("Bot_")) {
                             if (user.getPremierWins() == null)
                                 user.setPremierWins(0);
                             user.setPremierWins(user.getPremierWins() + 1);

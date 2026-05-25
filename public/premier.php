@@ -333,7 +333,9 @@ $initials = strtoupper(substr($username, 0, 2));
         window.currentUserId = <?php echo $_SESSION['user_id']; ?>;
         window.currentUserHash = '<?php echo $_SESSION['user_hash'] ?? ''; ?>';
     </script>
-    <script src="js/premier.js?v=<?php echo filemtime('js/premier.js') ?: time(); ?>"></script>
+    <script src="js/premier-matchmaking.js?v=<?php echo filemtime('js/premier-matchmaking.js') ?: time(); ?>"></script>
+    <script src="js/premier-team.js?v=<?php echo filemtime('js/premier-team.js') ?: time(); ?>"></script>
+    <script src="js/premier-hall-chat.js?v=<?php echo filemtime('js/premier-hall-chat.js') ?: time(); ?>"></script>
     <script src="js/app.js?v=<?php echo filemtime('js/app.js'); ?>"></script>
 </body>
 
