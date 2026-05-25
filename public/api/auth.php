@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Preparamos los datos para enviarlos a la API de Java (Spring Boot)
-        // Usamos 'gamity-api' en lugar de 'localhost' porque ambos están en Docker Compose
+        // Usamos 'gamity-api' 
         $javaUrl = 'http://gamity-api:8082/api/v1/auth/login';
         $postData = json_encode([
             'email' => $email,
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'Content-Type: application/json',
             'Content-Length: ' . strlen($postData)
         ]);
-        
+
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
@@ -48,17 +48,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Verificamos si Java aceptó el login
         if ($response && $httpCode === 200) {
             $data = json_decode($response, true);
-            
+
             if (isset($data['success']) && $data['success'] === true && isset($data['user'])) {
-                // Java aprobó el inicio de sesión, así que creamos la sesión en PHP
+
                 $userData = $data['user'];
-                
+
                 $_SESSION['user_id'] = $userData['id'];
                 $_SESSION['username'] = $userData['username'];
                 $_SESSION['user_role'] = $userData['role'] ?? 'user';
                 $_SESSION['avatar'] = $userData['avatar'] ?? 'img/default.png';
                 $_SESSION['user_hash'] = hash('sha256', $userData['id'] . 'GAMITY_TFG_SECRET_2024');
-                
+
                 echo json_encode(['success' => true]);
                 exit;
             }
