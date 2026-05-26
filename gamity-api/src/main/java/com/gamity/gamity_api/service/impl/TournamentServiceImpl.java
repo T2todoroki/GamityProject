@@ -3,7 +3,6 @@ package com.gamity.gamity_api.service.impl;
 import com.gamity.gamity_api.service.TournamentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;

@@ -4,7 +4,6 @@ import com.gamity.gamity_api.domain.entity.*;
 import com.gamity.gamity_api.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
