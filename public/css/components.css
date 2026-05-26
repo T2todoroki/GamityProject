@@ -1,8 +1,8 @@
-/* ============================================
+/* 
    GAMITY - components.css
    Componentes reutilizables: cards, badges,
    status indicators, tabs, chat bubbles, etc.
-   ============================================ */
+  */
 
 /* === Glow Text === */
 .glow-text {
@@ -30,10 +30,10 @@ html.light .card-hover:hover {
     box-shadow: 0 8px 24px rgba(139, 92, 246, 0.15);
 }
 
-/* ============================================
+/* 
    PLAYER CARD COMPONENT
    Reemplaza el spaghetti de Tailwind en index.js
-   ============================================ */
+   */
 
 .player-card {
     background-color: var(--bg-card);
@@ -67,8 +67,14 @@ html.light .player-card {
     cursor: pointer;
 }
 
-.player-card:hover .player-card__report-btn { opacity: 1; }
-.player-card__report-btn:hover { color: #f87171; background-color: rgba(239, 68, 68, 0.1); }
+.player-card:hover .player-card__report-btn {
+    opacity: 1;
+}
+
+.player-card__report-btn:hover {
+    color: #f87171;
+    background-color: rgba(239, 68, 68, 0.1);
+}
 
 /* Cabecera de la tarjeta */
 .player-card__header {
@@ -79,7 +85,10 @@ html.light .player-card {
     cursor: pointer;
 }
 
-.player-card__avatar-wrap { position: relative; flex-shrink: 0; }
+.player-card__avatar-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
 
 .player-card__avatar {
     width: 3.5rem;
@@ -89,7 +98,11 @@ html.light .player-card {
     border: 2px solid rgba(155, 93, 229, 0.5);
 }
 
-.player-card__avatar img { width: 100%; height: 100%; object-fit: cover; }
+.player-card__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
 .player-card__status-dot {
     position: absolute;
@@ -101,9 +114,14 @@ html.light .player-card {
     border: 2px solid var(--bg-card);
 }
 
-html.light .player-card__status-dot { border-color: #ffffff; }
+html.light .player-card__status-dot {
+    border-color: #ffffff;
+}
 
-.player-card__info { flex: 1; min-width: 0; }
+.player-card__info {
+    flex: 1;
+    min-width: 0;
+}
 
 .player-card__name {
     font-weight: 700;
@@ -115,7 +133,12 @@ html.light .player-card__status-dot { border-color: #ffffff; }
     padding-right: 1rem;
 }
 
-.player-card__badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+.player-card__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
 
 .player-card__bio {
     color: #9ca3af;
@@ -237,8 +260,17 @@ html.light .player-card__status-dot { border-color: #ffffff; }
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50%       { opacity: 0.6; transform: scale(0.85); }
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: scale(0.85);
+    }
 }
 
 /* === Auth Page - Glow Box === */
