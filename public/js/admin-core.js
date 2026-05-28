@@ -33,14 +33,42 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function loadDashboard() {
-    fetch(`${window.GAMITY_API_URL}/admin/dashboard`, {
-        headers: {
-            'X-User-Id': window.USER_ID,
-            'X-User-Hash': window.USER_HASH
+async function apiFetch(endpoint, options = {}) {
+    const url = `${window.GAMITY_API_URL}${endpoint}`;
+    const headers = {
+        'X-User-Id': window.USER_ID,
+        'X-User-Hash': window.USER_HASH,
+        'Content-Type': 'application/json',
+        ...options.headers
+    };
+
+    try {
+        const response = await fetch(url, { ...options, headers });
+        
+        if (!response.ok) {
+            if (response.status === 401 || response.status === 403) {
+                throw new Error("No tienes permisos o tu sesión ha expirado (403/401).");
+            }
+            if (response.status === 500) {
+                throw new Error("Error interno del servidor backend (500).");
+            }
+            throw new Error(`Error HTTP: ${response.status}`);
         }
-    })
-    .then(res => res.json())
+
+        return await response.json();
+    } catch (error) {
+        console.error(`[API Fetch Error en ${endpoint}]:`, error);
+        if (error instanceof TypeError) {
+            showToast('Error de red o bloqueo de CORS. Verifica la consola.', 'error');
+        } else {
+            showToast(error.message, 'error');
+        }
+        throw error;
+    }
+}
+
+function loadDashboard() {
+    apiFetch('/admin/dashboard')
     .then(data => {
         if (data.success) {
             document.getElementById('statUsers').textContent = data.stats.total_users;
@@ -58,7 +86,7 @@ function loadDashboard() {
             showToast(data.error || 'Error al cargar el panel', 'error');
         }
     })
-    .catch(() => showToast('No se puede conectar con el servidor API', 'error'));
+    .catch(() => {});
 }
 
 let usersChartInstance = null;

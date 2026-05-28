@@ -46,16 +46,10 @@ function renderDisputedMatches(matches) {
 function resolveDisputedMatch(matchId, winnerTeamId) {
     if (!confirm('¿Estás seguro de resolver esta disputa dando la victoria a este equipo?')) return;
 
-    fetch(`${window.GAMITY_API_URL}/admin/matches/${matchId}/resolve`, {
+    apiFetch(`/admin/matches/${matchId}/resolve`, {
         method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-User-Id': window.USER_ID,
-            'X-User-Hash': window.USER_HASH
-        },
         body: JSON.stringify({ winner_team_id: winnerTeamId })
     })
-    .then(res => res.json())
     .then(data => {
         if (data.success) {
             showToast('Disputa resuelta correctamente', 'success');
@@ -64,5 +58,5 @@ function resolveDisputedMatch(matchId, winnerTeamId) {
             showToast(data.error || 'Error al resolver la disputa', 'error');
         }
     })
-    .catch(() => showToast('Error de conexión con la API', 'error'));
+    .catch(() => {});
 }

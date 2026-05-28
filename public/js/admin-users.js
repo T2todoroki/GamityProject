@@ -147,16 +147,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 status: document.getElementById('editStatus').value
             };
 
-            fetch(`${window.GAMITY_API_URL}/admin/users/${userId}`, {
+            apiFetch(`/admin/users/${userId}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-User-Id': window.USER_ID,
-                    'X-User-Hash': window.USER_HASH
-                },
                 body: JSON.stringify(body)
             })
-            .then(res => res.json())
             .then(data => {
                 if (data.success) {
                     closeModal();
@@ -166,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     showToast(data.error || 'Error al actualizar usuario', 'error');
                 }
             })
-            .catch(() => showToast('Error de conexión con la API', 'error'));
+            .catch(() => {});
         });
     }
 });
@@ -174,15 +168,9 @@ document.addEventListener('DOMContentLoaded', () => {
 function deleteUser(userId, username) {
     if (!confirm(`¿Eliminar a "${username}"? Esta acción no se puede deshacer.`)) return;
 
-    fetch(`${window.GAMITY_API_URL}/admin/users/${userId}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-User-Id': window.USER_ID,
-            'X-User-Hash': window.USER_HASH
-        }
+    apiFetch(`/admin/users/${userId}`, {
+        method: 'DELETE'
     })
-    .then(res => res.json())
     .then(data => {
         if (data.success) {
             showToast(`Usuario "${username}" eliminado`, 'info');
@@ -191,5 +179,5 @@ function deleteUser(userId, username) {
             showToast(data.error || 'Error al eliminar usuario', 'error');
         }
     })
-    .catch(() => showToast('Error de conexión con la API', 'error'));
+    .catch(() => {});
 }

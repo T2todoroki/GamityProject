@@ -176,15 +176,9 @@ function closeReportDetailsModal() {
 function deleteUserFromReport(userId, username, reportId) {
     if (!confirm(`¿Eliminar al usuario "${username}"? Esta acción no se puede deshacer y resolverá el reporte.`)) return;
 
-    fetch(`${window.GAMITY_API_URL}/admin/users/${userId}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-User-Id': window.USER_ID,
-            'X-User-Hash': window.USER_HASH
-        }
+    apiFetch(`/admin/users/${userId}`, {
+        method: 'DELETE'
     })
-    .then(res => res.json())
     .then(data => {
         if (data.success) {
             showToast(`Usuario "${username}" eliminado y reporte resuelto`, 'success');
@@ -194,21 +188,15 @@ function deleteUserFromReport(userId, username, reportId) {
             showToast(data.error || 'Error al eliminar usuario', 'error');
         }
     })
-    .catch(() => showToast('Error de conexión con la API', 'error'));
+    .catch(() => {});
 }
 
 function updateReportStatus(reportId, newStatus) {
     const label = newStatus === 'reviewed' ? 'revisado' : 'descartado';
-    fetch(`${window.GAMITY_API_URL}/admin/reports/${reportId}`, {
+    apiFetch(`/admin/reports/${reportId}`, {
         method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-User-Id': window.USER_ID,
-            'X-User-Hash': window.USER_HASH
-        },
         body: JSON.stringify({ status: newStatus })
     })
-    .then(res => res.json())
     .then(data => {
         if (data.success) {
             showToast(`Reporte marcado como ${label}`, 'success');
@@ -217,7 +205,7 @@ function updateReportStatus(reportId, newStatus) {
             showToast(data.error || 'Error al actualizar reporte', 'error');
         }
     })
-    .catch(() => showToast('Error de conexión con la API', 'error'));
+    .catch(() => {});
 }
 
 let reportsChartInstance = null;
