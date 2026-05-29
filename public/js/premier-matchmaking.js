@@ -229,9 +229,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="w-full relative z-10">
                     ${actionHtml}
                     
+                    ${['admin', 'demo'].includes(window.currentUserRole) ? `
                     <button onclick="forceMatchmaking()" class="mt-8 text-xs text-gray-500 hover:text-gamityPurple hover:underline transition-colors flex items-center justify-center gap-2 mx-auto">
                         <i class="fa-solid fa-terminal"></i> [Dev] Forzar Matchmaking (Añadir 9 Bots)
-                    </button>
+                    </button>` : ''}
                 </div>
             </div>
         `;

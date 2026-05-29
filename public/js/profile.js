@@ -172,12 +172,42 @@ document.addEventListener("DOMContentLoaded", async () => {
             const emailEl = document.getElementById("profileEmailDisplay");
             if (emailEl) emailEl.textContent = p.email || "Sin correo";
 
-            if (p.premier_wins && p.premier_wins > 0) {
-                const badgeContainer = document.getElementById("premierBadgeContainer");
-                const badgeText = document.getElementById("premierBadgeText");
-                if (badgeContainer && badgeText) {
-                    badgeText.innerHTML = `<i class="fa-solid fa-trophy mr-1"></i> Premier Winner x${p.premier_wins}`;
+            // Render Badges
+            const badgeContainer = document.getElementById("premierBadgeContainer");
+            if (badgeContainer) {
+                badgeContainer.innerHTML = '';
+                badgeContainer.className = 'mt-3 flex flex-wrap items-center justify-center gap-2';
+                
+                let hasBadges = false;
+                
+                if (p.badges && p.badges.length > 0) {
+                    hasBadges = true;
+                    const uniqueBadges = [...new Set(p.badges)]; // Avoid duplicates visually
+                    
+                    uniqueBadges.forEach(badge => {
+                        let html = '';
+                        if (badge === 'CHAMPION') {
+                            html = `<span class="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 font-bold text-xs shadow-[0_0_15px_rgba(34,211,238,0.4)] backdrop-blur-sm flex items-center gap-1 transition-transform hover:scale-105"><i class="fa-solid fa-gem text-cyan-300"></i> Campeón Premier</span>`;
+                        } else if (badge === 'PREMIER_GOLD') {
+                            html = `<span class="px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/40 font-bold text-xs shadow-[0_0_15px_rgba(234,179,8,0.4)] backdrop-blur-sm flex items-center gap-1 transition-transform hover:scale-105"><i class="fa-solid fa-medal text-yellow-400"></i> Top 3 Oro</span>`;
+                        } else if (badge === 'PREMIER_SILVER') {
+                            html = `<span class="px-3 py-1 rounded-full bg-gray-400/20 text-gray-300 border border-gray-400/40 font-bold text-xs shadow-[0_0_10px_rgba(156,163,175,0.4)] backdrop-blur-sm flex items-center gap-1 transition-transform hover:scale-105"><i class="fa-solid fa-medal text-gray-300"></i> Top 10 Plata</span>`;
+                        } else if (badge === 'VETERAN') {
+                            html = `<span class="px-3 py-1 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/40 font-bold text-xs shadow-[0_0_10px_rgba(249,115,22,0.4)] backdrop-blur-sm flex items-center gap-1 transition-transform hover:scale-105"><i class="fa-solid fa-shield-halved text-orange-400"></i> Veterano</span>`;
+                        }
+                        if(html) badgeContainer.innerHTML += html;
+                    });
+                }
+                
+                if (p.premier_wins && p.premier_wins > 0) {
+                    hasBadges = true;
+                    badgeContainer.innerHTML += `<span class="px-3 py-1 rounded-full bg-gamityPurple/20 text-gamityPurple border border-gamityPurple/30 font-bold text-xs shadow-[0_0_10px_rgba(139,92,246,0.3)] backdrop-blur-sm flex items-center gap-1 transition-transform hover:scale-105"><i class="fa-solid fa-trophy text-gamityPurple"></i> ${p.premier_wins} Win${p.premier_wins > 1 ? 's' : ''}</span>`;
+                }
+                
+                if (hasBadges) {
                     badgeContainer.classList.remove("hidden");
+                } else {
+                    badgeContainer.classList.add("hidden");
                 }
             }
 

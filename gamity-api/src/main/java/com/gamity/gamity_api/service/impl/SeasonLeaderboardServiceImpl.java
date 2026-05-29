@@ -24,35 +24,51 @@ public class SeasonLeaderboardServiceImpl implements SeasonLeaderboardService {
 
     @Override
     public List<Map<String, Object>> getTopPlayers() {
-        List<User> topUsers = userRepository.findTop10ByRoleOrderByPremierWinsDesc("user");
-        
+
+        List<User> topUsers = userRepository.findAll().stream()
+                .filter(u -> "user".equals(u.getRole()) || "demo".equals(u.getRole()))
+                .sorted((u1, u2) -> Integer.compare(
+                        u2.getPremierWins() != null ? u2.getPremierWins() : 0,
+                        u1.getPremierWins() != null ? u1.getPremierWins() : 0))
+                .limit(10)
+                .collect(Collectors.toList());
+
         return topUsers.stream()
-            .filter(u -> u.getPremierWins() != null && u.getPremierWins() > 0)
-            .filter(u -> !u.getUsername().startsWith("Bot_"))
-            .map(u -> {
-                Map<String, Object> map = new HashMap<>();
-                map.put("username", u.getUsername());
-                map.put("avatar", u.getAvatar() != null ? u.getAvatar() : "img/default.png");
-                map.put("premier_wins", u.getPremierWins());
-                return map;
-            }).collect(Collectors.toList());
+                .filter(u -> u.getPremierWins() != null && u.getPremierWins() > 0)
+                .filter(u -> !u.getUsername().startsWith("Bot_"))
+                .map(u -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("username", u.getUsername());
+                    map.put("avatar", u.getAvatar() != null ? u.getAvatar() : "img/default.png");
+                    map.put("premier_wins", u.getPremierWins());
+                    
+                    List<UserBadge> badges = badgeRepository.findByUserId(u.getId());
+                    List<String> badgeTypes = badges.stream().map(UserBadge::getBadgeType).collect(Collectors.toList());
+                    map.put("badges", badgeTypes);
+                    
+                    return map;
+                }).collect(Collectors.toList());
     }
 
     /**
      * Se ejecuta el día 1 de cada mes a las 00:00.
-     * Principio Abierto/Cerrado (OCP): La lógica de cierre de temporada está encapsulada aquí
-     * y no contamina el servicio de Torneos. Podemos agregar nuevas recompensas o tipos de season 
-     * extendiendo este servicio sin tocar TournamentService.
+     * 
      */
     @Override
     @Transactional
     @Scheduled(cron = "0 0 0 1 * ?")
     public void processMonthlySeasonReset() {
-        List<User> topUsers = userRepository.findTop10ByRoleOrderByPremierWinsDesc("user");
-        
+        List<User> topUsers = userRepository.findAll().stream()
+                .filter(u -> "user".equals(u.getRole()) || "demo".equals(u.getRole()))
+                .sorted((u1, u2) -> Integer.compare(
+                        u2.getPremierWins() != null ? u2.getPremierWins() : 0,
+                        u1.getPremierWins() != null ? u1.getPremierWins() : 0))
+                .limit(10)
+                .collect(Collectors.toList());
+
         for (int i = 0; i < topUsers.size(); i++) {
             User user = topUsers.get(i);
-            
+
             // Si no tiene victorias, no damos medallas
             if (user.getPremierWins() == null || user.getPremierWins() == 0) {
                 continue;
@@ -60,7 +76,7 @@ public class SeasonLeaderboardServiceImpl implements SeasonLeaderboardService {
 
             UserBadge badge = new UserBadge();
             badge.setUserId(user.getId());
-            
+
             // Top 3 = GOLD, 4-10 = SILVER
             if (i < 3) {
                 badge.setBadgeType("PREMIER_GOLD");
@@ -78,7 +94,7 @@ public class SeasonLeaderboardServiceImpl implements SeasonLeaderboardService {
                 userRepository.save(u);
             }
         }
-        
+
         System.out.println("Cron ejecutado: Temporada reiniciada y medallas entregadas.");
     }
 }

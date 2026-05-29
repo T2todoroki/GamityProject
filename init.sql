@@ -50,17 +50,29 @@ CREATE TABLE IF NOT EXISTS `reports` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `role`, `avatar`, `status`) VALUES
-(1, 'administrador', 'admin@gamity.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 'img/default.png', 'offline'),
-(2, 'juanprueba', 'juanprueba@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline'),
-(3, 'luisprueba', 'luisprueba@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline'),
-(4, 'mariaprueba', 'mariaprueba@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline'),
-(5, 'carlosgamer', 'carlosgamer@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline'),
-(6, 'abby_alvarez', 'abby@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline'),
-(7, 'castillo_18', 'castillo@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline'),
-(8, 'proplayer_99', 'pro@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline'),
-(9, 'noobmaster', 'noob@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline'),
-(10, 'el_maestro', 'maestro@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline');
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `role`, `avatar`, `status`, `premier_wins`) VALUES
+(1, 'administrador', 'admin@gamity.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 'img/default.png', 'offline', 0),
+-- Usuarios con rol 'demo': pueden usar Forzar Matchmaking en la presentación del TFG
+(2, 'juanprueba', 'juanprueba@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'demo', 'img/default.png', 'offline', 0),
+(3, 'luisprueba', 'luisprueba@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'demo', 'img/default.png', 'offline', 0),
+(4, 'mariaprueba', 'mariaprueba@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'demo', 'img/default.png', 'offline', 0),
+(5, 'carlosgamer', 'carlosgamer@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'demo', 'img/default.png', 'offline', 15),
+(6, 'abby_alvarez', 'abby@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'demo', 'img/default.png', 'offline', 8),
+-- Usuarios normales
+(7, 'castillo_18', 'castillo@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline', 5),
+(8, 'proplayer_99', 'pro@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline', 12),
+(9, 'noobmaster', 'noob@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline', 0),
+(10, 'el_maestro', 'maestro@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline', 0),
+(11, 'david_gamer', 'david@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline', 0),
+(12, 'de_ramon', 'ramon@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline', 0),
+(13, 'de_maria', 'demaaria@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline', 0),
+(14, 'elmaspro', 'elmaspro@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline', 0),
+(15, 'aaron_gg', 'aaron@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline', 0),
+(16, 'jugador_oro1', 'oro1@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline', 11),
+(17, 'jugador_oro2', 'oro2@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline', 9),
+(18, 'jugador_oro3', 'oro3@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline', 7),
+(19, 'jugador_oro4', 'oro4@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline', 6),
+(20, 'jugador_plata1', 'plata1@gmail.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 'img/default.png', 'offline', 4);
 
 INSERT INTO `user_profiles` (`user_id`, `attitude`, `bio`, `game_rank`, `main_game`) VALUES
 (1, 'Administrador', 'Cuenta Oficial del Sistema.', 'Admin', 'Gamity'),
@@ -72,7 +84,17 @@ INSERT INTO `user_profiles` (`user_id`, `attitude`, `bio`, `game_rank`, `main_ga
 (7, 'Casual', 'Juego de todo un poco.', 'Oro', 'Apex Legends'),
 (8, 'Tryhard', 'Ex-jugador profesional.', 'Challenger', 'League of Legends'),
 (9, 'Chill', 'Enseñando a los nuevos a jugar.', 'Plata', 'Counter-Strike 2'),
-(10, 'Tóxico', 'feedeame y veras.', 'Hierro', 'League of Legends');
+(10, 'Tóxico', 'feedeame y veras.', 'Hierro', 'League of Legends'),
+(11, 'Competitivo', 'El grinding no para.', 'Diamante', 'Valorant'),
+(12, 'Casual', 'Solo vengo a pasarla bien.', 'Plata', 'Fortnite'),
+(13, 'Chill', 'Gamer de fin de semana.', 'Oro', 'Overwatch 2'),
+(14, 'Tryhard', 'Top fragger o nothing.', 'Radiante', 'Valorant'),
+(15, 'Competitivo', 'Busco equipo serio.', 'Platino', 'Counter-Strike 2'),
+(16, 'Competitivo', 'Siempre oro, nunca inoro.', 'Oro', 'League of Legends'),
+(17, 'Chill', 'Jugando para divertirme.', 'Oro', 'Valorant'),
+(18, 'Tryhard', 'A por todas.', 'Oro', 'Apex Legends'),
+(19, 'Casual', 'GG WP.', 'Oro', 'Fortnite'),
+(20, 'Competitivo', 'Subiendo a oro pronto.', 'Plata', 'Valorant');
 
 
 -- GAMITY PREMIER - Sistema de Torneos Valorant 5v5
@@ -193,4 +215,18 @@ CREATE TABLE IF NOT EXISTS `user_badges` (
   CONSTRAINT `fk_badge_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_badge_tournament` FOREIGN KEY (`tournament_id`) REFERENCES `tournaments` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
--- badge_type: CHAMPION, TRIPLE_CROWN, VETERAN
+-- badge_type: PREMIER_GOLD, PREMIER_SILVER, CHAMPION, TRIPLE_CROWN, VETERAN
+
+-- Insertar medallas de ejemplo para la presentación
+INSERT INTO `user_badges` (`user_id`, `badge_type`, `awarded_at`) VALUES
+(5, 'PREMIER_GOLD', DATE_SUB(NOW(), INTERVAL 1 DAY)),  -- carlosgamer
+(8, 'PREMIER_GOLD', DATE_SUB(NOW(), INTERVAL 1 DAY)),  -- proplayer_99
+(6, 'PREMIER_GOLD', DATE_SUB(NOW(), INTERVAL 1 DAY)),  -- abby_alvarez
+(7, 'PREMIER_SILVER', DATE_SUB(NOW(), INTERVAL 1 DAY)),-- castillo_18
+(5, 'CHAMPION', DATE_SUB(NOW(), INTERVAL 5 DAY)),      -- carlosgamer (múltiples medallas)
+(8, 'VETERAN', DATE_SUB(NOW(), INTERVAL 10 DAY)),      -- proplayer_99
+(16, 'PREMIER_GOLD', DATE_SUB(NOW(), INTERVAL 1 DAY)), -- jugador_oro1
+(17, 'PREMIER_GOLD', DATE_SUB(NOW(), INTERVAL 1 DAY)), -- jugador_oro2
+(18, 'PREMIER_GOLD', DATE_SUB(NOW(), INTERVAL 1 DAY)), -- jugador_oro3
+(19, 'PREMIER_GOLD', DATE_SUB(NOW(), INTERVAL 1 DAY)), -- jugador_oro4
+(20, 'PREMIER_SILVER', DATE_SUB(NOW(), INTERVAL 1 DAY));-- jugador_plata1

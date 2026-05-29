@@ -2,7 +2,9 @@ package com.gamity.gamity_api.service.impl;
 
 import com.gamity.gamity_api.domain.dto.UserDTO;
 import com.gamity.gamity_api.domain.entity.User;
+import com.gamity.gamity_api.domain.entity.UserBadge;
 import com.gamity.gamity_api.repository.UserRepository;
+import com.gamity.gamity_api.repository.UserBadgeRepository;
 import com.gamity.gamity_api.service.MatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 public class MatchServiceImpl implements MatchService {
 
     private final UserRepository userRepository;
+    private final UserBadgeRepository userBadgeRepository;
 
     @Override
     // Este método se encarga de obtener los posibles matches para un usuario dado, aplicando filtros opcionales
@@ -41,6 +44,9 @@ public class MatchServiceImpl implements MatchService {
     }
 // Este método privado se encarga de convertir una entidad User a un UserDTO, extrayendo solo los campos necesarios para el feed
     private UserDTO mapToDTO(User user) {
+        List<UserBadge> userBadges = userBadgeRepository.findByUserId(user.getId());
+        List<String> badgeTypes = userBadges.stream().map(UserBadge::getBadgeType).collect(Collectors.toList());
+
         return UserDTO.builder()
                 .id(user.getId())
                 .username(user.getUsername())
@@ -49,6 +55,8 @@ public class MatchServiceImpl implements MatchService {
                 .game(user.getProfile() != null ? user.getProfile().getMainGame() : null)
                 .rank(user.getProfile() != null ? user.getProfile().getGameRank() : null)
                 .attitude(user.getProfile() != null ? user.getProfile().getAttitude() : null)
+                .premierWins(user.getPremierWins() != null ? user.getPremierWins() : 0)
+                .badges(badgeTypes)
                 .build();
     }
 }

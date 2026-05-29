@@ -3,12 +3,16 @@ package com.gamity.gamity_api.controller;
 import com.gamity.gamity_api.domain.dto.AvatarUpdateDTO;
 import com.gamity.gamity_api.domain.entity.User;
 import com.gamity.gamity_api.repository.UserRepository;
+import com.gamity.gamity_api.repository.UserBadgeRepository;
+import com.gamity.gamity_api.domain.entity.UserBadge;
 import com.gamity.gamity_api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -17,6 +21,7 @@ public class UserController {
 
     private final UserService userService;
     private final UserRepository userRepository;
+    private final UserBadgeRepository userBadgeRepository;
 
     @PostMapping("/{id}/avatar")
     public ResponseEntity<?> updateAvatar(@PathVariable Long id, @RequestBody AvatarUpdateDTO dto) {
@@ -54,6 +59,10 @@ public class UserController {
                 profileData.put("game_rank", user.getProfile().getGameRank());
                 profileData.put("attitude", user.getProfile().getAttitude());
             }
+            
+            List<UserBadge> badges = userBadgeRepository.findByUserId(id);
+            List<String> badgeTypes = badges.stream().map(UserBadge::getBadgeType).collect(Collectors.toList());
+            profileData.put("badges", badgeTypes);
             
             return ResponseEntity.ok(java.util.Map.of("success", true, "profile", profileData));
         } catch (RuntimeException e) {

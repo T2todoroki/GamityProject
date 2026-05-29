@@ -1,5 +1,7 @@
 package com.gamity.gamity_api.controller;
 
+import com.gamity.gamity_api.domain.entity.User;
+import com.gamity.gamity_api.repository.UserRepository;
 import com.gamity.gamity_api.service.SeasonLeaderboardService;
 import com.gamity.gamity_api.service.TournamentService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ public class TournamentController {
 
     private final TournamentService tournamentService;
     private final SeasonLeaderboardService leaderboardService;
+    private final UserRepository userRepository;
 
     @GetMapping("/active")
     public ResponseEntity<?> getActiveTournament(@RequestHeader("X-User-Id") Long userId) {
@@ -33,6 +36,16 @@ public class TournamentController {
 
     @PostMapping("/matchmaking/force")
     public ResponseEntity<?> forceMatchmaking(@RequestHeader("X-User-Id") Long userId) {
+        // Control de acceso: solo roles 'admin' o 'demo' pueden inyectar bots
+        // Los usuarios 'demo' son los participantes de la presentación del TFG
+        User requester = userRepository.findById(userId).orElse(null);
+        if (requester == null) {
+            return ResponseEntity.status(403).body(Map.of("success", false, "error", "Usuario no encontrado"));
+        }
+        String role = requester.getRole() != null ? requester.getRole().toLowerCase() : "user";
+        if (!role.equals("admin") && !role.equals("demo")) {
+            return ResponseEntity.status(403).body(Map.of("success", false, "error", "Acceso denegado: se requiere rol 'demo' o 'admin'"));
+        }
         return ResponseEntity.ok(tournamentService.forceMatchmaking(userId));
     }
 

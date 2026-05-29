@@ -330,8 +330,10 @@ $initials = strtoupper(substr($username, 0, 2));
     </div>
 
     <script>
-        window.currentUserId = <?php echo $_SESSION['user_id']; ?>;
+        window.currentUserId   = <?php echo $_SESSION['user_id']; ?>;
         window.currentUserHash = '<?php echo $_SESSION['user_hash'] ?? ''; ?>';
+        // Role del usuario: 'user', 'admin' o 'demo' (acceso a Force Matchmaking)
+        window.currentUserRole = '<?php echo $_SESSION['user_role'] ?? 'user'; ?>';
     </script>
     <script src="js/premier-matchmaking.js?v=<?php echo filemtime('js/premier-matchmaking.js') ?: time(); ?>"></script>
     <script src="js/premier-team.js?v=<?php echo filemtime('js/premier-team.js') ?: time(); ?>"></script>

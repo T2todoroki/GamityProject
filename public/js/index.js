@@ -60,7 +60,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 game_rank: u.rank,
                 attitude: u.attitude,
                 status: u.status || 'offline', 
-                friendship_status: null 
+                friendship_status: null,
+                badges: u.badges || [],
+                premier_wins: u.premierWins || 0
             }));
 
             renderUsers(adaptedUsers);
@@ -146,6 +148,29 @@ document.addEventListener('DOMContentLoaded', async () => {
             const avatarUrl = user.avatar ? user.avatar : `https://ui-avatars.com/api/?name=${encodeURI(user.username)}&background=18181b&color=fff`;
             const attitudeHTML = user.attitude ? `<span class="text-xs text-red-500 font-medium ml-2">${escapeHTML(user.attitude)}</span>` : '';
 
+            // Generate Premier Badges
+            let premierBadgesHTML = '';
+            if (user.badges && user.badges.length > 0) {
+                const uniqueBadges = [...new Set(user.badges)];
+                uniqueBadges.forEach(badge => {
+                    if (badge === 'CHAMPION') {
+                        premierBadgesHTML += `<span class="px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 font-bold text-[10px] shadow-[0_0_10px_rgba(34,211,238,0.3)] flex items-center gap-1"><i class="fa-solid fa-gem text-cyan-300"></i> Campeón</span>`;
+                    } else if (badge === 'PREMIER_GOLD') {
+                        premierBadgesHTML += `<span class="px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/40 font-bold text-[10px] shadow-[0_0_10px_rgba(234,179,8,0.3)] flex items-center gap-1"><i class="fa-solid fa-medal text-yellow-400"></i> Oro</span>`;
+                    } else if (badge === 'PREMIER_SILVER') {
+                        premierBadgesHTML += `<span class="px-2 py-0.5 rounded-full bg-gray-400/20 text-gray-300 border border-gray-400/40 font-bold text-[10px] shadow-[0_0_5px_rgba(156,163,175,0.3)] flex items-center gap-1"><i class="fa-solid fa-medal text-gray-300"></i> Plata</span>`;
+                    } else if (badge === 'VETERAN') {
+                        premierBadgesHTML += `<span class="px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/40 font-bold text-[10px] shadow-[0_0_5px_rgba(249,115,22,0.3)] flex items-center gap-1"><i class="fa-solid fa-shield-halved text-orange-400"></i> Veterano</span>`;
+                    }
+                });
+            }
+            if (user.premier_wins && user.premier_wins > 0) {
+                premierBadgesHTML += `<span class="px-2 py-0.5 rounded-full bg-gamityPurple/20 text-gamityPurple border border-gamityPurple/30 font-bold text-[10px] flex items-center gap-1"><i class="fa-solid fa-trophy text-gamityPurple"></i> ${user.premier_wins} Victorias</span>`;
+            }
+            if (premierBadgesHTML !== '') {
+                premierBadgesHTML = `<div class="flex flex-wrap gap-1 mt-2">${premierBadgesHTML}</div>`;
+            }
+
 
 
             const safeUsername = escapeJSString(user.username);
@@ -179,6 +204,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 <span style="color:${isOnline ? '#10b981' : '#6b7280'};font-weight:500;">${statusText}</span>
                                 ${attitudeHTML}
                             </div>
+                            ${premierBadgesHTML}
                         </div>
                     </div>
 

@@ -40,6 +40,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 let historyHtml = data.map((c, index) => {
                     const isLatest = index === 0;
+                    
+                    let badgesHtml = '';
+                    if (c.badges && c.badges.length > 0) {
+                        const uniqueBadges = [...new Set(c.badges)];
+                        uniqueBadges.forEach(badge => {
+                            if (badge === 'CHAMPION') {
+                                badgesHtml += `<span class="px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 font-bold text-[10px] shadow-[0_0_10px_rgba(34,211,238,0.3)] flex items-center gap-1"><i class="fa-solid fa-gem text-cyan-300"></i> Campeón</span>`;
+                            } else if (badge === 'PREMIER_GOLD') {
+                                badgesHtml += `<span class="px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/40 font-bold text-[10px] shadow-[0_0_10px_rgba(234,179,8,0.3)] flex items-center gap-1"><i class="fa-solid fa-medal text-yellow-400"></i> Oro</span>`;
+                            } else if (badge === 'PREMIER_SILVER') {
+                                badgesHtml += `<span class="px-2 py-0.5 rounded-full bg-gray-400/20 text-gray-300 border border-gray-400/40 font-bold text-[10px] shadow-[0_0_5px_rgba(156,163,175,0.3)] flex items-center gap-1"><i class="fa-solid fa-medal text-gray-300"></i> Plata</span>`;
+                            } else if (badge === 'VETERAN') {
+                                badgesHtml += `<span class="px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/40 font-bold text-[10px] shadow-[0_0_5px_rgba(249,115,22,0.3)] flex items-center gap-1"><i class="fa-solid fa-shield-halved text-orange-400"></i> Veterano</span>`;
+                            }
+                        });
+                    }
+
                     return `
                     <div class="flex items-center justify-between p-5 bg-surfaceLight rounded-2xl border ${isLatest ? 'border-yellow-500/50 bg-yellow-500/5' : 'border-white/5 hover:border-gamityPurple/30'} transition-all group">
                         <div class="flex items-center gap-5">
@@ -49,9 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                             <div>
                                 <h4 class="font-black ${isLatest ? 'text-yellow-500 text-xl' : 'text-white text-lg'}">${c.username}</h4>
-                                <p class="text-xs text-gray-400 flex items-center gap-2 mt-1 font-bold">
-                                    <i class="fa-solid fa-medal text-gamityPurple"></i> ${c.premier_wins} Victorias en la Temporada
-                                </p>
+                                <div class="flex flex-wrap gap-1 mt-1.5">
+                                    ${badgesHtml}
+                                    <span class="px-2 py-0.5 rounded-full bg-gamityPurple/20 text-gamityPurple border border-gamityPurple/30 font-bold text-[10px] flex items-center gap-1"><i class="fa-solid fa-trophy text-gamityPurple"></i> ${c.premier_wins} Victorias</span>
+                                </div>
                             </div>
                         </div>
                         <div class="text-right hidden sm:block">

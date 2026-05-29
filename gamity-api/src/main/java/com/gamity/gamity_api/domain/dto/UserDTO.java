@@ -18,4 +18,6 @@ public class UserDTO {
     private String rank;
     private String attitude;
     private String status;
+    private Integer premierWins;
+    private java.util.List<String> badges;
 }
