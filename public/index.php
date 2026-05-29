@@ -321,7 +321,7 @@ if (!isset($_SESSION['user_id'])) {
             <form id="reportForm">
                 <input type="hidden" id="reportUserId">
                 <textarea id="reportReason" rows="4" placeholder="Describe el motivo del reporte..."
-                    class="w-full px-4 py-3 rounded-xl bg-surfaceLight border border-white/10 text-white text-sm placeholder-gray-500 resize-none focus:border-red-500 focus:outline-none mb-4"></textarea>
+                    class="w-full input-gamity resize-none mb-4"></textarea>
                 <div class="flex gap-3">
                     <button type="submit"
                         class="flex-1 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold transition-all text-sm">Enviar

@@ -101,12 +101,12 @@ public class AdminController {
                     map.put("id", r.getId());
                     map.put("reporter_id", r.getReporterId());
                     map.put("reported_id", r.getReportedUserId());
-                    map.put("reporter_name",
-                            userRepository.findById(r.getReporterId()).map(User::getUsername).orElse("Desconocido"));
-                    map.put("reported_name", userRepository.findById(r.getReportedUserId()).map(User::getUsername)
-                            .orElse("Desconocido"));
+                    map.put("reporter_name", r.getReporterId() != null ?
+                            userRepository.findById(r.getReporterId()).map(User::getUsername).orElse("Desconocido") : "Desconocido");
+                    map.put("reported_name", r.getReportedUserId() != null ? 
+                            userRepository.findById(r.getReportedUserId()).map(User::getUsername).orElse("Desconocido") : "Desconocido");
                     map.put("reason", r.getReason());
-                    map.put("evidence", r.getEvidence());
+                    map.put("evidence", null);
                     map.put("status", r.getStatus());
                     map.put("created_at", r.getCreatedAt() != null ? r.getCreatedAt().toString() : "");
                     return map;
@@ -121,10 +121,10 @@ public class AdminController {
                     map.put("tournament_id", m.getTournamentId());
                     map.put("round", m.getRound());
                     map.put("status", m.getStatus());
-                    String team1Name = tournamentTeamRepository.findById(m.getTeam1Id())
-                            .map(t -> t.getName()).orElse("Equipo " + m.getTeam1Id());
-                    String team2Name = tournamentTeamRepository.findById(m.getTeam2Id())
-                            .map(t -> t.getName()).orElse("Equipo " + m.getTeam2Id());
+                    String team1Name = m.getTeam1Id() != null ? 
+                            tournamentTeamRepository.findById(m.getTeam1Id()).map(t -> t.getName()).orElse("Equipo " + m.getTeam1Id()) : "Desconocido";
+                    String team2Name = m.getTeam2Id() != null ? 
+                            tournamentTeamRepository.findById(m.getTeam2Id()).map(t -> t.getName()).orElse("Equipo " + m.getTeam2Id()) : "Desconocido";
                     map.put("team1_id", m.getTeam1Id());
                     map.put("team2_id", m.getTeam2Id());
                     map.put("team1_name", team1Name);

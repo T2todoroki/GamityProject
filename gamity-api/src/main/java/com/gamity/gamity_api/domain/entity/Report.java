@@ -25,9 +25,6 @@ public class Report {
     private String reason;
     private String status;
 
-    @Column(columnDefinition = "TEXT")
-    private String evidence;
-
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
