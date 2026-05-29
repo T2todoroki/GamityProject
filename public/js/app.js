@@ -64,24 +64,28 @@ function openPlayerModal(userId, username, bio, mainGame, gameRank, attitude, av
     const gamesContainer = document.getElementById('modalGamesContainer');
     if (gamesContainer) {
         if (games.length === 0) {
-            gamesContainer.innerHTML = '<p class="text-gray-400 text-sm">Sin juegos configurados</p>';
+            gamesContainer.innerHTML = '<p class="text-sm" style="color:#6b7280;">Sin juegos configurados</p>';
         } else {
             gamesContainer.innerHTML = games.map((g, i) => {
                 if (!g) return '';
                 const rank = ranks[i] || 'N/A';
-                let badgeCls = 'border-gray-500/30 bg-gray-500/5';
+                // Colores sólidos por juego
+                let borderColor = '#4b5563';
+                let accentColor = '#9ca3af';
+                let rankBg = 'rgba(75,85,99,0.3)';
                 let iconEmoji = '🎲';
-                if (g === 'Valorant') { badgeCls = 'border-red-500/30 bg-red-500/5'; iconEmoji = '🔥'; }
-                else if (g === 'LoL' || g === 'League of Legends') { badgeCls = 'border-blue-500/30 bg-blue-500/5'; iconEmoji = '⚔️'; }
-                else if (g === 'CS2') { badgeCls = 'border-yellow-500/30 bg-yellow-500/5'; iconEmoji = '🎯'; }
-                else if (g === 'Minecraft') { badgeCls = 'border-green-500/30 bg-green-500/5'; iconEmoji = '⛏️'; }
-                else if (g === 'Fortnite') { badgeCls = 'border-purple-500/30 bg-purple-500/5'; iconEmoji = '🎮'; }
-                return `<div class="flex items-center justify-between p-2.5 rounded-xl border ${badgeCls}">
+                if (g === 'Valorant') { borderColor = '#ef4444'; accentColor = '#f87171'; rankBg = 'rgba(239,68,68,0.2)'; iconEmoji = '🔥'; }
+                else if (g === 'LoL' || g === 'League of Legends') { borderColor = '#3b82f6'; accentColor = '#60a5fa'; rankBg = 'rgba(59,130,246,0.2)'; iconEmoji = '⚔️'; }
+                else if (g === 'CS2') { borderColor = '#f59e0b'; accentColor = '#fbbf24'; rankBg = 'rgba(245,158,11,0.2)'; iconEmoji = '🎯'; }
+                else if (g === 'Minecraft') { borderColor = '#10b981'; accentColor = '#34d399'; rankBg = 'rgba(16,185,129,0.2)'; iconEmoji = '⛏️'; }
+                else if (g === 'Fortnite') { borderColor = '#8b5cf6'; accentColor = '#a78bfa'; rankBg = 'rgba(139,92,246,0.2)'; iconEmoji = '🎮'; }
+                else if (g === 'Apex Legends') { borderColor = '#ef4444'; accentColor = '#f87171'; rankBg = 'rgba(239,68,68,0.2)'; iconEmoji = '🔫'; }
+                return `<div class="flex items-center justify-between p-2.5 rounded-xl" style="background-color:#1a1d2e; border: 1px solid ${borderColor}40;">
                     <div class="flex items-center gap-2">
                         <span class="text-base">${iconEmoji}</span>
-                        <span class="text-sm font-bold text-white">${g}</span>
+                        <span class="text-sm font-bold" style="color:#f3f4f6;">${g}</span>
                     </div>
-                    <span class="text-xs font-semibold text-gamityGreen bg-gamityGreen/10 px-2.5 py-1 rounded-full">${rank}</span>
+                    <span class="text-xs font-bold px-2.5 py-1 rounded-full" style="color:${accentColor}; background:${rankBg};">${rank}</span>
                 </div>`;
             }).filter(Boolean).join('');
         }

@@ -239,22 +239,22 @@ if (!isset($_SESSION['user_id'])) {
 
     <!-- Player Profile Modal -->
     <div id="playerModal"
-        class="modal-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center">
-        <div
-            class="modal-content bg-surface rounded-2xl border border-white/5 w-full max-w-md mx-4 overflow-hidden shadow-2xl transform scale-95 opacity-0 transition-all duration-300">
+        class="modal-backdrop fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden items-center justify-center">
+        <div class="modal-content rounded-2xl border border-purple-500/30 w-full max-w-md mx-4 overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(155,93,229,0.15)] transform scale-95 opacity-0 transition-all duration-300"
+            style="background-color: #0f1117;">
             <div class="h-28 bg-neon-gradient relative">
                 <button onclick="closePlayerModal()"
-                    class="absolute top-3 right-3 p-1.5 rounded-full bg-black/30 text-white/80 hover:text-white hover:bg-black/50 transition-colors">
+                    class="absolute top-3 right-3 p-1.5 rounded-full bg-black/40 text-white hover:text-white hover:bg-black/60 transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
                         </path>
                     </svg>
                 </button>
             </div>
-            <div class="px-6 pb-6">
+            <div class="px-6 pb-6" style="background-color: #0f1117;">
                 <div class="flex items-end gap-4 -mt-10 mb-4">
-                    <img id="modalAvatar" src=""
-                        class="w-20 h-20 rounded-xl border-4 border-surface object-cover shadow-lg">
+                    <img id="modalAvatar" src="" class="w-20 h-20 rounded-xl border-4 object-cover shadow-lg"
+                        style="border-color: #0f1117;">
                     <div class="pb-1">
                         <h3 id="modalUsername" class="text-xl font-black text-white"></h3>
                         <div id="modalStatus"></div>
@@ -263,17 +263,19 @@ if (!isset($_SESSION['user_id'])) {
                 <input type="hidden" id="modalUserId">
                 <div class="space-y-4">
                     <div>
-                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wider">BiografÃ­a</label>
-                        <p id="modalBio" class="text-gray-300 text-sm mt-1 leading-relaxed"></p>
+                        <label class="text-xs font-semibold uppercase tracking-wider"
+                            style="color: #6b7280;">Biografía</label>
+                        <p id="modalBio" class="text-sm mt-1 leading-relaxed" style="color: #d1d5db;"></p>
                     </div>
                     <div>
-                        <label class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Juegos y
+                        <label class="text-xs font-semibold uppercase tracking-wider" style="color: #6b7280;">Juegos y
                             Rangos</label>
                         <div id="modalGamesContainer" class="mt-2 space-y-2"></div>
                     </div>
                     <div class="grid grid-cols-1 gap-3">
-                        <div class="bg-surfaceLight rounded-xl p-3 text-center">
-                            <p class="text-xs text-gray-500 font-medium mb-1">Actitud</p>
+                        <div class="rounded-xl p-3 text-center"
+                            style="background-color: #1a1d2e; border: 1px solid rgba(155,93,229,0.2);">
+                            <p class="text-xs font-medium mb-1" style="color: #6b7280;">Actitud</p>
                             <p id="modalAttitude" class="text-sm font-bold text-yellow-400"></p>
                         </div>
                     </div>
@@ -288,7 +290,10 @@ if (!isset($_SESSION['user_id'])) {
                             Enviar mensaje
                         </button>
                         <button onclick="closePlayerModal()"
-                            class="px-5 py-2.5 rounded-xl border border-white/10 text-gray-400 hover:text-white hover:border-white/30 transition-all text-sm font-medium">Cerrar</button>
+                            class="px-5 py-2.5 rounded-xl text-sm font-medium transition-all"
+                            style="border: 1px solid rgba(255,255,255,0.15); color: #9ca3af;"
+                            onmouseover="this.style.color='#fff'; this.style.borderColor='rgba(255,255,255,0.4)';"
+                            onmouseout="this.style.color='#9ca3af'; this.style.borderColor='rgba(255,255,255,0.15)';">Cerrar</button>
                     </div>
                 </div>
             </div>
