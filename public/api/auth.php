@@ -58,7 +58,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_role'] = $userData['role'] ?? 'user';
                 $_SESSION['avatar'] = $userData['avatar'] ?? 'img/default.png';
                 $_SESSION['user_hash'] = hash('sha256', $userData['id'] . 'GAMITY_TFG_SECRET_2024');
-
+                if (isset($_POST['remember_me']) && $_POST['remember_me'] === 'on') {
+                    // Extender la sesión en el navegador por 30 días
+                    setcookie(session_name(), session_id(), time() + 30 * 24 * 60 * 60, '/');
+                }
                 echo json_encode(['success' => true]);
                 exit;
             }

@@ -78,6 +78,16 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
 
     const btn = e.target.querySelector('button[type="submit"]');
     const originalBtnText = btn.innerText;
+
+    // Validar contraseña
+    if (jsonPayload.password !== jsonPayload.confirm_password) {
+        const msg = document.getElementById('registerMessage');
+        msg.textContent = 'Las contraseñas no coinciden.';
+        msg.classList.remove('hidden');
+        return;
+    }
+    delete jsonPayload.confirm_password; // No lo mandamos al backend
+
     btn.innerText = "Registrando...";
     btn.disabled = true;
 

@@ -54,7 +54,7 @@ if (isset($_SESSION['user_id'])) {
                 <p class="text-sm text-gray-400 mb-8">Ingresa tus datos para continuar</p>
                 
                 <!-- Aqui está el formulario. No le pongo action de PHP porque detendré su proceso de recarga usando 'auth.js'. -->
-                <form id="loginForm" class="space-y-5"> <!-- space-y-5 pone automáticamente una separación vertical entre los inputs -->
+                <form id="loginForm" class="space-y-5" autocomplete="off"> <!-- space-y-5 pone automáticamente una separación vertical entre los inputs -->
                     
                     <!-- INPUT DEL CORREO -->
                     <div>
@@ -66,7 +66,7 @@ if (isset($_SESSION['user_id'])) {
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                             </span>
                             <!-- Importante: 'name="email"'. Mi backend leerá este campo exacto. Pongo 'pl-12' (padding left extra) para dejarle espacio al icono. -->
-                            <input type="email" name="email" required placeholder="correo@ejemplo.com" class="w-full pl-12 pr-4 py-3 rounded-xl input-gamity text-sm text-white placeholder-gray-500">
+                            <input type="email" name="email" required placeholder="correo@ejemplo.com" class="w-full pl-12 pr-4 py-3 rounded-xl input-gamity text-sm text-white placeholder-gray-500" autocomplete="username">
                         </div>
                     </div>
                     
@@ -78,7 +78,7 @@ if (isset($_SESSION['user_id'])) {
                                 <!-- Icono del candado -->
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                             </span>
-                            <input type="password" id="loginPassword" name="password" required placeholder="••••••••" class="w-full pl-12 pr-12 py-3 rounded-xl input-gamity text-sm text-white placeholder-gray-500">
+                            <input type="password" id="loginPassword" name="password" required placeholder="••••••••" class="w-full pl-12 pr-12 py-3 rounded-xl input-gamity text-sm text-white placeholder-gray-500" autocomplete="current-password">
                             
                             <!-- Botón "ojo" fijado a la derecha ('absolute right-4'). Cuando hago click, mi script cambiará el 'type="password"' a 'text' para ver lo escrito. -->
                             <button type="button" onclick="togglePassword('loginPassword', this)" class="absolute right-4 text-gray-500 hover:text-gamityPurple transition-all duration-300">
@@ -88,6 +88,14 @@ if (isset($_SESSION['user_id'])) {
                                 </svg>
                             </button>
                         </div>
+                    </div>
+                    
+                    <!-- CHECKBOX RECUÉRDAME -->
+                    <div class="flex items-center mt-2">
+                        <label class="flex items-center text-sm text-gray-400 hover:text-white cursor-pointer transition-colors">
+                            <input type="checkbox" name="remember_me" class="mr-2 rounded bg-surface border-white/10 text-gamityPurple focus:ring-gamityPurple focus:ring-offset-surface">
+                            Recuérdame
+                        </label>
                     </div>
                     
                     <!-- BOTÓN DE ENVIAR. Uso el fondo 'bg-neon-gradient' que definí arriba, y al pasar el ratón tiene un efecto de sombra verde ('hover:shadow'). -->
@@ -105,7 +113,7 @@ if (isset($_SESSION['user_id'])) {
                 <h2 class="text-3xl font-bold mb-2">Crear cuenta</h2>
                 <p class="text-sm text-gray-400 mb-8">Regístrate y encuentra tu equipo</p>
                 
-                <form id="registerForm" class="space-y-4">
+                <form id="registerForm" class="space-y-4" autocomplete="off">
                     <!-- INPUT DE NOMBRE DE USUARIO: Igual a los de antes, los textos y el name los adapto para la base de datos Java -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-400 mb-1 uppercase tracking-wider">Nombre de usuario</label>
@@ -113,7 +121,7 @@ if (isset($_SESSION['user_id'])) {
                             <span class="absolute left-4 top-3 text-gray-500">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                             </span>
-                            <input type="text" name="username" required placeholder="tu_gamertag" class="w-full pl-12 pr-4 py-2.5 rounded-xl input-gamity text-sm text-white placeholder-gray-500">
+                            <input type="text" name="username" required placeholder="tu_gamertag" class="w-full pl-12 pr-4 py-2.5 rounded-xl input-gamity text-sm text-white placeholder-gray-500" autocomplete="off">
                         </div>
                     </div>
 
@@ -124,7 +132,7 @@ if (isset($_SESSION['user_id'])) {
                             <span class="absolute left-4 top-3 text-gray-500">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                             </span>
-                            <input type="email" name="email" required placeholder="correo@ejemplo.com" class="w-full pl-12 pr-4 py-2.5 rounded-xl input-gamity text-sm text-white placeholder-gray-500">
+                            <input type="email" name="email" required placeholder="correo@ejemplo.com" class="w-full pl-12 pr-4 py-2.5 rounded-xl input-gamity text-sm text-white placeholder-gray-500" autocomplete="off">
                         </div>
                     </div>
                     
@@ -135,9 +143,27 @@ if (isset($_SESSION['user_id'])) {
                             <span class="absolute left-4 text-gray-500">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                             </span>
-                            <input type="password" id="registerPassword" name="password" required placeholder="••••••••" class="w-full pl-12 pr-12 py-2.5 rounded-xl input-gamity text-sm text-white placeholder-gray-500">
+                            <input type="password" id="registerPassword" name="password" required placeholder="••••••••" class="w-full pl-12 pr-12 py-2.5 rounded-xl input-gamity text-sm text-white placeholder-gray-500" autocomplete="new-password">
                             <!-- El mismo de botón de ojo para revelar la contraseña, pero referenciando a 'registerPassword' -->
                             <button type="button" onclick="togglePassword('registerPassword', this)" class="absolute right-4 text-gray-500 hover:text-gamityPurple transition-all duration-300">
+                                <svg class="w-5 h-5 eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- INPUT CONFIRMAR CONTRASEÑA -->
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 mb-1 uppercase tracking-wider">Confirmar Contraseña</label>
+                        <div class="relative flex items-center">
+                            <span class="absolute left-4 text-gray-500">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                            </span>
+                            <input type="password" id="confirmPassword" name="confirm_password" required placeholder="••••••••" class="w-full pl-12 pr-12 py-2.5 rounded-xl input-gamity text-sm text-white placeholder-gray-500" autocomplete="new-password">
+                            <!-- El mismo de botón de ojo para revelar la contraseña -->
+                            <button type="button" onclick="togglePassword('confirmPassword', this)" class="absolute right-4 text-gray-500 hover:text-gamityPurple transition-all duration-300">
                                 <svg class="w-5 h-5 eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
