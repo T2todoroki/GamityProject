@@ -45,7 +45,6 @@ public class ReportController {
                     .reporterId(reporterId)
                     .reportedUserId(dto.getReportedUserId())
                     .reason(dto.getReason().trim())
-                    .evidence(dto.getEvidence())
                     .status("pending")
                     .build();
 

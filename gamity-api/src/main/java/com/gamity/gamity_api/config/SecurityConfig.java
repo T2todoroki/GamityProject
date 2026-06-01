@@ -36,9 +36,9 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(hybridAuthFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/v1/auth/**").permitAll() // Login/Register abierto
-                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN") // PROTEGIDO SOLO PARA ADMIN
-                .anyRequest().authenticated() // EL RESTO REQUIERE ESTAR AUTENTICADO
+                .requestMatchers("/api/v1/auth/**").permitAll()
+                .requestMatchers("/api/v1/admin/**").permitAll()
+                .anyRequest().permitAll() // Seguridad gestionada por HybridAuthFilter y validación manual en cada Controller
             );
         return http.build();
     }

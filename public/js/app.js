@@ -125,9 +125,20 @@ function openReportModal(userId, username) {
     const modal = document.getElementById('reportModal');
     if (!modal) return;
 
-    document.getElementById('reportUserId').value = userId;
-    document.getElementById('reportUsername').textContent = username;
-    document.getElementById('reportReason').value = '';
+    const reportUserId = document.getElementById('reportUserId');
+    if (reportUserId) reportUserId.value = userId;
+    
+    const reportUsername = document.getElementById('reportUsername');
+    if (reportUsername) reportUsername.textContent = username;
+
+    const reasonInput = document.getElementById('reportReason');
+    if (reasonInput) reasonInput.value = '';
+
+    const reasonSelect = document.getElementById('reportReasonSelect');
+    if (reasonSelect) reasonSelect.value = '';
+
+    const detailsInput = document.getElementById('reportDetails');
+    if (detailsInput) detailsInput.value = '';
 
     modal.classList.remove('hidden');
     modal.classList.add('flex');
@@ -142,8 +153,23 @@ function closeReportModal() {
 
 async function submitReport(e) {
     e.preventDefault();
-    const userId = document.getElementById('reportUserId').value;
-    const reason = document.getElementById('reportReason').value.trim();
+    const userIdInput = document.getElementById('reportUserId');
+    if (!userIdInput) return;
+    const userId = userIdInput.value;
+
+    let reason = '';
+    const reasonSelect = document.getElementById('reportReasonSelect');
+    const reasonText = document.getElementById('reportReason');
+    const detailsText = document.getElementById('reportDetails');
+
+    if (reasonSelect && reasonSelect.value) {
+        reason = reasonSelect.value;
+        if (detailsText && detailsText.value.trim()) {
+             reason += " - Detalles: " + detailsText.value.trim();
+        }
+    } else if (reasonText) {
+        reason = reasonText.value.trim();
+    }
 
     if (!reason) {
         showToast('Escribe el motivo del reporte.', 'error');
@@ -160,7 +186,7 @@ async function submitReport(e) {
                 'X-User-Id': reporterId,
                 'X-User-Hash': window.currentUserHash || window.SESSION_USER_HASH || ''
             },
-            body: JSON.stringify({ reportedUserId: userId, reason: reason })
+            body: JSON.stringify({ reported_user_id: parseInt(userId), reason: reason })
         });
         const data = await res.json();
         if (data.success) {
