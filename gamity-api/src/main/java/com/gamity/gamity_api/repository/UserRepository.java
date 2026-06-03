@@ -16,7 +16,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT DISTINCT u FROM User u " +
            "LEFT JOIN u.profile p " +
            "WHERE u.id != :currentUserId " +
-           "AND u.role = 'user' " +
+           "AND u.role IN ('user', 'demo') " +
            "AND (:game IS NULL OR p.mainGame LIKE %:game%) " +
            "AND (:ranks IS NULL OR p.gameRank IN :ranks) " +
            "AND (:attitude IS NULL OR p.attitude = :attitude) " +
